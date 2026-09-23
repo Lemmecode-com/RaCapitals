@@ -391,44 +391,7 @@ const Home = () => {
           `}</style>
         </section>
 
-        <section className="home-faq-section" aria-labelledby="faq-heading">
-          <div className="home-faq-header">
-            <p className="home-eyebrow">Need to know</p>
-            <h2 id="faq-heading" className="home-section-title">Frequently Asked Questions</h2>
-          </div>
-          <div className="home-faq-grid">
-            {[
-              { q: 'What are unlisted shares?', a: 'Unlisted shares are equity shares of a company that are not listed on a recognised stock exchange (such as NSE or BSE). They are typically held by promoters, early investors, employees, or private equity funds. Transactions occur privately, often through intermediaries, and prices are negotiated rather than discovered on a public order book.' },
-              { q: "Why buy before a company's IPO?", a: 'Investing before an IPO can provide access to companies at earlier growth stages, often at lower valuations than the eventual public offering price. However, it carries higher illiquidity risk, longer holding periods, and less regulatory oversight. Investors should assess their risk tolerance and investment horizon carefully.' },
-              { q: 'How does a purchase actually work?', a: 'Browse the price list, shortlist companies, and tap Enquire on any listing. Our team responds personally on WhatsApp or email within one business day with current availability, lot size, and next steps. Once terms are agreed, shares are transferred via demat-to-demat transfer with full documentation.' },
-              { q: 'Is this SEBI-regulated?', a: 'Taurus Magnus is an information platform for unlisted and pre-IPO shares — not a stock exchange, broker, or investment adviser. We do not execute trades, hold client funds, or offer regulated investment services. All transactions are private, bilateral arrangements between buyers and sellers. Investors should seek independent financial and legal advice before transacting.' },
-            ].map((item, i) => (
-              <article
-                key={i}
-                className={`home-faq-card${faqOpen === i ? ' home-faq-card--open' : ''}`}
-              >
-                <button
-                  type="button"
-                  className="home-faq-question"
-                  onClick={() => toggleFaq(i)}
-                  aria-expanded={faqOpen === i}
-                  aria-controls={`faq-answer-${i}`}
-                >
-                  <span className="home-faq-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="home-faq-q-text">{item.q}</span>
-                  <span className="home-faq-chevron" aria-hidden="true">
-                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                      <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </span>
-                </button>
-                <div id={`faq-answer-${i}`} className="home-faq-answer" role="region" aria-hidden={faqOpen !== i}>
-                  <p>{item.a}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
+
 
         <section
           className="ff-section"
@@ -573,6 +536,44 @@ const Home = () => {
           )}
         </section>
 
+        <section className="home-faq-section" aria-labelledby="faq-heading">
+          <div className="home-faq-header">
+            <p className="home-eyebrow">Need to know</p>
+            <h2 id="faq-heading" className="home-section-title">Frequently Asked Questions</h2>
+          </div>
+          <div className="home-faq-grid">
+            {[
+              { q: 'What are unlisted shares?', a: 'Unlisted shares are equity shares of a company that are not listed on a recognised stock exchange (such as NSE or BSE). They are typically held by promoters, early investors, employees, or private equity funds. Transactions occur privately, often through intermediaries, and prices are negotiated rather than discovered on a public order book.' },
+              { q: "Why buy before a company's IPO?", a: 'Investing before an IPO can provide access to companies at earlier growth stages, often at lower valuations than the eventual public offering price. However, it carries higher illiquidity risk, longer holding periods, and less regulatory oversight. Investors should assess their risk tolerance and investment horizon carefully.' },
+              { q: 'How does a purchase actually work?', a: 'Browse the price list, shortlist companies, and tap Enquire on any listing. Our team responds personally on WhatsApp or email within one business day with current availability, lot size, and next steps. Once terms are agreed, shares are transferred via demat-to-demat transfer with full documentation.' },
+              { q: 'Is this SEBI-regulated?', a: 'Taurus Magnus is an information platform for unlisted and pre-IPO shares — not a stock exchange, broker, or investment adviser. We do not execute trades, hold client funds, or offer regulated investment services. All transactions are private, bilateral arrangements between buyers and sellers. Investors should seek independent financial and legal advice before transacting.' },
+            ].map((item, i) => (
+              <article
+                key={i}
+                className={`home-faq-card${faqOpen === i ? ' home-faq-card--open' : ''}`}
+              >
+                <button
+                  type="button"
+                  className="home-faq-question"
+                  onClick={() => toggleFaq(i)}
+                  aria-expanded={faqOpen === i}
+                  aria-controls={`faq-answer-${i}`}
+                >
+                  <span className="home-faq-num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <span className="home-faq-q-text">{item.q}</span>
+                  <span className="home-faq-chevron" aria-hidden="true">
+                    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                      <path d="M4.5 6.75L9 11.25L13.5 6.75" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                </button>
+                <div id={`faq-answer-${i}`} className="home-faq-answer" role="region" aria-hidden={faqOpen !== i}>
+                  <p>{item.a}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

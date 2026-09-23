@@ -26,7 +26,7 @@ const ConfirmDialog = ({
 
   return (
     <div
-      className="modal-backdrop"
+      className="modal-backdrop event-modal-backdrop"
       onClick={onCancel}
       role="dialog"
       aria-modal="true"

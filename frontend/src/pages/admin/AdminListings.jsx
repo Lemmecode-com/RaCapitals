@@ -379,7 +379,7 @@ const AdminListings = () => {
       />
 
       {formOpen && (
-        <div className="modal-backdrop" onClick={closeForm}>
+        <div className="modal-backdrop event-modal-backdrop" onClick={closeForm}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={closeForm}>&times;</button>
             <h2>{editing ? 'Edit Listing' : 'Add New Listing'}</h2>
@@ -471,7 +471,7 @@ const AdminListings = () => {
       />
 
       {priceModal && (
-        <div className="modal-backdrop" onClick={closePriceModal}>
+        <div className="modal-backdrop event-modal-backdrop" onClick={closePriceModal}>
           <div className="modal small" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={closePriceModal}>&times;</button>
             <h2>Update Price — {priceModal.name}</h2>
