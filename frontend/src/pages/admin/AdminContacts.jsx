@@ -95,12 +95,12 @@ const AdminContacts = () => {
 
   return (
     <div className="dashboard-wrap">
-      <div className="admin-page-header">
-        <h1>Contact Submissions</h1>
-        <p className="page-subtitle">Manage messages from the contact form.</p>
+      <div className="admin-page-header" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '0.5rem' }}>
+        <h1 style={{ margin: 0 }}>Contact Submissions</h1>
+        <p className="page-subtitle" style={{ margin: 0 }}>Manage messages from the contact form.</p>
       </div>
 
-      <div className="admin-filters" style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap' }}>
+      <div className="admin-filters" style={{ display: 'flex', gap: '1rem', marginBottom: '1.5rem', flexWrap: 'wrap', alignItems: 'flex-start' }}>
         <input
           type="text"
           placeholder="Search by name or email..."
@@ -109,26 +109,36 @@ const AdminContacts = () => {
           className="form-input"
           style={{ flex: 1, minWidth: '200px' }}
         />
-        <input
-          type="date"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="form-input"
-          placeholder="Start Date"
-        />
-        <input
-          type="date"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="form-input"
-          placeholder="End Date"
-        />
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-color, #333)' }}>Start:</span>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="form-input"
+                title="Start Date"
+              />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span style={{ fontSize: '0.9rem', fontWeight: 500, color: 'var(--text-color, #333)' }}>End:</span>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="form-input"
+                title="End Date"
+              />
+            </div>
+          </div>
+          {startDate && endDate && new Date(startDate) > new Date(endDate) && (
+            <p className="form-error" style={{ margin: 0, fontSize: '0.85rem', color: 'red' }}>
+              Start date cannot be after the end date.
+            </p>
+          )}
+        </div>
       </div>
-      {startDate && endDate && new Date(startDate) > new Date(endDate) && (
-        <p className="form-error" style={{ marginTop: '-1rem', marginBottom: '1.5rem', fontSize: '0.85rem' }}>
-          Start date cannot be after the end date.
-        </p>
-      )}
 
       {loading ? (
         <p className="muted">Loading submissions…</p>
@@ -159,7 +169,7 @@ const AdminContacts = () => {
                     <td style={{ padding: '0.6rem 1rem' }}>{(currentPage - 1) * itemsPerPage + idx + 1}</td>
                     <td style={{ padding: '0.6rem 1rem' }}>
                       <strong>{s.name}</strong>
-                      {s.status === 'new' && <span className="contact-new-badge" style={{ marginLeft: '8px', fontSize: '0.75em', padding: '2px 6px', background: 'var(--brass)', color: 'var(--ink)', borderRadius: '4px' }}>NEW</span>}
+                      {s.status === 'new' && <span className="contact-new-badge" style={{ marginLeft: '8px', fontSize: '0.75em', padding: '2px 6px', background: 'var(--brass)', color: 'white', borderRadius: '4px' }}>NEW</span>}
                     </td>
                     <td className="mono" style={{ padding: '0.6rem 1rem' }}>{s.email}</td>
                     <td style={{ padding: '0.6rem 1rem', maxWidth: '300px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={s.message}>

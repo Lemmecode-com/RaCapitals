@@ -43,10 +43,30 @@ const Contact = () => {
 
   const validate = () => {
     const next = {}
-    if (!form.name.trim()) next.name = 'Please enter your name.'
-    if (!form.email.trim()) next.email = 'Please enter your email.'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) next.email = 'Please enter a valid email.'
-    if (!form.message.trim()) next.message = 'Please enter a message.'
+    
+    // Name validation
+    if (!form.name.trim()) {
+      next.name = 'Please enter your name.'
+    } else if (form.name.trim().length > 50) {
+      next.name = 'Name cannot exceed 50 characters.'
+    } else if (/\d/.test(form.name)) {
+      next.name = 'Name cannot contain numbers.'
+    }
+    
+    // Email validation
+    if (!form.email.trim()) {
+      next.email = 'Please enter your email.'
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email.trim())) {
+      next.email = 'Please enter a valid email address.'
+    }
+    
+    // Message validation
+    if (!form.message.trim()) {
+      next.message = 'Please enter a message.'
+    } else if (form.message.trim().length > 1000) {
+      next.message = 'Message cannot exceed 1000 characters.'
+    }
+    
     return next
   }
 

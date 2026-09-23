@@ -101,9 +101,28 @@ const AdminListings = () => {
     setFormError('')
 
     const errors = {}
-    if (!form.name.trim()) errors.name = 'This field is required'
-    if (!form.sector.trim()) errors.sector = 'This field is required'
-    if (!form.lotSize) errors.lotSize = 'This field is required'
+    
+    // Name validation
+    if (!form.name.trim()) {
+      errors.name = 'This field is required'
+    } else if (form.name.trim().length > 100) {
+      errors.name = 'Company name cannot exceed 100 characters'
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(form.name)) {
+      errors.name = 'Company name cannot contain special characters'
+    }
+
+    // Sector validation
+    if (!form.sector.trim()) {
+      errors.sector = 'This field is required'
+    }
+
+    // Lot Size validation
+    if (!form.lotSize) {
+      errors.lotSize = 'This field is required'
+    } else if (Number(form.lotSize) <= 0) {
+      errors.lotSize = 'Lot size must be a positive number'
+    }
+
     setFieldErrors(errors)
     if (Object.keys(errors).length > 0) return
 
@@ -180,6 +199,10 @@ const AdminListings = () => {
   const handleSubmitPrice = async (e) => {
     e.preventDefault()
     setPriceError('')
+    if (!priceValue) {
+      setPriceError('Price is required')
+      return
+    }
     const num = Number(priceValue)
     if (Number.isNaN(num) || num <= 0) {
       setPriceError('Enter a valid positive number')

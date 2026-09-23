@@ -35,13 +35,31 @@ const AdminLogin = () => {
     e.preventDefault()
     setError('')
 
-    const usernameMissing = !username.trim()
-    const passwordMissing = !password
+    let uError = ''
+    let pError = ''
 
-    setUsernameError(usernameMissing ? 'Username is required' : '')
-    setPasswordError(passwordMissing ? 'Password is required' : '')
+    if (!username.trim()) {
+      uError = 'Username is required'
+    } else if (username.trim().includes(' ')) {
+      uError = 'Username cannot contain spaces'
+    }
 
-    if (usernameMissing || passwordMissing) return
+    if (!password) {
+      pError = 'Password is required'
+    } else if (password.length < 6) {
+      pError = 'Password must be at least 6 characters'
+    } else if (!/[A-Z]/.test(password)) {
+      pError = 'Password must contain at least one capital letter'
+    } else if (!/\d/.test(password)) {
+      pError = 'Password must contain at least one number'
+    } else if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)) {
+      pError = 'Password must contain at least one special character'
+    }
+
+    setUsernameError(uError)
+    setPasswordError(pError)
+
+    if (uError || pError) return
 
     setSubmitting(true)
     const result = await login(username, password)

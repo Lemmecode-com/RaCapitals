@@ -83,8 +83,21 @@ const AdminEvents = () => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setFormError('')
-    if (!form.title.trim()) return setFormError('Title is required')
-    if (!form.eventDate) return setFormError('Event date is required')
+    if (!form.title.trim()) {
+      return setFormError('Title is required')
+    } else if (form.title.trim().length > 150) {
+      return setFormError('Title cannot exceed 150 characters')
+    }
+    
+    if (!form.eventDate) {
+      return setFormError('Event date is required')
+    }
+    
+    if (!form.description.trim()) {
+      return setFormError('Description is required')
+    } else if (form.description.trim().length < 10) {
+      return setFormError('Description must be at least 10 characters long')
+    }
     setSaving(true)
     try {
       const payload = {

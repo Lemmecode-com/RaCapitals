@@ -67,6 +67,32 @@ const AdminCompanyDetail = () => {
   const submitEdit = async (e) => {
     e.preventDefault()
     setEditError('')
+
+    // Validate
+    if (!editForm.name.trim()) {
+      setEditError('Company name is required')
+      return
+    } else if (editForm.name.trim().length > 100) {
+      setEditError('Company name cannot exceed 100 characters')
+      return
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(editForm.name)) {
+      setEditError('Company name cannot contain special characters')
+      return
+    }
+    
+    if (!editForm.sector.trim()) {
+      setEditError('Sector is required')
+      return
+    }
+    
+    if (!editForm.lotSize) {
+      setEditError('Lot size is required')
+      return
+    } else if (Number(editForm.lotSize) <= 0) {
+      setEditError('Lot size must be a positive number')
+      return
+    }
+
     try {
       const payload = {
         name: editForm.name.trim(),
@@ -88,6 +114,10 @@ const AdminCompanyDetail = () => {
   const submitPrice = async (e) => {
     e.preventDefault()
     setPriceError('')
+    if (!priceValue) {
+      setPriceError('Price is required')
+      return
+    }
     const num = Number(priceValue)
     if (Number.isNaN(num) || num <= 0) {
       setPriceError('Enter a valid positive number')
