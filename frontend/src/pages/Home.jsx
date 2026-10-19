@@ -7,6 +7,7 @@ import Footer from '../components/common/Footer'
 import Navbar from '../components/common/Navbar'
 
 import { formatINR, formatShortDate } from '../utils/format'
+import { MOCK_BLOGS } from '../data/mockBlogs'
 
 const PREVIEW_LIMIT = 12
 const MARQUEE_DURATION = 22
@@ -534,6 +535,34 @@ const Home = () => {
               ))}
             </div>
           )}
+        </section>
+
+        <section className="home-insights-section" aria-labelledby="insights-heading">
+          <div className="home-section-header">
+            <div>
+              <p className="home-eyebrow">RESEARCH & ANALYSIS</p>
+              <h2 id="insights-heading" className="home-section-title">Market Insights</h2>
+            </div>
+            <Link to="/insights" className="home-marquee-cta">View all insights →</Link>
+          </div>
+          <div className="home-insights-grid">
+            {MOCK_BLOGS.slice(0, 3).map((blog) => (
+              <article key={blog.id} className="home-insight-card">
+                <div className="home-insight-badge-row">
+                  <span className="home-insight-tag">{blog.category}</span>
+                  <span className="home-insight-time">{blog.readTime}</span>
+                </div>
+                <h3 className="home-insight-title">
+                  <Link to={`/insights/${blog.slug}`}>{blog.title}</Link>
+                </h3>
+                <p className="home-insight-excerpt">{blog.excerpt}</p>
+                <div className="home-insight-footer">
+                  <span className="home-insight-author">{blog.author}</span>
+                  <Link to={`/insights/${blog.slug}`} className="home-insight-link">Read analysis →</Link>
+                </div>
+              </article>
+            ))}
+          </div>
         </section>
 
         <section className="home-faq-section" aria-labelledby="faq-heading">

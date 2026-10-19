@@ -16,6 +16,8 @@ import Terms from './pages/legal/Terms'
 import Privacy from './pages/legal/Privacy'
 import DrhpFiled from './pages/DrhpFiled'
 import Events from './pages/Events'
+import Insights from './pages/Insights'
+import InsightDetail from './pages/InsightDetail'
 import ProtectedRoute from './components/common/ProtectedRoute'
 import AdminLayout from './components/admin/AdminLayout'
 
@@ -42,6 +44,10 @@ function App() {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/drhp-filed" element={<DrhpFiled />} />
         <Route path="/events" element={<Events />} />
+        <Route path="/insights" element={<Insights />} />
+        <Route path="/insights/:slug" element={<InsightDetail />} />
+        <Route path="/blog" element={<Navigate to="/insights" replace />} />
+        <Route path="/blog/:slug" element={<InsightDetail />} />
         <Route path="/admin/login" element={<AdminLogin />} />
         <Route
           path="/admin"

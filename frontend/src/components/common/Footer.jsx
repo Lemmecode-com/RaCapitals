@@ -17,6 +17,7 @@ const Footer = () => {
         <div className="footer-col">
           <h3>Platform</h3>
           <Link to="/catalog">Price List</Link>
+          <Link to="/insights">Market Insights</Link>
           <Link to="/contact">Contact</Link>
         </div>
         <div className="footer-col">

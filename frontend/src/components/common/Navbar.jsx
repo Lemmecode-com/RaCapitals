@@ -44,6 +44,7 @@ const Navbar = () => {
           <NavLink to="/catalog" onClick={closeMenu}>Price List</NavLink>
           <NavLink to="/drhp-filed" onClick={closeMenu}>DRHP Filed</NavLink>
           <NavLink to="/events" onClick={closeMenu}>Events</NavLink>
+          <NavLink to="/insights" onClick={closeMenu}>Insights</NavLink>
           <NavLink to="/about" onClick={closeMenu}>About us</NavLink>
           <NavLink to="/contact" onClick={closeMenu}>Contact us</NavLink>
           {onAdmin ? (
