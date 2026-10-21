@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import api from '../../services/api'
 import { apiBaseWithoutApi, formatShortDate } from '../../utils/format'
+import TipTapEditor from '../../components/admin/TipTapEditor'
 
 const CATEGORIES = [
   'Valuation & Analysis',
@@ -59,7 +60,6 @@ const AdminBlogEditor = () => {
   const [activeTab, setActiveTab] = useState('write') // 'write' | 'preview'
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(isEditMode)
 
-  const textareaRef = useRef(null)
   const fileInputRef = useRef(null)
 
   // Fetch article if in edit mode
@@ -148,26 +148,7 @@ const AdminBlogEditor = () => {
     }
   }
 
-  // Helper to insert HTML snippets at cursor position in textarea
-  const insertHtmlSnippet = (snippet) => {
-    const textarea = textareaRef.current
-    if (!textarea) {
-      setForm((prev) => ({ ...prev, contentHtml: prev.contentHtml + '\n' + snippet }))
-      return
-    }
 
-    const start = textarea.selectionStart
-    const end = textarea.selectionEnd
-    const text = form.contentHtml
-    const newText = text.substring(0, start) + snippet + text.substring(end)
-
-    setForm((prev) => ({ ...prev, contentHtml: newText }))
-
-    setTimeout(() => {
-      textarea.focus()
-      textarea.setSelectionRange(start + snippet.length, start + snippet.length)
-    }, 50)
-  }
 
   // Form submission
   const handleSubmit = async (e) => {
@@ -530,7 +511,7 @@ const AdminBlogEditor = () => {
           </div>
         </div>
 
-        {/* Content Section (with Tabs & Snippet Toolbar) */}
+        {/* Content Section (with Tabs & TipTap Rich Editor) */}
         <div className="dashboard-content-card">
           <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
             <div style={{ display: 'flex', gap: '0.25rem' }}>
@@ -539,7 +520,7 @@ const AdminBlogEditor = () => {
                 className={`chip ${activeTab === 'write' ? 'chip-active' : ''}`}
                 onClick={() => setActiveTab('write')}
               >
-                ✏️ HTML Editor
+                ✏️ Rich Article Editor
               </button>
               <button
                 type="button"
@@ -549,74 +530,17 @@ const AdminBlogEditor = () => {
                 👁 Live Article Preview
               </button>
             </div>
-
-            {/* Quick HTML Snippet Toolbar */}
-            {activeTab === 'write' && (
-              <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap' }}>
-                <button
-                  type="button"
-                  className="secondary-btn"
-                  style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
-                  onClick={() => insertHtmlSnippet('<div class="insight-lead">\n  Your lead introductory paragraph here...\n</div>\n')}
-                >
-                  + Lead Intro
-                </button>
-                <button
-                  type="button"
-                  className="secondary-btn"
-                  style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
-                  onClick={() => insertHtmlSnippet('<div class="insight-callout">\n  <h4>Key Takeaways</h4>\n  <ul>\n    <li><strong>Point 1:</strong> Description here.</li>\n    <li><strong>Point 2:</strong> Description here.</li>\n  </ul>\n</div>\n')}
-                >
-                  + Callout Box
-                </button>
-                <button
-                  type="button"
-                  className="secondary-btn"
-                  style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
-                  onClick={() => insertHtmlSnippet('<h2>1. Section Title Here</h2>\n<p>Your analysis text here...</p>\n')}
-                >
-                  + Heading & Para
-                </button>
-                <button
-                  type="button"
-                  className="secondary-btn"
-                  style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
-                  onClick={() => insertHtmlSnippet('<div class="insight-table-wrap">\n  <table class="insight-table">\n    <thead>\n      <tr>\n        <th>Metric</th>\n        <th>Company A</th>\n        <th>Company B</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr>\n        <td><strong>Valuation Multiple</strong></td>\n        <td>₹10,000 Cr</td>\n        <td>₹15,000 Cr</td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n')}
-                >
-                  + Comparison Table
-                </button>
-                <button
-                  type="button"
-                  className="secondary-btn"
-                  style={{ padding: '0.25rem 0.5rem', fontSize: '0.75rem' }}
-                  onClick={() => insertHtmlSnippet('<blockquote>\n  "A noteworthy quote or market perspective."\n</blockquote>\n')}
-                >
-                  + Quote
-                </button>
-              </div>
-            )}
+            <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+              MS Word-like WYSIWYG editing + &lt;/&gt; HTML switch
+            </div>
           </div>
 
           <div className="card-body" style={{ padding: '1rem' }}>
             {activeTab === 'write' ? (
-              <div>
-                <textarea
-                  ref={textareaRef}
-                  value={form.contentHtml}
-                  onChange={(e) => setForm({ ...form, contentHtml: e.target.value })}
-                  placeholder="Write or paste your article content in HTML format..."
-                  rows={20}
-                  className="contact-form-textarea"
-                  style={{
-                    fontFamily: 'Consolas, Monaco, "Courier New", monospace',
-                    fontSize: '0.9rem',
-                    lineHeight: '1.5',
-                    minHeight: '450px',
-                    width: '100%'
-                  }}
-                  required
-                />
-              </div>
+              <TipTapEditor
+                content={form.contentHtml}
+                onChange={(html) => setForm((prev) => ({ ...prev, contentHtml: html }))}
+              />
             ) : (
               <div
                 style={{
