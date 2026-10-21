@@ -11,6 +11,7 @@ backend/.env
 # Build outputs
 dist/
 build/
+frontend/dist/
 
 # Uploads
 backend/uploads/*

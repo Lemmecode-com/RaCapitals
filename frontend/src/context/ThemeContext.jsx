@@ -13,12 +13,7 @@ const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setThemeState] = useState(() => {
-    if (typeof window === 'undefined') return DEFAULT_THEME
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === 'espresso') return 'evergreen'
-    return THEMES.includes(stored) ? stored : DEFAULT_THEME
-  })
+  const [theme, setThemeState] = useState(DEFAULT_THEME)
 
   const [showOverlay, setShowOverlay] = useState(false)
 

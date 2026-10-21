@@ -47,6 +47,13 @@ const AdminSidebar = ({ isOpen = false, onNavigate }) => {
          >
            Events
          </NavLink>
+         <NavLink
+           to="/admin/blogs"
+           className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
+           onClick={handleClick}
+         >
+           Market Insights
+         </NavLink>
       </nav>
     </aside>
   )

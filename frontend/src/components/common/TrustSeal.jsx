@@ -1,8 +1,7 @@
 import { useTheme } from '../../context/ThemeContext'
 
 const TrustSeal = ({ size = 280, showSubText = true, showRingText = false, className = '' }) => {
-  const { theme } = useTheme()
-  const isSpinning = theme === 'sage-editorial' || theme === 'black'
+  const isSpinning = false
   const numberFontSize = size <= 48 ? Math.round(size * 0.42) : 64
   const subFontSize = size <= 48 ? Math.round(size * 0.09) : 10
   const numberYOffset = size <= 48 ? Math.round(size * 0.30) : 0

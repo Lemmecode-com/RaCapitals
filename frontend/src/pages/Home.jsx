@@ -176,6 +176,7 @@ const Home = () => {
   const [pmOpen, setPmOpen] = useState(null)
   const [drhpCompanies, setDrhpCompanies] = useState([])
   const [events, setEvents] = useState([])
+  const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
     let cancelled = false
@@ -200,18 +201,25 @@ const Home = () => {
     let cancelled = false
     const load = async () => {
       try {
-        const [drhpRes, eventsRes] = await Promise.all([
+        const [drhpRes, eventsRes, blogsRes] = await Promise.all([
           api.get('/companies/drhp-filed'),
-          api.get('/events')
+          api.get('/events'),
+          api.get('/blogs', { params: { limit: 3 } })
         ])
         if (!cancelled) {
           setDrhpCompanies(drhpRes.data || [])
           setEvents(eventsRes.data || [])
+          if (Array.isArray(blogsRes.data) && blogsRes.data.length > 0) {
+            setBlogs(blogsRes.data)
+          } else {
+            setBlogs(MOCK_BLOGS.slice(0, 3))
+          }
         }
       } catch {
         if (!cancelled) {
           setDrhpCompanies([])
           setEvents([])
+          setBlogs(MOCK_BLOGS.slice(0, 3))
         }
       }
     }
@@ -546,22 +554,25 @@ const Home = () => {
             <Link to="/insights" className="home-marquee-cta">View all insights →</Link>
           </div>
           <div className="home-insights-grid">
-            {MOCK_BLOGS.slice(0, 3).map((blog) => (
-              <article key={blog.id} className="home-insight-card">
-                <div className="home-insight-badge-row">
-                  <span className="home-insight-tag">{blog.category}</span>
-                  <span className="home-insight-time">{blog.readTime}</span>
-                </div>
-                <h3 className="home-insight-title">
-                  <Link to={`/insights/${blog.slug}`}>{blog.title}</Link>
-                </h3>
-                <p className="home-insight-excerpt">{blog.excerpt}</p>
-                <div className="home-insight-footer">
-                  <span className="home-insight-author">{blog.author}</span>
-                  <Link to={`/insights/${blog.slug}`} className="home-insight-link">Read analysis →</Link>
-                </div>
-              </article>
-            ))}
+            {(blogs.length > 0 ? blogs : MOCK_BLOGS.slice(0, 3)).map((blog) => {
+              const blogKey = blog._id || blog.id || blog.slug
+              return (
+                <article key={blogKey} className="home-insight-card">
+                  <div className="home-insight-badge-row">
+                    <span className="home-insight-tag">{blog.category}</span>
+                    <span className="home-insight-time">{blog.readTime || '5 min read'}</span>
+                  </div>
+                  <h3 className="home-insight-title">
+                    <Link to={`/insights/${blog.slug}`}>{blog.title}</Link>
+                  </h3>
+                  <p className="home-insight-excerpt">{blog.excerpt}</p>
+                  <div className="home-insight-footer">
+                    <span className="home-insight-author">{blog.author || 'RA Research Desk'}</span>
+                    <Link to={`/insights/${blog.slug}`} className="home-insight-link">Read analysis →</Link>
+                  </div>
+                </article>
+              )
+            })}
           </div>
         </section>
 

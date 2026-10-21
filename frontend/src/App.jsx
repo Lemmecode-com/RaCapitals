@@ -11,6 +11,9 @@ import AdminListings from './pages/admin/AdminListings'
 import AdminCompanyDetail from './pages/admin/AdminCompanyDetail'
 import AdminEvents from './pages/admin/AdminEvents'
 import AdminContacts from './pages/admin/AdminContacts'
+import AdminBlogs from './pages/admin/AdminBlogs'
+import AdminBlogEditor from './pages/admin/AdminBlogEditor'
+import AdminBlogDetail from './pages/admin/AdminBlogDetail'
 import Disclaimer from './pages/legal/Disclaimer'
 import Terms from './pages/legal/Terms'
 import Privacy from './pages/legal/Privacy'
@@ -99,6 +102,46 @@ function App() {
             <ProtectedRoute>
               <AdminLayout>
                 <AdminEvents />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/blogs"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminBlogs />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/blogs/new"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminBlogEditor />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/blogs/edit/:id"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminBlogEditor />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/blogs/:id"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminBlogDetail />
               </AdminLayout>
             </ProtectedRoute>
           }

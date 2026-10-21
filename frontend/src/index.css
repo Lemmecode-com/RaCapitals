@@ -65,153 +65,8 @@
   --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
-[data-theme="sage-editorial"] {
-  --page-bg: #F4F1EA;
-  --page-bg-rgb: 244, 241, 234;
-  --card-bg: #EDEEE6;
-  --surface-2: #DCDED3;
-  --surface-3: #C8D0C5;
-  --surface-4: #B8C5B4;
-  --page-text: #2E3B2F;
-  --text-soft: #6E7A6A;
-  --text-faint: #8A9A88;
-  --error-fg: #A14A3D;
-  --brass: #7A8B6F;
-  --brass-rgb: 122, 139, 111;
-  --rust: #A14A3D;
-  --rust-rgb: 161, 74, 61;
-  --muted: #6E7A6A;
-  --ink: #2E3B2F;
-  --ink-soft: #6E7A6A;
-  --ink-rgb: 46, 59, 47;
-  --paper: #EDEEE6;
-  --paper-2: #DCDED3;
-  --paper-3: #C8D0C5;
-  --white: #FFFFFF;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-display-style: normal;
-  --font-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-[data-theme="forest-ledger"] {
-  --page-bg: #EEF0EA;
-  --page-bg-rgb: 238, 240, 234;
-  --card-bg: #FFFFFF;
-  --surface-2: #D9E0DA;
-  --surface-3: #C5D0C6;
-  --surface-4: #B2C0AD;
-  --page-text: #12241C;
-  --text-soft: #3A4A42;
-  --text-faint: #5B6B5F;
-  --error-fg: #C1440E;
-  --brass: #B08D57;
-  --brass-rgb: 176, 141, 87;
-  --rust: #A14A3D;
-  --rust-rgb: 161, 74, 61;
-  --muted: #5B6B5F;
-  --ink: #12241C;
-  --ink-soft: #3A4A42;
-  --ink-rgb: 18, 36, 28;
-  --paper: #FFFFFF;
-  --paper-2: #D9E0DA;
-  --paper-3: #C5D0C6;
-  --white: #FFFFFF;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-display-style: normal;
-  --font-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-[data-theme="white"] {
-  --page-bg: #FFFFFF;
-  --page-bg-rgb: 255, 255, 255;
-  --card-bg: #F7F7F8;
-  --surface-2: #E5E7EB;
-  --surface-3: #D1D5DB;
-  --surface-4: #BDC0C7;
-  --page-text: #1A2B3C;
-  --text-soft: #4B5561;
-  --text-faint: #6B7280;
-  --error-fg: #DC2626;
-  --brass: #B08D57;
-  --brass-rgb: 176, 141, 87;
-  --rust: #A14A3D;
-  --rust-rgb: 161, 74, 61;
-  --muted: #5C6B7A;
-  --ink: #1A2B3C;
-  --ink-soft: #24384D;
-  --ink-rgb: 26, 43, 60;
-  --paper: #F7F7F8;
-  --paper-2: #E5E7EB;
-  --paper-3: #D1D5DB;
-  --white: #FFFFFF;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-display-style: normal;
-  --font-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-[data-theme="black"] {
-  --page-bg: #0F1B2D;
-  --page-bg-rgb: 15, 27, 45;
-  --card-bg: #1A2B3C;
-  --surface-2: #142340;
-  --surface-3: #0A1623;
-  --surface-4: #243955;
-  --page-text: #ECEEF1;
-  --text-soft: #A7B3C2;
-  --text-faint: #8A97A3;
-  --error-fg: #E2A89C;
-  --brass: #B08D57;
-  --brass-rgb: 176, 141, 87;
-  --rust: #A14A3D;
-  --rust-rgb: 161, 74, 61;
-  --muted: #8A97A3;
-  --ink: #ECEEF1;
-  --ink-soft: #A7B3C2;
-  --ink-rgb: 15, 27, 45;
-  --paper: #1A2B3C;
-  --paper-2: #142340;
-  --paper-3: #0A1623;
-  --white: #FFFFFF;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-display-style: normal;
-  --font-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
-[data-theme="evergreen"] {
-  --page-bg: #11241B;
-  --page-bg-rgb: 17, 36, 27;
-  --card-bg: #1A3327;
-  --surface-2: #152B30;
-  --surface-3: #0C1D14;
-  --surface-4: #1C3327;
-  --page-text: #ECEEF1;
-  --text-soft: #C6D1CA;
-  --text-faint: #9BAE9D;
-  --error-fg: #EA7B5A;
-  --brass: #B08D57;
-  --brass-rgb: 176, 141, 87;
-  --rust: #A14A3D;
-  --rust-rgb: 161, 74, 61;
-  --muted: #8FA396;
-  --ink: #ECEEF1;
-  --ink-soft: #C6D1CA;
-  --ink-rgb: 17, 36, 27;
-  --paper: #1A3327;
-  --paper-2: #152B30;
-  --paper-3: #0C1D14;
-  --white: #FFFFFF;
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-display-style: normal;
-  --font-body: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-}
-
 /* ============================================================
-   Theme-aware base element styling
+   Theme-aware base element styling (Indigo Light)
    ============================================================ */
 body {
   font-family: var(--font-body);
@@ -387,15 +242,6 @@ a:hover {
   display: block;
 }
 
-/* Dark theme logo background chip for Navbar */
-[data-theme="black"] .wordmark img,
-[data-theme="evergreen"] .wordmark img,
-[data-theme="forest-ledger"] .wordmark img {
-  background: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
-}
-
 .brand-logo {
   width: 36px;
   height: 36px;
@@ -463,15 +309,6 @@ a:hover {
   height: 90px;
   width: auto;
   flex-shrink: 0;
-}
-
-/* Dark theme logo background chip for Footer */
-[data-theme="black"] .footer-logo,
-[data-theme="evergreen"] .footer-logo,
-[data-theme="forest-ledger"] .footer-logo {
-  background: #fff;
-  padding: 4px 8px;
-  border-radius: 6px;
 }
 
 .footer-brand-name {
@@ -6522,7 +6359,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
-   TrustSeal outer ring rotation — sage-editorial theme only
+   TrustSeal outer ring rotation
    ============================================================ */
 @keyframes sealRotate {
   from { transform: rotate(0deg); }
@@ -6746,7 +6583,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
-   Animated headline — word-by-word fade + gold shimmer (evergreen only)
+   Animated headline — word-by-word fade + gold shimmer
    ============================================================ */
 .animated-word {
   display: inline-block;

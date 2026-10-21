@@ -95,6 +95,11 @@ const seedDatabase = async () => {
     await ContactSubmission.insertMany(contactSubmissions)
     console.log(`Successfully seeded ${contactSubmissions.length} contact submissions!`)
 
+    // 5. Seed Blogs
+    const { seedBlogs } = await import('./seedBlogs.js')
+    const blogCount = await seedBlogs()
+    console.log(`Successfully seeded ${blogCount} blog articles!`)
+
     console.log('Database seeded successfully!')
     process.exit(0)
   } catch (error) {

@@ -3,20 +3,10 @@ import { useTheme } from '../../context/ThemeContext'
 
 const THEME_COLORS = {
   'indigo-light': { pageBg: '#F5F5FA', brass: '#4F46E5' },
-  'sage-editorial': { pageBg: '#F4F1EA', brass: '#7A8B6F' },
-  'forest-ledger': { pageBg: '#EEF0EA', brass: '#B08D57' },
-  'white': { pageBg: '#FFFFFF', brass: '#B08D57' },
-  'black': { pageBg: '#0F1B2D', brass: '#B08D57' },
-  'evergreen': { pageBg: '#11241B', brass: '#B08D57' },
 }
 
 const THEME_OPTIONS = [
   { name: 'indigo-light', label: 'Indigo' },
-  { name: 'sage-editorial', label: 'Sage' },
-  { name: 'forest-ledger', label: 'Forest' },
-  { name: 'white', label: 'White' },
-  { name: 'black', label: 'Black' },
-  { name: 'evergreen', label: 'Evergreen' },
 ]
 
 const ThemeToggle = () => {

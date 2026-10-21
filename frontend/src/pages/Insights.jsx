@@ -1,12 +1,23 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import api from '../services/api'
 import { MOCK_BLOGS, BLOG_CATEGORIES } from '../data/mockBlogs'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
-import { formatShortDate } from '../utils/format'
+import { formatShortDate, apiBaseWithoutApi } from '../utils/format'
+
+const resolveCoverSrc = (coverImage) => {
+  if (!coverImage) return ''
+  if (coverImage.startsWith('http://') || coverImage.startsWith('https://')) {
+    return coverImage
+  }
+  return `${apiBaseWithoutApi()}${coverImage}`
+}
 
 const Insights = () => {
+  const [blogs, setBlogs] = useState([])
+  const [loading, setLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('All')
   const [searchQuery, setSearchQuery] = useState('')
 
@@ -14,40 +25,72 @@ const Insights = () => {
     document.title = 'Market Insights & Pre-IPO Research | Taurus Magnus'
   }, [])
 
+  useEffect(() => {
+    let isMounted = true
+    setLoading(true)
+    api
+      .get('/blogs')
+      .then((res) => {
+        if (!isMounted) return
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setBlogs(res.data)
+        } else {
+          setBlogs(MOCK_BLOGS)
+        }
+      })
+      .catch((err) => {
+        console.warn('Failed to load insights from API, falling back to mock:', err)
+        if (isMounted) setBlogs(MOCK_BLOGS)
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false)
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
   const filteredBlogs = useMemo(() => {
-    return MOCK_BLOGS.filter((blog) => {
+    return blogs.filter((blog) => {
       const matchesCategory =
         selectedCategory === 'All' || blog.category === selectedCategory
 
+      const title = blog.title || ''
+      const excerpt = blog.excerpt || ''
+      const tags = Array.isArray(blog.tags) ? blog.tags : []
+      const q = searchQuery.toLowerCase()
+
       const matchesSearch =
         !searchQuery.trim() ||
-        blog.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        blog.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        blog.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()))
+        title.toLowerCase().includes(q) ||
+        excerpt.toLowerCase().includes(q) ||
+        tags.some((t) => t.toLowerCase().includes(q))
 
       return matchesCategory && matchesSearch
     })
-  }, [selectedCategory, searchQuery])
+  }, [blogs, selectedCategory, searchQuery])
 
-  // Featured blog (swiggy valuation analysis)
+  // Featured blog (featured: true or fallback to first)
   const featuredBlog = useMemo(() => {
     if (selectedCategory !== 'All' || searchQuery.trim()) return null
-    return MOCK_BLOGS.find((b) => b.featured) || MOCK_BLOGS[0]
-  }, [selectedCategory, searchQuery])
+    return blogs.find((b) => b.featured) || blogs[0] || null
+  }, [blogs, selectedCategory, searchQuery])
 
-  // Remaining articles
+  // Remaining articles for the grid
   const gridBlogs = useMemo(() => {
     if (!featuredBlog) return filteredBlogs
-    return filteredBlogs.filter((b) => b.id !== featuredBlog.id)
+    const featuredKey = featuredBlog._id || featuredBlog.id || featuredBlog.slug
+    return filteredBlogs.filter((b) => (b._id || b.id || b.slug) !== featuredKey)
   }, [filteredBlogs, featuredBlog])
 
   const categoryCounts = useMemo(() => {
-    const counts = { All: MOCK_BLOGS.length }
-    MOCK_BLOGS.forEach((b) => {
+    const counts = { All: blogs.length }
+    blogs.forEach((b) => {
       counts[b.category] = (counts[b.category] || 0) + 1
     })
     return counts
-  }, [])
+  }, [blogs])
 
   const handleWhatsAppDesk = () => {
     const number = import.meta.env.VITE_WHATSAPP_NUMBER || '919999999999'
@@ -112,133 +155,145 @@ const Insights = () => {
           </nav>
         </header>
 
-        {/* Featured Spotlight Banner (when on All and no search) */}
-        {featuredBlog && (
-          <section className="insights-featured-section">
-            <div className="insights-featured-badge-label">
-              <span>★</span> FEATURED DEEP DIVE
-            </div>
-            <article className="insights-featured-card">
-              <div className="insights-featured-image-wrap">
-                <img
-                  src={featuredBlog.coverImage}
-                  alt={featuredBlog.title}
-                  className="insights-featured-img"
-                  loading="lazy"
-                />
-                <div className="insights-featured-overlay-pill">
-                  {featuredBlog.category}
+        {loading ? (
+          <div style={{ textAlign: 'center', padding: '3rem 1rem', color: 'var(--text-muted)' }}>
+            <div style={{ fontSize: '1.25rem', marginBottom: '0.5rem' }}>⏳ Loading market insights…</div>
+            <p style={{ fontSize: '0.9rem' }}>Fetching latest research & valuation models</p>
+          </div>
+        ) : (
+          <>
+            {/* Featured Spotlight Banner (when on All and no search) */}
+            {featuredBlog && (
+              <section className="insights-featured-section">
+                <div className="insights-featured-badge-label">
+                  <span>★</span> FEATURED DEEP DIVE
                 </div>
-              </div>
-
-              <div className="insights-featured-body">
-                <div className="insights-meta-row">
-                  <span className="insights-meta-tag">{featuredBlog.category}</span>
-                  <span className="insights-meta-divider">•</span>
-                  <span className="insights-meta-time">{featuredBlog.readTime}</span>
-                  <span className="insights-meta-divider">•</span>
-                  <span className="insights-meta-date">{formatShortDate(featuredBlog.publishedDate)}</span>
-                </div>
-
-                <h2 className="insights-featured-title">
-                  <Link to={`/insights/${featuredBlog.slug}`}>
-                    {featuredBlog.title}
-                  </Link>
-                </h2>
-
-                <p className="insights-featured-excerpt">
-                  {featuredBlog.excerpt}
-                </p>
-
-                <div className="insights-featured-footer">
-                  <div className="insights-author-info">
-                    <div className="insights-author-avatar">RA</div>
-                    <div>
-                      <div className="insights-author-name">{featuredBlog.author}</div>
-                      <div className="insights-author-role">{featuredBlog.authorRole}</div>
+                <article className="insights-featured-card">
+                  <div className="insights-featured-image-wrap">
+                    <img
+                      src={resolveCoverSrc(featuredBlog.coverImage)}
+                      alt={featuredBlog.title}
+                      className="insights-featured-img"
+                      loading="lazy"
+                    />
+                    <div className="insights-featured-overlay-pill">
+                      {featuredBlog.category}
                     </div>
                   </div>
 
-                  <Link to={`/insights/${featuredBlog.slug}`} className="insights-read-btn">
-                    Read Analysis <span>→</span>
-                  </Link>
-                </div>
-              </div>
-            </article>
-          </section>
-        )}
-
-        {/* Articles Grid */}
-        <section className="insights-grid-section">
-          {filteredBlogs.length === 0 ? (
-            <div className="insights-empty-state">
-              <div className="insights-empty-icon">🔍</div>
-              <h3>No insights found</h3>
-              <p>We couldn't find any articles matching your search query "{searchQuery}".</p>
-              <button
-                type="button"
-                className="insights-reset-btn"
-                onClick={() => {
-                  setSearchQuery('')
-                  setSelectedCategory('All')
-                }}
-              >
-                Reset Filters
-              </button>
-            </div>
-          ) : (
-            <div className="insights-cards-grid">
-              {gridBlogs.map((blog) => (
-                <article key={blog.id} className="insight-card">
-                  <Link to={`/insights/${blog.slug}`} className="insight-card-media-link">
-                    <div className="insight-card-img-wrap">
-                      <img
-                        src={blog.coverImage}
-                        alt={blog.title}
-                        className="insight-card-img"
-                        loading="lazy"
-                      />
-                      <span className="insight-card-cat-badge">{blog.category}</span>
-                    </div>
-                  </Link>
-
-                  <div className="insight-card-content">
-                    <div className="insight-card-meta">
-                      <span className="insight-card-time">{blog.readTime}</span>
+                  <div className="insights-featured-body">
+                    <div className="insights-meta-row">
+                      <span className="insights-meta-tag">{featuredBlog.category}</span>
                       <span className="insights-meta-divider">•</span>
-                      <span className="insight-card-date">{formatShortDate(blog.publishedDate)}</span>
+                      <span className="insights-meta-time">{featuredBlog.readTime}</span>
+                      <span className="insights-meta-divider">•</span>
+                      <span className="insights-meta-date">{formatShortDate(featuredBlog.publishedDate)}</span>
                     </div>
 
-                    <h3 className="insight-card-title">
-                      <Link to={`/insights/${blog.slug}`}>
-                        {blog.title}
+                    <h2 className="insights-featured-title">
+                      <Link to={`/insights/${featuredBlog.slug}`}>
+                        {featuredBlog.title}
                       </Link>
-                    </h3>
+                    </h2>
 
-                    <p className="insight-card-excerpt">
-                      {blog.excerpt}
+                    <p className="insights-featured-excerpt">
+                      {featuredBlog.excerpt}
                     </p>
 
-                    <div className="insight-card-tags">
-                      {blog.tags.slice(0, 3).map((tag) => (
-                        <span key={tag} className="insight-tag-pill">#{tag}</span>
-                      ))}
-                    </div>
-
-                    <div className="insight-card-footer">
-                      <div className="insight-card-author">
-                        <span className="insight-author-name">{blog.author}</span>
+                    <div className="insights-featured-footer">
+                      <div className="insights-author-info">
+                        <div className="insights-author-avatar">RA</div>
+                        <div>
+                          <div className="insights-author-name">{featuredBlog.author}</div>
+                          <div className="insights-author-role">{featuredBlog.authorRole}</div>
+                        </div>
                       </div>
-                      <Link to={`/insights/${blog.slug}`} className="insight-card-link">
-                        Read <span>→</span>
+
+                      <Link to={`/insights/${featuredBlog.slug}`} className="insights-read-btn">
+                        Read Analysis <span>→</span>
                       </Link>
                     </div>
                   </div>
                 </article>
-              ))}
-            </div>
-          )}
-        </section>
+              </section>
+            )}
+
+            {/* Articles Grid */}
+            <section className="insights-grid-section">
+              {filteredBlogs.length === 0 ? (
+                <div className="insights-empty-state">
+                  <div className="insights-empty-icon">🔍</div>
+                  <h3>No insights found</h3>
+                  <p>We couldn't find any articles matching your search query "{searchQuery}".</p>
+                  <button
+                    type="button"
+                    className="insights-reset-btn"
+                    onClick={() => {
+                      setSearchQuery('')
+                      setSelectedCategory('All')
+                    }}
+                  >
+                    Reset Filters
+                  </button>
+                </div>
+              ) : (
+                <div className="insights-cards-grid">
+                  {gridBlogs.map((blog) => {
+                    const blogKey = blog._id || blog.id || blog.slug
+                    return (
+                      <article key={blogKey} className="insight-card">
+                        <Link to={`/insights/${blog.slug}`} className="insight-card-media-link">
+                          <div className="insight-card-img-wrap">
+                            <img
+                              src={resolveCoverSrc(blog.coverImage)}
+                              alt={blog.title}
+                              className="insight-card-img"
+                              loading="lazy"
+                            />
+                            <span className="insight-card-cat-badge">{blog.category}</span>
+                          </div>
+                        </Link>
+
+                        <div className="insight-card-content">
+                          <div className="insight-card-meta">
+                            <span className="insight-card-time">{blog.readTime}</span>
+                            <span className="insights-meta-divider">•</span>
+                            <span className="insight-card-date">{formatShortDate(blog.publishedDate)}</span>
+                          </div>
+
+                          <h3 className="insight-card-title">
+                            <Link to={`/insights/${blog.slug}`}>
+                              {blog.title}
+                            </Link>
+                          </h3>
+
+                          <p className="insight-card-excerpt">
+                            {blog.excerpt}
+                          </p>
+
+                          <div className="insight-card-tags">
+                            {(blog.tags || []).slice(0, 3).map((tag) => (
+                              <span key={tag} className="insight-tag-pill">#{tag}</span>
+                            ))}
+                          </div>
+
+                          <div className="insight-card-footer">
+                            <div className="insight-card-author">
+                              <span className="insight-author-name">{blog.author}</span>
+                            </div>
+                            <Link to={`/insights/${blog.slug}`} className="insight-card-link">
+                              Read <span>→</span>
+                            </Link>
+                          </div>
+                        </div>
+                      </article>
+                    )
+                  })}
+                </div>
+              )}
+            </section>
+          </>
+        )}
 
         {/* Advisory / WhatsApp Banner */}
         <section className="insights-advisory-banner">

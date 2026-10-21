@@ -1,36 +1,110 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, useParams, useNavigate } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
+import api from '../services/api'
 import { MOCK_BLOGS } from '../data/mockBlogs'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
-import { formatShortDate } from '../utils/format'
+import { formatShortDate, apiBaseWithoutApi } from '../utils/format'
+
+const resolveCoverSrc = (coverImage) => {
+  if (!coverImage) return ''
+  if (coverImage.startsWith('http://') || coverImage.startsWith('https://')) {
+    return coverImage
+  }
+  return `${apiBaseWithoutApi()}${coverImage}`
+}
 
 const InsightDetail = () => {
   const { slug } = useParams()
-  const navigate = useNavigate()
+  const [blog, setBlog] = useState(null)
+  const [allBlogs, setAllBlogs] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [notFound, setNotFound] = useState(false)
   const [copied, setCopied] = useState(false)
-
-  const blog = useMemo(() => {
-    return MOCK_BLOGS.find((b) => b.slug === slug)
-  }, [slug])
 
   useEffect(() => {
     window.scrollTo(0, 0)
+    let isMounted = true
+    setLoading(true)
+    setNotFound(false)
+
+    // Fetch the single article by slug
+    api
+      .get(`/blogs/${slug}`)
+      .then((res) => {
+        if (!isMounted) return
+        if (res.data) {
+          setBlog(res.data)
+        } else {
+          fallbackToMock()
+        }
+      })
+      .catch((err) => {
+        console.warn('API error fetching article by slug, trying fallback:', err)
+        fallbackToMock()
+      })
+      .finally(() => {
+        if (isMounted) setLoading(false)
+      })
+
+    const fallbackToMock = () => {
+      if (!isMounted) return
+      const foundInMock = MOCK_BLOGS.find((b) => b.slug === slug)
+      if (foundInMock) {
+        setBlog(foundInMock)
+      } else {
+        setNotFound(true)
+      }
+    }
+
+    return () => {
+      isMounted = false
+    }
+  }, [slug])
+
+  // Fetch all blogs for related articles matching
+  useEffect(() => {
+    let isMounted = true
+    api
+      .get('/blogs')
+      .then((res) => {
+        if (!isMounted) return
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          setAllBlogs(res.data)
+        } else {
+          setAllBlogs(MOCK_BLOGS)
+        }
+      })
+      .catch(() => {
+        if (isMounted) setAllBlogs(MOCK_BLOGS)
+      })
+
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  useEffect(() => {
     if (blog) {
       document.title = `${blog.title} | Taurus Magnus Insights`
-    } else {
+    } else if (notFound) {
       document.title = 'Insight Not Found | Taurus Magnus'
     }
-  }, [blog])
+  }, [blog, notFound])
 
   const relatedArticles = useMemo(() => {
     if (!blog) return []
+    const sourcePool = allBlogs.length > 0 ? allBlogs : MOCK_BLOGS
+
     if (blog.relatedSlugs && blog.relatedSlugs.length > 0) {
-      return MOCK_BLOGS.filter((b) => blog.relatedSlugs.includes(b.slug))
+      const matched = sourcePool.filter((b) => blog.relatedSlugs.includes(b.slug))
+      if (matched.length > 0) return matched
     }
-    return MOCK_BLOGS.filter((b) => b.id !== blog.id && b.category === blog.category).slice(0, 2)
-  }, [blog])
+    return sourcePool
+      .filter((b) => b.slug !== blog.slug && b.category === blog.category)
+      .slice(0, 2)
+  }, [blog, allBlogs])
 
   const handleShare = () => {
     if (navigator.clipboard) {
@@ -52,7 +126,23 @@ const InsightDetail = () => {
     window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank', 'noopener,noreferrer')
   }
 
-  if (!blog) {
+  if (loading) {
+    return (
+      <div className="page-wrap">
+        <Navbar />
+        <ComplianceRibbon />
+        <main className="page-main insight-detail-page">
+          <div style={{ textAlign: 'center', padding: '5rem 1rem', color: 'var(--text-muted)' }}>
+            <div style={{ fontSize: '1.5rem', marginBottom: '0.75rem' }}>⏳ Loading article…</div>
+            <p style={{ fontSize: '0.95rem' }}>Preparing full research report & financial disclosures</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
+
+  if (notFound || !blog) {
     return (
       <div className="page-wrap">
         <Navbar />
@@ -68,6 +158,12 @@ const InsightDetail = () => {
       </div>
     )
   }
+
+  const authorInitials = (blog.author || 'RA')
+    .split(' ')
+    .map((w) => w[0])
+    .join('')
+    .slice(0, 2)
 
   return (
     <div className="page-wrap">
@@ -94,21 +190,21 @@ const InsightDetail = () => {
           <header className="insight-article-header">
             <div className="insight-article-badge-row">
               <span className="insight-cat-tag">{blog.category}</span>
-              <span className="insight-read-badge">⏱ {blog.readTime}</span>
+              <span className="insight-read-badge">⏱ {blog.readTime || '5 min read'}</span>
               <span className="insight-date-badge">📅 {formatShortDate(blog.publishedDate)}</span>
             </div>
 
             <h1 className="insight-article-title">{blog.title}</h1>
-            <p className="insight-article-subtitle">{blog.subtitle}</p>
+            {blog.subtitle && <p className="insight-article-subtitle">{blog.subtitle}</p>}
 
             <div className="insight-author-bar">
               <div className="insight-author-left">
                 <div className="insight-author-avatar-large">
-                  {blog.author.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                  {authorInitials}
                 </div>
                 <div>
-                  <div className="insight-author-fullname">{blog.author}</div>
-                  <div className="insight-author-role-sub">{blog.authorRole}</div>
+                  <div className="insight-author-fullname">{blog.author || 'RA Research Desk'}</div>
+                  <div className="insight-author-role-sub">{blog.authorRole || 'Equity & Private Markets Analyst'}</div>
                 </div>
               </div>
 
@@ -134,16 +230,18 @@ const InsightDetail = () => {
           </header>
 
           {/* Featured Cover Image */}
-          <div className="insight-cover-image-box">
-            <img
-              src={blog.coverImage}
-              alt={blog.title}
-              className="insight-cover-img"
-            />
-            <div className="insight-cover-caption">
-              Source: Taurus Magnus Private Markets Intelligence & Financial Filings
+          {blog.coverImage && (
+            <div className="insight-cover-image-box">
+              <img
+                src={resolveCoverSrc(blog.coverImage)}
+                alt={blog.title}
+                className="insight-cover-img"
+              />
+              <div className="insight-cover-caption">
+                Source: Taurus Magnus Private Markets Intelligence & Financial Filings
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Article HTML Content */}
           <div
@@ -152,12 +250,14 @@ const InsightDetail = () => {
           />
 
           {/* Tags */}
-          <div className="insight-tags-row">
-            <span className="insight-tags-label">Topics:</span>
-            {blog.tags.map((t) => (
-              <span key={t} className="insight-tag-chip">#{t}</span>
-            ))}
-          </div>
+          {Array.isArray(blog.tags) && blog.tags.length > 0 && (
+            <div className="insight-tags-row">
+              <span className="insight-tags-label">Topics:</span>
+              {blog.tags.map((t) => (
+                <span key={t} className="insight-tag-chip">#{t}</span>
+              ))}
+            </div>
+          )}
 
           {/* High-Converting WhatsApp CTA Box */}
           <section className="insight-cta-box">
@@ -202,22 +302,25 @@ const InsightDetail = () => {
             </div>
 
             <div className="insight-related-grid">
-              {relatedArticles.map((rel) => (
-                <div key={rel.id} className="insight-related-card">
-                  <div className="insight-related-meta">
-                    <span className="insight-related-cat">{rel.category}</span>
-                    <span>•</span>
-                    <span>{rel.readTime}</span>
+              {relatedArticles.map((rel) => {
+                const relKey = rel._id || rel.id || rel.slug
+                return (
+                  <div key={relKey} className="insight-related-card">
+                    <div className="insight-related-meta">
+                      <span className="insight-related-cat">{rel.category}</span>
+                      <span>•</span>
+                      <span>{rel.readTime || '5 min read'}</span>
+                    </div>
+                    <h4 className="insight-related-title">
+                      <Link to={`/insights/${rel.slug}`}>{rel.title}</Link>
+                    </h4>
+                    <p className="insight-related-excerpt">{rel.excerpt}</p>
+                    <Link to={`/insights/${rel.slug}`} className="insight-related-link">
+                      Read article <span>→</span>
+                    </Link>
                   </div>
-                  <h4 className="insight-related-title">
-                    <Link to={`/insights/${rel.slug}`}>{rel.title}</Link>
-                  </h4>
-                  <p className="insight-related-excerpt">{rel.excerpt}</p>
-                  <Link to={`/insights/${rel.slug}`} className="insight-related-link">
-                    Read article <span>→</span>
-                  </Link>
-                </div>
-              ))}
+                )
+              })}
             </div>
           </section>
         )}
