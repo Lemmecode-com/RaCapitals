@@ -58,7 +58,6 @@ const AdminBlogEditor = () => {
   const [uploadingCover, setUploadingCover] = useState(false)
   const [error, setError] = useState('')
   const [activeTab, setActiveTab] = useState('write') // 'write' | 'preview'
-  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(isEditMode)
 
   const fileInputRef = useRef(null)
 
@@ -97,20 +96,14 @@ const AdminBlogEditor = () => {
       })
   }, [id, isEditMode])
 
-  // Handle title change & auto-generate slug if not manually edited
+  // Handle title change & auto-generate slug
   const handleTitleChange = (e) => {
     const newTitle = e.target.value
     setForm((prev) => ({
       ...prev,
       title: newTitle,
-      slug: !isSlugManuallyEdited ? slugify(newTitle) : prev.slug
+      slug: slugify(newTitle)
     }))
-  }
-
-  // Handle manual slug editing
-  const handleSlugChange = (e) => {
-    setIsSlugManuallyEdited(true)
-    setForm((prev) => ({ ...prev, slug: slugify(e.target.value) }))
   }
 
   // Auto-calculate read time based on word count
@@ -171,11 +164,11 @@ const AdminBlogEditor = () => {
       ...form,
       title: form.title.trim(),
       slug: form.slug.trim() || slugify(form.title),
-      tags: form.tags
+      tags: (form.tags || '')
         .split(',')
         .map((t) => t.trim())
         .filter(Boolean),
-      relatedSlugs: form.relatedSlugs
+      relatedSlugs: (form.relatedSlugs || '')
         .split(',')
         .map((s) => s.trim())
         .filter(Boolean)
@@ -289,7 +282,7 @@ const AdminBlogEditor = () => {
                 onChange={handleTitleChange}
                 placeholder="e.g. Swiggy Pre-IPO Valuation Analysis: Quick Commerce Economics & DRHP Takeaways"
                 className="form-input"
-                style={{ fontSize: '1rem', fontWeight: 600 }}
+                style={{ fontSize: '1rem', fontWeight: form.title ? 600 : 400, fontFamily: 'var(--font-body)' }}
                 required
               />
             </label>
@@ -297,18 +290,20 @@ const AdminBlogEditor = () => {
             {/* Slug & Subtitle */}
             <div className="form-row">
               <label className="form-label" style={{ flex: 1 }}>
-                SEO Slug *
+                SEO Slug
                 <input
                   type="text"
                   value={form.slug}
-                  onChange={handleSlugChange}
-                  placeholder="e.g. swiggy-pre-ipo-valuation-analysis"
+                  readOnly
+                  placeholder="Auto-generated from title..."
                   className="form-input"
-                  required
+                  style={{
+                    cursor: 'not-allowed',
+                    opacity: 0.85,
+                    background: 'var(--surface-2)'
+                  }}
+                  tabIndex={-1}
                 />
-                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.25rem', display: 'block' }}>
-                  Live URL: <code>/insights/{form.slug || 'your-slug'}</code>
-                </span>
               </label>
 
               <label className="form-label" style={{ flex: 1 }}>
@@ -337,9 +332,9 @@ const AdminBlogEditor = () => {
               />
             </label>
 
-            {/* Excerpt */}
+            {/* Short Description */}
             <label className="form-label">
-              Short Excerpt (Grid Card Preview)
+              Short Description (Card Preview)
               <textarea
                 value={form.excerpt}
                 onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
@@ -384,19 +379,20 @@ const AdminBlogEditor = () => {
 
               <label className="form-label">
                 Read Time
-                <div style={{ display: 'flex', gap: '0.4rem' }}>
+                <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center' }}>
                   <input
                     type="text"
                     value={form.readTime}
                     onChange={(e) => setForm({ ...form, readTime: e.target.value })}
                     className="form-input"
+                    style={{ flex: 1, minWidth: 0 }}
                   />
                   <button
                     type="button"
                     onClick={handleCalculateReadTime}
                     className="secondary-btn"
                     title="Auto-calculate from word count"
-                    style={{ whiteSpace: 'nowrap', padding: '0 0.6rem', fontSize: '0.78rem' }}
+                    style={{ whiteSpace: 'nowrap', padding: '0.55rem 0.75rem', fontSize: '0.8rem', flexShrink: 0 }}
                   >
                     Auto
                   </button>
@@ -471,7 +467,7 @@ const AdminBlogEditor = () => {
               )}
             </div>
 
-            {/* Tags and Related Slugs */}
+            {/* Tags */}
             <div className="form-row">
               <label className="form-label" style={{ flex: 1 }}>
                 Tags (Comma-separated)
@@ -483,31 +479,7 @@ const AdminBlogEditor = () => {
                   className="form-input"
                 />
               </label>
-
-              <label className="form-label" style={{ flex: 1 }}>
-                Related Article Slugs (Comma-separated)
-                <input
-                  type="text"
-                  value={form.relatedSlugs}
-                  onChange={(e) => setForm({ ...form, relatedSlugs: e.target.value })}
-                  placeholder="e.g. how-unlisted-shares-transferred-demat, taxation-on-unlisted-shares-in-india"
-                  className="form-input"
-                />
-              </label>
             </div>
-
-            {/* Featured Spotlight Checkbox */}
-            <label style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', cursor: 'pointer', marginTop: '0.25rem' }}>
-              <input
-                type="checkbox"
-                checked={form.featured}
-                onChange={(e) => setForm({ ...form, featured: e.target.checked })}
-                style={{ width: '18px', height: '18px', cursor: 'pointer' }}
-              />
-              <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>
-                ★ Feature as Spotlight Deep Dive on Insights Homepage
-              </span>
-            </label>
           </div>
         </div>
 

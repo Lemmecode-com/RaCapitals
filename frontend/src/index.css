@@ -2622,7 +2622,7 @@ a:hover {
   padding: 0.55rem 0.7rem;
   border: 1px solid var(--paper-2);
   border-radius: 2px;
-  font-family: inherit;
+  font-family: var(--font-body);
   font-size: 0.95rem;
   color: var(--ink);
   background: var(--card-bg);
@@ -5518,11 +5518,18 @@ a:hover {
   background: var(--surface-2);
   border-color: rgba(var(--brass-rgb), 0.3);
   color: var(--page-text);
+  font-family: var(--font-body);
 }
 
 .admin-layout .search-input::placeholder,
-.admin-layout .form-input::placeholder {
-  color: var(--text-soft);
+.admin-layout .form-input::placeholder,
+.admin-layout .contact-form-textarea::placeholder,
+.admin-layout input::placeholder,
+.admin-layout textarea::placeholder {
+  color: var(--text-faint, #9ca3af) !important;
+  font-weight: 400 !important;
+  font-family: var(--font-body) !important;
+  opacity: 0.85;
 }
 
 .admin-layout .search-input:focus,

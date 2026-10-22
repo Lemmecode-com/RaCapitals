@@ -292,18 +292,6 @@ const AdminBlogDetail = () => {
             </div>
           </div>
 
-          <div>
-            <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, letterSpacing: '0.05em' }}>
-              Related Slugs
-            </div>
-            <div style={{ marginTop: '0.3rem', fontSize: '0.85rem' }}>
-              {Array.isArray(blog.relatedSlugs) && blog.relatedSlugs.length > 0 ? (
-                blog.relatedSlugs.join(', ')
-              ) : (
-                <span className="muted">—</span>
-              )}
-            </div>
-          </div>
         </div>
 
         {blog.subtitle && (
@@ -318,7 +306,7 @@ const AdminBlogDetail = () => {
         {blog.excerpt && (
           <div style={{ borderTop: '1px solid var(--border)', padding: '1rem 1.25rem' }}>
             <div style={{ fontSize: '0.75rem', textTransform: 'uppercase', color: 'var(--text-muted)', fontWeight: 600, marginBottom: '0.25rem' }}>
-              Excerpt (Card Preview)
+              Short Description (Card Preview)
             </div>
             <p style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>{blog.excerpt}</p>
           </div>
