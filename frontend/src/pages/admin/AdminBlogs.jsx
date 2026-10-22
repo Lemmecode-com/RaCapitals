@@ -157,7 +157,7 @@ const AdminBlogs = () => {
           className="search-input"
         />
 
-        <div className="sector-chips">
+        <div className="sector-chips blog-admin-chips">
           {BLOG_CATEGORIES.map((c) => (
             <button
               key={c}
@@ -170,20 +170,22 @@ const AdminBlogs = () => {
           ))}
         </div>
 
-        <select
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          className="form-input"
-          style={{ width: 'auto', padding: '0.4rem 0.75rem', height: '36px', borderRadius: '6px' }}
-        >
-          <option value="All">All Statuses</option>
-          <option value="Published">Published Only</option>
-          <option value="Draft">Drafts Only</option>
-        </select>
+        <div className="admin-controls-subrow">
+          <select
+            value={statusFilter}
+            onChange={(e) => setStatusFilter(e.target.value)}
+            className="form-input"
+            style={{ padding: '0.4rem 0.75rem', height: '38px', borderRadius: '6px' }}
+          >
+            <option value="All">All Statuses</option>
+            <option value="Published">Published Only</option>
+            <option value="Draft">Drafts Only</option>
+          </select>
 
-        <button type="button" className="secondary-btn" onClick={fetchBlogs}>
-          Refresh
-        </button>
+          <button type="button" className="secondary-btn" onClick={fetchBlogs} style={{ height: '38px' }}>
+            Refresh
+          </button>
+        </div>
       </section>
 
       {/* Main Table Card (Matching Listings & Events pages) */}
@@ -207,160 +209,231 @@ const AdminBlogs = () => {
             </span>
           </div>
 
-          <div className="card-body" style={{ padding: 0, overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', margin: 0, textAlign: 'left' }}>
-              <thead style={{ background: 'var(--surface-2)' }}>
-                <tr>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Cover
-                  </th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Title
-                  </th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Category
-                  </th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Date & Read Time
-                  </th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Status
-                  </th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                    Featured
-                  </th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedBlogs.map((b) => (
-                  <tr key={b._id} style={{ borderBottom: '1px solid var(--border)' }}>
-                    {/* Cover Thumbnail */}
-                    <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle', width: '56px' }}>
-                      <div className="dashboard-hero-logo" style={{ width: '40px', height: '40px', borderRadius: '6px', overflow: 'hidden' }}>
-                        {b.coverImage ? (
-                          <img
-                            src={resolveCoverSrc(b.coverImage)}
-                            alt=""
-                            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                          />
-                        ) : (
-                          <span className="logo-placeholder small" style={{ fontSize: '0.9rem' }}>📄</span>
-                        )}
-                      </div>
-                    </td>
+          <div className="card-body" style={{ padding: 0 }}>
+            {/* Desktop Table View (>= 768px) */}
+            <div className="admin-blogs-desktop-table">
+              <table style={{ width: '100%', minWidth: '760px', borderCollapse: 'collapse', margin: 0, textAlign: 'left' }}>
+                <thead style={{ background: 'var(--surface-2)' }}>
+                  <tr>
+                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Cover
+                    </th>
+                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Title
+                    </th>
+                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Category
+                    </th>
+                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Date & Read Time
+                    </th>
+                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Status
+                    </th>
+                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+                      Featured
+                    </th>
+                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
+                      Actions
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {paginatedBlogs.map((b) => (
+                    <tr key={b._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                      {/* Cover Thumbnail */}
+                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle', width: '56px' }}>
+                        <div className="dashboard-hero-logo" style={{ width: '40px', height: '40px', borderRadius: '6px', overflow: 'hidden' }}>
+                          {b.coverImage ? (
+                            <img
+                              src={resolveCoverSrc(b.coverImage)}
+                              alt=""
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            />
+                          ) : (
+                            <span className="logo-placeholder small" style={{ fontSize: '0.9rem' }}>📄</span>
+                          )}
+                        </div>
+                      </td>
 
-                    {/* Title & Slug */}
-                    <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
-                      <div style={{ fontWeight: 600, fontSize: '0.9rem', lineHeight: '1.3' }}>
-                        <Link to={`/admin/blogs/${b._id}`} style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>
-                          {b.title}
-                        </Link>
-                      </div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                        <code>/insights/{b.slug}</code>
-                      </div>
-                    </td>
+                      {/* Title & Slug */}
+                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
+                        <div style={{ fontWeight: 600, fontSize: '0.9rem', lineHeight: '1.3' }}>
+                          <Link to={`/admin/blogs/${b._id}`} style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>
+                            {b.title}
+                          </Link>
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
+                          <code>/insights/{b.slug}</code>
+                        </div>
+                      </td>
 
-                    {/* Category */}
-                    <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
-                      <span
-                        style={{
-                          fontSize: '0.75rem',
-                          padding: '0.2rem 0.55rem',
-                          borderRadius: '12px',
-                          background: 'var(--surface-3)',
-                          border: '1px solid var(--border)',
-                          fontWeight: 500,
-                          whiteSpace: 'nowrap'
-                        }}
-                      >
-                        {b.category}
-                      </span>
-                    </td>
-
-                    {/* Date & Read Time */}
-                    <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle', fontSize: '0.85rem' }}>
-                      <div>{formatShortDate(b.publishedDate)}</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
-                        {b.readTime || '5 min read'}
-                      </div>
-                    </td>
-
-                    {/* Status Pill & Toggle */}
-                    <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleStatus(b)}
-                        title={`Click to toggle status`}
-                        style={{
-                          display: 'inline-flex',
-                          alignItems: 'center',
-                          gap: '0.35rem',
-                          padding: '0.25rem 0.6rem',
-                          borderRadius: '12px',
-                          border: b.status === 'published' ? '1px solid rgba(46, 204, 113, 0.4)' : '1px solid rgba(241, 196, 15, 0.4)',
-                          background: b.status === 'published' ? 'rgba(46, 204, 113, 0.15)' : 'rgba(241, 196, 15, 0.15)',
-                          color: b.status === 'published' ? '#2ecc71' : '#f1c40f',
-                          fontSize: '0.75rem',
-                          fontWeight: 600,
-                          cursor: 'pointer'
-                        }}
-                      >
-                        <span>{b.status === 'published' ? '● Published' : '○ Draft'}</span>
-                      </button>
-                    </td>
-
-                    {/* Featured Star Toggle */}
-                    <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleFeatured(b)}
-                        title={b.featured ? 'Spotlight article (Click to unfeature)' : 'Click to feature in spotlight banner'}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          fontSize: '1.25rem',
-                          color: b.featured ? '#f39c12' : 'var(--text-muted)',
-                          padding: '0.2rem'
-                        }}
-                      >
-                        {b.featured ? '★' : '☆'}
-                      </button>
-                    </td>
-
-                    {/* Actions: View (Opens Admin View Page!), Edit, Delete */}
-                    <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle', textAlign: 'right' }}>
-                      <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end', flexWrap: 'nowrap' }}>
-                        <Link
-                          to={`/admin/blogs/${b._id}`}
-                          className="row-action-btn"
-                          title="View article details inside Admin"
+                      {/* Category */}
+                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
+                        <span
+                          style={{
+                            fontSize: '0.75rem',
+                            padding: '0.2rem 0.55rem',
+                            borderRadius: '12px',
+                            background: 'var(--surface-3)',
+                            border: '1px solid var(--border)',
+                            fontWeight: 500,
+                            whiteSpace: 'nowrap'
+                          }}
                         >
-                          View
-                        </Link>
-                        <Link
-                          to={`/admin/blogs/edit/${b._id}`}
-                          className="row-action-btn"
-                        >
-                          Edit
-                        </Link>
+                          {b.category}
+                        </span>
+                      </td>
+
+                      {/* Date & Read Time */}
+                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle', fontSize: '0.85rem' }}>
+                        <div>{formatShortDate(b.publishedDate)}</div>
+                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>
+                          {b.readTime || '5 min read'}
+                        </div>
+                      </td>
+
+                      {/* Status Pill & Toggle */}
+                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
                         <button
                           type="button"
-                          className="row-action-btn delete-btn"
-                          onClick={() => setDeleteConfirmId(b._id)}
+                          onClick={() => handleToggleStatus(b)}
+                          title="Click to toggle status"
+                          style={{
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '0.35rem',
+                            padding: '0.25rem 0.6rem',
+                            borderRadius: '12px',
+                            border: b.status === 'published' ? '1px solid rgba(46, 204, 113, 0.4)' : '1px solid rgba(241, 196, 15, 0.4)',
+                            background: b.status === 'published' ? 'rgba(46, 204, 113, 0.15)' : 'rgba(241, 196, 15, 0.15)',
+                            color: b.status === 'published' ? '#2ecc71' : '#f1c40f',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            cursor: 'pointer'
+                          }}
                         >
-                          Delete
+                          <span>{b.status === 'published' ? '● Published' : '○ Draft'}</span>
+                        </button>
+                      </td>
+
+                      {/* Featured Star Toggle */}
+                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleFeatured(b)}
+                          title={b.featured ? 'Spotlight article (Click to unfeature)' : 'Click to feature in spotlight banner'}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '1.25rem',
+                            color: b.featured ? '#f39c12' : 'var(--text-muted)',
+                            padding: '0.2rem'
+                          }}
+                        >
+                          {b.featured ? '★' : '☆'}
+                        </button>
+                      </td>
+
+                      {/* Actions: View (Opens Admin View Page!), Edit, Delete */}
+                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle', textAlign: 'right' }}>
+                        <div style={{ display: 'flex', gap: '0.4rem', justifyContent: 'flex-end', flexWrap: 'nowrap' }}>
+                          <Link
+                            to={`/admin/blogs/${b._id}`}
+                            className="row-action-btn"
+                            title="View article details inside Admin"
+                          >
+                            View
+                          </Link>
+                          <Link
+                            to={`/admin/blogs/edit/${b._id}`}
+                            className="row-action-btn"
+                          >
+                            Edit
+                          </Link>
+                          <button
+                            type="button"
+                            className="row-action-btn delete-btn"
+                            onClick={() => setDeleteConfirmId(b._id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Cards List View (< 768px) */}
+            <div className="admin-blogs-mobile-list">
+              {paginatedBlogs.map((b) => (
+                <div key={b._id} className="admin-blog-mobile-card">
+                  <div className="admin-blog-mobile-row-top">
+                    <div className="admin-blog-mobile-thumb">
+                      {b.coverImage ? (
+                        <img src={resolveCoverSrc(b.coverImage)} alt="" />
+                      ) : (
+                        <span>📄</span>
+                      )}
+                    </div>
+                    <div className="admin-blog-mobile-header-info">
+                      <div className="admin-blog-mobile-badges">
+                        <span className="admin-blog-cat-pill">{b.category}</span>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleStatus(b)}
+                          className="admin-blog-status-btn"
+                          style={{
+                            border: b.status === 'published' ? '1px solid rgba(46, 204, 113, 0.4)' : '1px solid rgba(241, 196, 15, 0.4)',
+                            background: b.status === 'published' ? 'rgba(46, 204, 113, 0.15)' : 'rgba(241, 196, 15, 0.15)',
+                            color: b.status === 'published' ? '#2ecc71' : '#f1c40f'
+                          }}
+                        >
+                          {b.status === 'published' ? '● Published' : '○ Draft'}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleFeatured(b)}
+                          className="admin-blog-star-toggle"
+                          title={b.featured ? 'Spotlight (Click to unfeature)' : 'Click to spotlight'}
+                        >
+                          {b.featured ? '★' : '☆'}
                         </button>
                       </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+                      <div className="admin-blog-mobile-date-text">
+                        {formatShortDate(b.publishedDate)} • {b.readTime || '5 min read'}
+                      </div>
+                    </div>
+                  </div>
+
+                  <h4 className="admin-blog-mobile-title">
+                    <Link to={`/admin/blogs/${b._id}`}>{b.title}</Link>
+                  </h4>
+                  <div className="admin-blog-mobile-slug">
+                    <code>/insights/{b.slug}</code>
+                  </div>
+
+                  <div className="admin-blog-mobile-actions">
+                    <Link to={`/admin/blogs/${b._id}`} className="row-action-btn">
+                      View
+                    </Link>
+                    <Link to={`/admin/blogs/edit/${b._id}`} className="row-action-btn">
+                      Edit
+                    </Link>
+                    <button
+                      type="button"
+                      className="row-action-btn delete-btn"
+                      onClick={() => setDeleteConfirmId(b._id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       )}
