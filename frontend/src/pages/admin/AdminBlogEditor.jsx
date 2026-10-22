@@ -114,10 +114,25 @@ const AdminBlogEditor = () => {
     setForm((prev) => ({ ...prev, readTime: `${minutes} min read` }))
   }
 
-  // Cover image file upload handler
+  // Cover image file upload handler with validation
   const handleFileUpload = async (e) => {
     const file = e.target.files?.[0]
     if (!file) return
+
+    // 1. File type validation
+    const validTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/jpg']
+    if (!validTypes.includes(file.type)) {
+      setError('Invalid file type: Please upload a JPG, PNG, or WebP image.')
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
+    }
+
+    // 2. File size validation (Max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      setError('File is too large: Cover image must be smaller than 5 MB.')
+      if (fileInputRef.current) fileInputRef.current.value = ''
+      return
+    }
 
     setUploadingCover(true)
     setError('')
@@ -141,42 +156,126 @@ const AdminBlogEditor = () => {
     }
   }
 
-
-
-  // Form submission
+  // Form submission with comprehensive validations
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
 
-    if (!form.title.trim()) {
-      setError('Article title is required')
+    const trimmedTitle = form.title.trim()
+    const trimmedSubtitle = (form.subtitle || '').trim()
+    const trimmedExcerpt = (form.excerpt || '').trim()
+    const plainContent = (form.contentHtml || '').replace(/<[^>]+>/g, ' ').trim()
+    const isPublishing = form.status === 'published'
+
+    // 1. Title validation
+    if (!trimmedTitle) {
+      setError('Article title is required.')
+      return
+    }
+    if (trimmedTitle.length < 10) {
+      setError('Article title is too short (minimum 10 characters required).')
+      return
+    }
+    if (trimmedTitle.length > 120) {
+      setError('Article title is too long (maximum 120 characters allowed).')
       return
     }
 
+    // 2. Category validation
     if (!form.category) {
-      setError('Please select a category')
+      setError('Please select an article category.')
       return
     }
 
-    if (!form.contentHtml.trim()) {
-      setError('Article content (HTML) is required')
+    // 3. Subtitle validation (if provided)
+    if (trimmedSubtitle.length > 200) {
+      setError('Subtitle is too long (maximum 200 characters allowed).')
       return
+    }
+
+    // 4. Short Description validation
+    if (isPublishing && !trimmedExcerpt) {
+      setError('Short Description (Card Preview) is required before publishing live.')
+      return
+    }
+    if (trimmedExcerpt && trimmedExcerpt.length < 20) {
+      setError('Short Description is too brief (minimum 20 characters recommended for card preview).')
+      return
+    }
+    if (trimmedExcerpt.length > 250) {
+      setError('Short Description must not exceed 250 characters.')
+      return
+    }
+
+    // 5. Author and Role length limits
+    if (form.author.trim().length > 50) {
+      setError('Author name must not exceed 50 characters.')
+      return
+    }
+    if (form.authorRole.trim().length > 60) {
+      setError('Author role must not exceed 60 characters.')
+      return
+    }
+
+    // 6. Cover Image validation
+    if (isPublishing && !form.coverImage.trim()) {
+      setError('A cover image banner is required before publishing live.')
+      return
+    }
+    if (
+      form.coverImage.trim() &&
+      !form.coverImage.startsWith('/uploads') &&
+      !form.coverImage.startsWith('http://') &&
+      !form.coverImage.startsWith('https://')
+    ) {
+      setError('Cover image must be a valid URL (http:// or https://) or an uploaded file.')
+      return
+    }
+
+    // 7. Tags validation (Max 8 tags, clean formatting)
+    const rawTags = (form.tags || '')
+      .split(',')
+      .map((t) => t.trim().replace(/^#/, ''))
+      .filter(Boolean)
+    const uniqueTags = [...new Set(rawTags)]
+    if (uniqueTags.length > 8) {
+      setError('Maximum 8 tags allowed per article.')
+      return
+    }
+
+    // 8. Article Content validation
+    if (!plainContent) {
+      setError('Article content cannot be empty.')
+      return
+    }
+    const wordCount = plainContent.split(/\s+/).filter(Boolean).length
+    if (isPublishing && wordCount < 30) {
+      setError(`Article content is too short for publication (${wordCount} words; minimum 30 words required).`)
+      return
+    }
+
+    // 9. Read time normalization
+    let normalizedReadTime = form.readTime.trim()
+    if (!normalizedReadTime) {
+      const minutes = Math.max(1, Math.ceil(wordCount / 180))
+      normalizedReadTime = `${minutes} min read`
+    } else if (/^\d+$/.test(normalizedReadTime)) {
+      normalizedReadTime = `${normalizedReadTime} min read`
     }
 
     setSaving(true)
 
     const payload = {
       ...form,
-      title: form.title.trim(),
-      slug: form.slug.trim() || slugify(form.title),
+      title: trimmedTitle,
+      slug: form.slug.trim() || slugify(trimmedTitle),
+      subtitle: trimmedSubtitle,
+      excerpt: trimmedExcerpt,
       author: form.author.trim() || 'RA Research Desk',
       authorRole: form.authorRole.trim() || 'Equity & Private Markets Analyst',
-      readTime: form.readTime.trim() || '5 min read',
+      readTime: normalizedReadTime,
       publishedDate: form.publishedDate || new Date().toISOString().slice(0, 10),
-      tags: (form.tags || '')
-        .split(',')
-        .map((t) => t.trim())
-        .filter(Boolean),
+      tags: uniqueTags,
       relatedSlugs: (form.relatedSlugs || '')
         .split(',')
         .map((s) => s.trim())
@@ -284,7 +383,12 @@ const AdminBlogEditor = () => {
           <div className="card-body" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {/* Title */}
             <label className="form-label">
-              Article Title *
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>Article Title *</span>
+                <span style={{ fontSize: '0.75rem', color: (form.title || '').length >= 110 ? '#e74c3c' : 'var(--text-muted)' }}>
+                  {(form.title || '').length}/120
+                </span>
+              </div>
               <input
                 type="text"
                 value={form.title}
@@ -292,6 +396,7 @@ const AdminBlogEditor = () => {
                 placeholder="e.g. Swiggy Pre-IPO Valuation Analysis: Quick Commerce Economics & DRHP Takeaways"
                 className="form-input"
                 style={{ fontSize: '1rem', fontWeight: form.title ? 600 : 400, fontFamily: 'var(--font-body)' }}
+                maxLength={120}
                 required
               />
             </label>
@@ -333,19 +438,32 @@ const AdminBlogEditor = () => {
 
             {/* Subtitle / Deck */}
             <label className="form-label">
-              Subtitle (Deck)
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>Subtitle (Deck)</span>
+                <span style={{ fontSize: '0.75rem', color: (form.subtitle || '').length >= 185 ? '#e74c3c' : 'var(--text-muted)' }}>
+                  {(form.subtitle || '').length}/200
+                </span>
+              </div>
               <input
                 type="text"
                 value={form.subtitle}
                 onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
                 placeholder="A brief summary deck displayed right under the main title..."
                 className="form-input"
+                maxLength={200}
               />
             </label>
 
             {/* Short Description */}
             <label className="form-label">
-              Short Description (Card Preview)
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span>
+                  Short Description (Card Preview) {form.status === 'published' && <span style={{ color: 'var(--rust, #e74c3c)' }}>*</span>}
+                </span>
+                <span style={{ fontSize: '0.75rem', color: (form.excerpt || '').length >= 235 ? '#e74c3c' : 'var(--text-muted)' }}>
+                  {(form.excerpt || '').length}/250
+                </span>
+              </div>
               <textarea
                 value={form.excerpt}
                 onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
@@ -353,6 +471,7 @@ const AdminBlogEditor = () => {
                 className="contact-form-textarea"
                 rows={2}
                 style={{ minHeight: '70px' }}
+                maxLength={250}
               />
             </label>
 
@@ -366,6 +485,7 @@ const AdminBlogEditor = () => {
                   onChange={(e) => setForm({ ...form, author: e.target.value })}
                   placeholder="e.g. RA Research Desk"
                   className="form-input"
+                  maxLength={50}
                 />
               </label>
 
@@ -377,6 +497,7 @@ const AdminBlogEditor = () => {
                   onChange={(e) => setForm({ ...form, authorRole: e.target.value })}
                   placeholder="e.g. Equity & Private Markets Analyst"
                   className="form-input"
+                  maxLength={60}
                 />
               </label>
 
@@ -416,7 +537,9 @@ const AdminBlogEditor = () => {
 
             {/* Cover Image URL + Upload Button */}
             <div className="form-label">
-              Cover Image (Banner)
+              <div>
+                Cover Image (Banner) {form.status === 'published' && <span style={{ color: 'var(--rust, #e74c3c)' }}>*</span>}
+              </div>
               <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.25rem' }}>
                 <input
                   type="text"
@@ -484,7 +607,9 @@ const AdminBlogEditor = () => {
             {/* Tags */}
             <div className="form-row">
               <label className="form-label" style={{ flex: 1 }}>
-                Tags (Comma-separated)
+                <div>
+                  Tags <small style={{ fontWeight: 'normal', color: 'var(--text-muted)' }}>(Max 8 tags, comma-separated)</small>
+                </div>
                 <input
                   type="text"
                   value={form.tags}
