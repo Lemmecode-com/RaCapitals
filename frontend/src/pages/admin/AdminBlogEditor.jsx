@@ -15,11 +15,11 @@ const INITIAL_FORM = {
   title: '',
   slug: '',
   subtitle: '',
-  category: 'Valuation & Analysis',
-  readTime: '5 min read',
+  category: '',
+  readTime: '',
   publishedDate: new Date().toISOString().slice(0, 10),
-  author: 'RA Research Desk',
-  authorRole: 'Equity & Private Markets Analyst',
+  author: '',
+  authorRole: '',
   coverImage: '',
   tags: '',
   excerpt: '',
@@ -73,11 +73,11 @@ const AdminBlogEditor = () => {
           title: data.title || '',
           slug: data.slug || '',
           subtitle: data.subtitle || '',
-          category: data.category || 'Valuation & Analysis',
-          readTime: data.readTime || '5 min read',
+          category: data.category || '',
+          readTime: data.readTime || '',
           publishedDate: data.publishedDate ? data.publishedDate.slice(0, 10) : new Date().toISOString().slice(0, 10),
-          author: data.author || 'RA Research Desk',
-          authorRole: data.authorRole || 'Equity & Private Markets Analyst',
+          author: data.author || '',
+          authorRole: data.authorRole || '',
           coverImage: data.coverImage || '',
           tags: Array.isArray(data.tags) ? data.tags.join(', ') : '',
           excerpt: data.excerpt || '',
@@ -153,6 +153,11 @@ const AdminBlogEditor = () => {
       return
     }
 
+    if (!form.category) {
+      setError('Please select a category')
+      return
+    }
+
     if (!form.contentHtml.trim()) {
       setError('Article content (HTML) is required')
       return
@@ -164,6 +169,10 @@ const AdminBlogEditor = () => {
       ...form,
       title: form.title.trim(),
       slug: form.slug.trim() || slugify(form.title),
+      author: form.author.trim() || 'RA Research Desk',
+      authorRole: form.authorRole.trim() || 'Equity & Private Markets Analyst',
+      readTime: form.readTime.trim() || '5 min read',
+      publishedDate: form.publishedDate || new Date().toISOString().slice(0, 10),
       tags: (form.tags || '')
         .split(',')
         .map((t) => t.trim())
@@ -312,7 +321,9 @@ const AdminBlogEditor = () => {
                   value={form.category}
                   onChange={(e) => setForm({ ...form, category: e.target.value })}
                   className="form-input"
+                  required
                 >
+                  <option value="" disabled>-- Select Category --</option>
                   {CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
                   ))}
@@ -353,6 +364,7 @@ const AdminBlogEditor = () => {
                   type="text"
                   value={form.author}
                   onChange={(e) => setForm({ ...form, author: e.target.value })}
+                  placeholder="e.g. RA Research Desk"
                   className="form-input"
                 />
               </label>
@@ -363,6 +375,7 @@ const AdminBlogEditor = () => {
                   type="text"
                   value={form.authorRole}
                   onChange={(e) => setForm({ ...form, authorRole: e.target.value })}
+                  placeholder="e.g. Equity & Private Markets Analyst"
                   className="form-input"
                 />
               </label>
@@ -384,6 +397,7 @@ const AdminBlogEditor = () => {
                     type="text"
                     value={form.readTime}
                     onChange={(e) => setForm({ ...form, readTime: e.target.value })}
+                    placeholder="e.g. 5 min read"
                     className="form-input"
                     style={{ flex: 1, minWidth: 0 }}
                   />
