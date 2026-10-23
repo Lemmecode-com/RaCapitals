@@ -1,17 +1,23 @@
+import { jest, describe, it, expect, beforeAll, afterEach } from '@jest/globals'
 import request from 'supertest'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
-import app from '../app.js'
 
 process.env.JWT_SECRET = 'test-secret'
 
-jest.mock('../models/AdminUser.js', () => ({
-  default: { findOne: jest.fn() }
+const mockFindOne = jest.fn()
+jest.unstable_mockModule('../models/AdminUser.js', () => ({
+  default: { findOne: mockFindOne }
 }))
 
-import AdminUser from '../models/AdminUser.js'
+const { default: app } = await import('../app.js')
 
-const hashedPassword = bcrypt.hashSync('password123', 10)
+let hashedPassword
+beforeAll(async () => {
+  hashedPassword = await bcrypt.hash('password123', 10)
+})
+
+afterEach(() => jest.clearAllMocks())
 
 describe('POST /api/auth/login', () => {
   it('returns 401 when credentials missing', async () => {
@@ -20,19 +26,19 @@ describe('POST /api/auth/login', () => {
   })
 
   it('returns 401 for unknown user', async () => {
-    AdminUser.findOne.mockResolvedValue(null)
+    mockFindOne.mockResolvedValue(null)
     const res = await request(app).post('/api/auth/login').send({ username: 'x', password: 'y' })
     expect(res.status).toBe(401)
   })
 
   it('returns 401 for wrong password', async () => {
-    AdminUser.findOne.mockResolvedValue({ username: 'admin', passwordHash: hashedPassword })
+    mockFindOne.mockResolvedValue({ username: 'admin', passwordHash: hashedPassword })
     const res = await request(app).post('/api/auth/login').send({ username: 'admin', password: 'wrong' })
     expect(res.status).toBe(401)
   })
 
   it('returns token on valid login', async () => {
-    AdminUser.findOne.mockResolvedValue({ _id: '123', username: 'admin', passwordHash: hashedPassword })
+    mockFindOne.mockResolvedValue({ _id: '123', username: 'admin', passwordHash: hashedPassword })
     const res = await request(app).post('/api/auth/login').send({ username: 'admin', password: 'password123' })
     expect(res.status).toBe(200)
     expect(res.body).toHaveProperty('token')

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatINR, formatPriceRange, formatCurrency, formatShortDate } from '../utils/formatters.js'
+import { formatINR, formatPriceRange, formatCurrency, formatShortDate } from '../utils/format.js'
 
 describe('formatINR', () => {
   it('formats a number with ₹ symbol', () => {
