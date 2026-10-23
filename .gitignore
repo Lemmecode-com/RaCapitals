@@ -11,9 +11,14 @@ backend/.env
 # Build outputs
 dist/
 build/
+frontend/dist/
 
 # Uploads
 backend/uploads/*
 
 # Keep uploads folder
 !backend/uploads/.gitkeep
+
+# Seed scripts (Dummy data only)
+backend/seedPrices.js
+backend/seedEvents.js

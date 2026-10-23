@@ -15,11 +15,11 @@ const Terms = () => {
         </p>
         <p>
           PLACEHOLDER CONTENT — PENDING LEGAL REVIEW. Content on this site, including text, graphics, and
-          indicative pricing data, is the property of RA Capitals and is protected by applicable intellectual
+          indicative pricing data, is the property of Taurus Magnus and is protected by applicable intellectual
           property laws. You may not reproduce or redistribute content without prior written consent.
         </p>
         <p>
-          PLACEHOLDER CONTENT — PENDING LEGAL REVIEW. RA Capitals reserves the right to modify these terms
+          PLACEHOLDER CONTENT — PENDING LEGAL REVIEW. Taurus Magnus reserves the right to modify these terms
           at any time. Continued use of the site following any changes constitutes acceptance of the new terms.
         </p>
       </main>

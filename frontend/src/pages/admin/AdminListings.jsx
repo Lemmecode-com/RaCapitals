@@ -2,6 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../services/api'
 import { apiBaseWithoutApi, formatINR } from '../../utils/format'
+import ConfirmDialog from '../../components/common/ConfirmDialog'
+import InfoTooltip from '../../components/common/InfoTooltip'
+import Pagination from '../../components/admin/Pagination'
 
 const EMPTY_FORM = {
   name: '',
@@ -10,6 +13,7 @@ const EMPTY_FORM = {
   lotSize: '',
   faceValue: '',
   isin: '',
+  drhpFiled: false,
 }
 
 const SECTORS = ['Fintech', 'Energy', 'Logistics', 'Consumer', 'Healthcare']
@@ -28,6 +32,10 @@ const AdminListings = () => {
   const [priceValue, setPriceValue] = useState('')
   const [priceError, setPriceError] = useState('')
   const [flash, setFlash] = useState('')
+  const [deactivateTarget, setDeactivateTarget] = useState(null)
+  const [reactivateTarget, setReactivateTarget] = useState(null)
+  const [currentPage, setCurrentPage] = useState(1)
+  const itemsPerPage = 10
 
   const fetchCompanies = async (sectorOverride, searchOverride) => {
     const activeSector = sectorOverride !== undefined ? sectorOverride : sector
@@ -50,6 +58,12 @@ const AdminListings = () => {
     fetchCompanies()
   }, [])
 
+  useEffect(() => {
+    const trimmed = search.trim()
+    const handler = setTimeout(() => fetchCompanies(sector, trimmed || undefined), 500)
+    return () => clearTimeout(handler)
+  }, [search])
+
   const openCreate = () => {
     setEditing(null)
     setForm(EMPTY_FORM)
@@ -67,6 +81,7 @@ const AdminListings = () => {
       lotSize: company.lotSize ?? '',
       faceValue: company.faceValue ?? '',
       isin: company.isin || '',
+      drhpFiled: Boolean(company.drhpFiled),
     })
     setFormError('')
     setFieldErrors({})
@@ -86,9 +101,28 @@ const AdminListings = () => {
     setFormError('')
 
     const errors = {}
-    if (!form.name.trim()) errors.name = 'This field is required'
-    if (!form.sector.trim()) errors.sector = 'This field is required'
-    if (!form.lotSize) errors.lotSize = 'This field is required'
+    
+    // Name validation
+    if (!form.name.trim()) {
+      errors.name = 'This field is required'
+    } else if (form.name.trim().length > 100) {
+      errors.name = 'Company name cannot exceed 100 characters'
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(form.name)) {
+      errors.name = 'Company name cannot contain special characters'
+    }
+
+    // Sector validation
+    if (!form.sector.trim()) {
+      errors.sector = 'This field is required'
+    }
+
+    // Lot Size validation
+    if (!form.lotSize) {
+      errors.lotSize = 'This field is required'
+    } else if (Number(form.lotSize) <= 0) {
+      errors.lotSize = 'Lot size must be a positive number'
+    }
+
     setFieldErrors(errors)
     if (Object.keys(errors).length > 0) return
 
@@ -100,6 +134,7 @@ const AdminListings = () => {
         lotSize: form.lotSize === '' ? undefined : Number(form.lotSize),
         faceValue: form.faceValue === '' ? undefined : Number(form.faceValue),
         isin: form.isin.trim(),
+        drhpFiled: Boolean(form.drhpFiled),
       }
       if (editing) {
         await api.put(`/companies/${editing._id}`, payload)
@@ -116,15 +151,33 @@ const AdminListings = () => {
   }
 
   const toggleActive = async (company) => {
+    if (company.isActive) {
+      setDeactivateTarget(company)
+    } else {
+      setReactivateTarget(company)
+    }
+  }
+
+  const confirmReactivate = async () => {
+    if (!reactivateTarget) return
+    const target = reactivateTarget
+    setReactivateTarget(null)
     try {
-      if (company.isActive) {
-        if (!window.confirm(`Deactivate "${company.name}"? It will be hidden from the public catalog.`)) return
-        await api.patch(`/companies/${company._id}/deactivate`)
-        setFlash(`Deactivated "${company.name}"`)
-      } else {
-        await api.patch(`/companies/${company._id}/activate`)
-        setFlash(`Activated "${company.name}"`)
-      }
+      await api.patch(`/companies/${target._id}/activate`)
+      setFlash(`Reactivated "${target.name}"`)
+      await fetchCompanies()
+    } catch (err) {
+      setFlash(err?.response?.data?.message || 'Action failed')
+    }
+  }
+
+  const confirmDeactivate = async () => {
+    if (!deactivateTarget) return
+    const target = deactivateTarget
+    setDeactivateTarget(null)
+    try {
+      await api.patch(`/companies/${target._id}/deactivate`)
+      setFlash(`Deactivated "${target.name}"`)
       await fetchCompanies()
     } catch (err) {
       setFlash(err?.response?.data?.message || 'Action failed')
@@ -146,6 +199,10 @@ const AdminListings = () => {
   const handleSubmitPrice = async (e) => {
     e.preventDefault()
     setPriceError('')
+    if (!priceValue) {
+      setPriceError('Price is required')
+      return
+    }
     const num = Number(priceValue)
     if (Number.isNaN(num) || num <= 0) {
       setPriceError('Enter a valid positive number')
@@ -176,19 +233,51 @@ const AdminListings = () => {
     }
   }
 
-  const handleDelete = (company) => {
-    if (!window.confirm(`Permanently delete "${company.name}"? This cannot be undone.`)) return
-    console.log('Delete endpoint not yet implemented')
-  }
-
   useEffect(() => {
     if (!flash) return
     const t = setTimeout(() => setFlash(''), 3000)
     return () => clearTimeout(t)
   }, [flash])
 
+  const renderActionsForCard = (c) => (
+    <div className="actions-cell">
+      <Link to={`/admin/companies/${c._id}`} className="row-action-btn">View</Link>
+      <button type="button" className="row-action-btn" onClick={() => openEdit(c)}>Edit</button>
+      <button type="button" className="row-action-btn" onClick={() => openPriceModal(c)}>Update Price</button>
+      <button type="button" className="row-action-btn" onClick={() => toggleActive(c)}>
+        {c.isActive ? 'Deactivate' : 'Activate'}
+      </button>
+      <label className="row-action-btn upload-btn-label">
+        {c.logoUrl ? 'Replace Logo' : 'Upload Logo'}
+        <input
+          type="file"
+          accept="image/*"
+          style={{ display: 'none' }}
+          onChange={(e) => {
+            const file = e.target.files?.[0]
+            e.target.value = ''
+            if (file) handleLogoUpload(c, file)
+          }}
+        />
+      </label>
+    </div>
+  )
+
+  // Pagination logic
+  const totalPages = Math.ceil(companies.length / itemsPerPage)
+  const paginatedCompanies = companies.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  )
+
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(totalPages)
+    }
+  }, [totalPages, currentPage])
+
   return (
-    <div className="admin-wrap admin-wrap-wide">
+    <div className="dashboard-wrap">
       <div className="admin-page-header">
         <div>
           <h1>Listings</h1>
@@ -198,7 +287,7 @@ const AdminListings = () => {
 
       {flash && <div className="flash">{flash}</div>}
 
-      <section className="admin-controls">
+      <section className="admin-controls" style={{ marginBottom: '1.5rem' }}>
         <input
           type="text"
           placeholder="Search by name…"
@@ -222,89 +311,77 @@ const AdminListings = () => {
         <button type="button" className="secondary-btn" onClick={() => fetchCompanies()}>Refresh</button>
       </section>
 
-      <h2 className="section-heading">Company Listings</h2>
-
       {loading ? (
         <p className="muted">Loading listings…</p>
       ) : companies.length === 0 ? (
         <p className="muted">No companies found.</p>
       ) : (
-        <div className="admin-table-wrap">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Logo</th>
-                <th>Name</th>
-                <th>Sector</th>
-                <th>Latest Price</th>
-                <th>Status</th>
-                <th className="th-actions">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {companies.map((c) => (
-                <tr key={c._id}>
-                  <td>
-                    {c.logoUrl ? (
-                      <img src={`${apiBaseWithoutApi()}${c.logoUrl}`} alt={`${c.name} logo`} className="admin-logo-thumb" />
-                    ) : (
-                      <span className="logo-placeholder small">{(c.name || '?').charAt(0).toUpperCase()}</span>
-                    )}
-                  </td>
-                  <td>{c.name}</td>
-                  <td>{c.sector || '—'}</td>
-                  <td className="mono">
-                    {c.latestPrice == null ? (
-                      <button
-                        type="button"
-                        className="set-price-link"
-                        onClick={() => openPriceModal(c)}
-                      >
-                        Set price
-                      </button>
-                    ) : (
-                      formatINR(c.latestPrice)
-                    )}
-                  </td>
-                  <td>
-                    <span className={`status-badge ${c.isActive ? 'status-live' : 'status-off'}`}>
-                      {c.isActive ? 'Live' : 'Deactivated'}
-                    </span>
-                  </td>
-                   <td className="actions-cell">
-                      <Link to={`/admin/companies/${c._id}`} className="row-action-btn">View</Link>
-                      <button type="button" className="row-action-btn" onClick={() => openEdit(c)}>Edit</button>
-                      <button type="button" className="row-action-btn" onClick={() => openPriceModal(c)}>Update Price</button>
-                      <button type="button" className="row-action-btn" onClick={() => toggleActive(c)}>
-                        {c.isActive ? 'Deactivate' : 'Activate'}
-                      </button>
-                      <button type="button" className="row-action-btn delete-btn" onClick={() => handleDelete(c)}>
-                        Delete
-                      </button>
-                      <label className="row-action-btn upload-btn-label">
-                        {c.logoUrl ? 'Replace Logo' : 'Upload Logo'}
-                        <input
-                          type="file"
-                          accept="image/*"
-                          style={{ display: 'none' }}
-                          onChange={(e) => {
-                            const file = e.target.files?.[0]
-                            e.target.value = ''
-                            if (file) handleLogoUpload(c, file)
-                          }}
-                        />
-                      </label>
-                    </td>
+        <div className="dashboard-content-card">
+          <div className="card-header">
+            <h3>Company Listings</h3>
+          </div>
+          <div className="card-body" style={{ padding: 0, overflowX: 'auto' }}>
+            <table style={{ width: '100%', borderCollapse: 'collapse', margin: 0, textAlign: 'left' }}>
+              <thead style={{ background: 'var(--surface-2)' }}>
+                <tr>
+                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Logo</th>
+                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
+                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sector</th>
+                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Latest Price</th>
+                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
+                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {paginatedCompanies.map((c) => (
+                  <tr key={c._id} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <td style={{ padding: '0.6rem 1rem' }}>
+                      <div className="dashboard-hero-logo" style={{ width: '32px', height: '32px', borderRadius: '6px' }}>
+                        {c.logoUrl ? (
+                          <img src={`${apiBaseWithoutApi()}${c.logoUrl}`} alt={`${c.name} logo`} />
+                        ) : (
+                          <span className="logo-placeholder small" style={{ fontSize: '1rem' }}>{(c.name || '?').charAt(0).toUpperCase()}</span>
+                        )}
+                      </div>
+                    </td>
+                    <td style={{ padding: '0.6rem 1rem', fontWeight: 600, fontSize: '0.9rem' }}>{c.name}</td>
+                    <td style={{ padding: '0.6rem 1rem' }}>{c.sector || '—'}</td>
+                    <td className="mono" style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>
+                      {c.latestPrice == null ? (
+                        <button type="button" className="set-price-link" onClick={() => openPriceModal(c)}>Set price</button>
+                      ) : (
+                        formatINR(c.latestPrice)
+                      )}
+                    </td>
+                    <td style={{ padding: '0.6rem 1rem' }}>
+                      <span className={`status-badge ${c.isActive ? 'status-live' : 'status-off'}`}>
+                        {c.isActive ? 'Live' : 'Deactivated'}
+                      </span>
+                      {c.drhpFiled && <span className="drhp-badge" style={{ marginLeft: '0.5rem' }}>DRHP</span>}
+                    </td>
+                    <td style={{ padding: '0.6rem 1rem' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+                        {renderActionsForCard(c)}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
+      <Pagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
+
       {formOpen && (
-        <div className="modal-backdrop" onClick={closeForm}>
+        <div className="modal-backdrop event-modal-backdrop" onClick={closeForm}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" type="button" onClick={closeForm}>&times;</button>
             <h2>{editing ? 'Edit Listing' : 'Add New Listing'}</h2>
             <form onSubmit={handleSubmitCompany} className="admin-form">
               <label className="form-label">
@@ -326,20 +403,34 @@ const AdminListings = () => {
               </label>
               <div className="form-row">
                 <label className="form-label">
-                  Lot Size *
+                  <InfoTooltip text="Minimum number of shares a buyer must purchase in one transaction.">
+                    Lot Size *
+                  </InfoTooltip>
                   <input type="number" value={form.lotSize} onChange={(e) => setForm({ ...form, lotSize: e.target.value })} className="form-input" />
                   {fieldErrors.lotSize && <span className="form-error">{fieldErrors.lotSize}</span>}
                 </label>
                 <label className="form-label">
-                  Face Value (optional)
+                  <InfoTooltip text="The share's original nominal value set at incorporation — unrelated to its current market price.">
+                    Face Value (optional)
+                  </InfoTooltip>
                   <input type="number" step="0.01" value={form.faceValue} onChange={(e) => setForm({ ...form, faceValue: e.target.value })} className="form-input" />
                 </label>
               </div>
               <label className="form-label">
-                ISIN (optional)
-                <input type="text" value={form.isin} onChange={(e) => setForm({ ...form, isin: e.target.value })} className="form-input" />
-              </label>
-              {formError && <p className="form-error">{formError}</p>}
+<InfoTooltip text="International Securities Identification Number — a unique code for the share. Leave blank if not yet assigned.">
+                   ISIN (optional)
+                 </InfoTooltip>
+                 <input type="text" value={form.isin} onChange={(e) => setForm({ ...form, isin: e.target.value })} className="form-input" />
+               </label>
+               <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                 <input
+                   type="checkbox"
+                   checked={form.drhpFiled}
+                    onChange={(e) => setForm({ ...form, drhpFiled: e.target.checked })}
+                 />
+                 <span>DRHP Filed</span>
+               </label>
+                {formError && <p className="form-error">{formError}</p>}
               <div className="modal-actions">
                 <button type="button" className="secondary-btn" onClick={closeForm}>Cancel</button>
                 <button type="submit" className="primary-btn">{editing ? 'Save Changes' : 'Create Listing'}</button>
@@ -349,9 +440,40 @@ const AdminListings = () => {
         </div>
       )}
 
+      <ConfirmDialog
+        isOpen={Boolean(deactivateTarget)}
+        title="Deactivate listing?"
+        message={
+          deactivateTarget
+            ? `This will hide "${deactivateTarget.name}" from the public price list. You can reactivate it anytime.`
+            : ''
+        }
+        confirmLabel="Deactivate"
+        cancelLabel="Cancel"
+        variant="danger"
+        onConfirm={confirmDeactivate}
+        onCancel={() => setDeactivateTarget(null)}
+      />
+
+      <ConfirmDialog
+        isOpen={Boolean(reactivateTarget)}
+        title="Reactivate listing?"
+        message={
+          reactivateTarget
+            ? `This will make "${reactivateTarget.name}" visible on the public price list again.`
+            : ''
+        }
+        confirmLabel="Reactivate"
+        cancelLabel="Cancel"
+        variant="primary"
+        onConfirm={confirmReactivate}
+        onCancel={() => setReactivateTarget(null)}
+      />
+
       {priceModal && (
-        <div className="modal-backdrop" onClick={closePriceModal}>
+        <div className="modal-backdrop event-modal-backdrop" onClick={closePriceModal}>
           <div className="modal small" onClick={(e) => e.stopPropagation()}>
+            <button className="modal-close-btn" type="button" onClick={closePriceModal}>&times;</button>
             <h2>Update Price — {priceModal.name}</h2>
             <form onSubmit={handleSubmitPrice} className="admin-form">
               <label className="form-label">

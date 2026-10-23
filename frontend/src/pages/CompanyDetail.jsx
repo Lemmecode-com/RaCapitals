@@ -4,7 +4,10 @@ import api from '../services/api'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import EnquireButton from '../components/common/EnquireButton'
 import Footer from '../components/common/Footer'
+import InfoTooltip from '../components/common/InfoTooltip'
 import Navbar from '../components/common/Navbar'
+import FloatingParticles from '../components/common/FloatingParticles'
+import PriceHistoryChart from '../components/detail/PriceHistoryChart'
 import { apiBaseWithoutApi, formatINR } from '../utils/format'
 
 const buildLogoSrc = (logoUrl) => {
@@ -13,47 +16,12 @@ const buildLogoSrc = (logoUrl) => {
   return `${apiBaseWithoutApi()}${logoUrl}`
 }
 
-const PriceChart = ({ history }) => {
-  const points = history || []
-  if (points.length < 2) {
-    return (
-      <div className="chart-empty">
-        <p>Not enough price history to draw a chart yet.</p>
-      </div>
-    )
-  }
-  const prices = points.map((p) => Number(p.price)).filter((n) => !Number.isNaN(n))
-  const min = Math.min(...prices)
-  const max = Math.max(...prices)
-  const range = max - min || 1
-  const width = 600
-  const height = 200
-  const padding = 20
-  const stepX = (width - padding * 2) / Math.max(prices.length - 1, 1)
-  const coords = prices.map((price, i) => {
-    const x = padding + i * stepX
-    const y = padding + (height - padding * 2) * (1 - (price - min) / range)
-    return `${x},${y}`
-  })
-  const polyline = coords.join(' ')
-  return (
-    <div className="chart-wrap">
-      <svg viewBox={`0 0 ${width} ${height}`} className="chart-svg" role="img" aria-label="Price history">
-        <rect x="0" y="0" width={width} height={height} fill="transparent" />
-        <polyline points={polyline} fill="none" stroke="var(--brass)" strokeWidth="2" />
-        {coords.map((c, i) => (
-          <circle key={i} cx={c.split(',')[0]} cy={c.split(',')[1]} r="2.5" fill="var(--brass)" />
-        ))}
-      </svg>
-    </div>
-  )
-}
-
 const CompanyDetail = () => {
   const { id } = useParams()
   const [company, setCompany] = useState(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -107,10 +75,20 @@ const CompanyDetail = () => {
       <Navbar />
       <ComplianceRibbon />
       <main className="page-main">
+        <div className="particles-container">
+          <FloatingParticles />
+        </div>
         <header className="company-header">
           <div className="company-logo">
             {logoSrc ? (
-              <img src={logoSrc} alt={`${company.name} logo`} />
+              <button
+                type="button"
+                className="company-logo-thumb-btn"
+                onClick={() => setIsLightboxOpen(true)}
+                aria-label={`View full-size ${company.name} logo`}
+              >
+                <img src={logoSrc} alt={`${company.name} logo`} className="company-logo-thumb" />
+              </button>
             ) : (
               <span className="logo-placeholder">{initial}</span>
             )}
@@ -124,19 +102,35 @@ const CompanyDetail = () => {
 
         <section className="company-stats">
           <div className="stat-card">
-            <p className="stat-label">Indicative Price</p>
+            <p className="stat-label">
+              <InfoTooltip text="An estimated price based on our own research — not sourced from a live stock exchange.">
+                Indicative Price
+              </InfoTooltip>
+            </p>
             <p className="stat-value mono">{formatINR(latestPrice)}</p>
           </div>
           <div className="stat-card">
-            <p className="stat-label">52W High</p>
+            <p className="stat-label">
+              <InfoTooltip text="Highest and lowest indicative price recorded over the last 12 months.">
+                52W High
+              </InfoTooltip>
+            </p>
             <p className="stat-value mono">{formatINR(company.high52)}</p>
           </div>
           <div className="stat-card">
-            <p className="stat-label">52W Low</p>
+            <p className="stat-label">
+              <InfoTooltip text="Highest and lowest indicative price recorded over the last 12 months.">
+                52W Low
+              </InfoTooltip>
+            </p>
             <p className="stat-value mono">{formatINR(company.low52)}</p>
           </div>
           <div className="stat-card">
-            <p className="stat-label">Lot Size</p>
+            <p className="stat-label">
+              <InfoTooltip text="Minimum number of shares you can enquire about in one transaction.">
+                Lot Size
+              </InfoTooltip>
+            </p>
             <p className="stat-value mono">{company.lotSize ?? '—'}</p>
           </div>
           <div className="stat-card">
@@ -154,13 +148,39 @@ const CompanyDetail = () => {
 
         <section className="company-section">
           <h2 className="section-title">Price History</h2>
-          <PriceChart history={history} />
+          <PriceHistoryChart priceHistory={history} />
         </section>
 
         <section className="company-enquire">
           <EnquireButton companyName={company.name} />
         </section>
       </main>
+
+      {isLightboxOpen && logoSrc && (
+        <div
+          className="logo-lightbox-overlay"
+          onClick={() => setIsLightboxOpen(false)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${company.name} logo preview`}
+        >
+          <button
+            type="button"
+            className="logo-lightbox-close"
+            onClick={(e) => { e.stopPropagation(); setIsLightboxOpen(false) }}
+            aria-label="Close logo preview"
+          >
+            ✕
+          </button>
+          <img
+            src={logoSrc}
+            alt={`${company.name} logo`}
+            className="logo-lightbox-img"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
       <Footer />
     </div>
   )

@@ -1,10 +1,14 @@
-// Phone number is a placeholder — replace with the real RA Capitals WhatsApp Business number.
-const WHATSAPP_PHONE = '919999999999'
+const FALLBACK_WHATSAPP_NUMBER = '919999999999'
+const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || FALLBACK_WHATSAPP_NUMBER
+
+if (!import.meta.env.VITE_WHATSAPP_NUMBER) {
+  console.warn('WhatsApp number not configured - using placeholder')
+}
 
 const EnquireButton = ({ companyName }) => {
   const handleClick = () => {
     const message = `Hi, I'm interested in ${companyName}. Please share more details.`
-    const url = `https://wa.me/${WHATSAPP_PHONE}?text=${encodeURIComponent(message)}`
+    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 const EyeOpen = () => (
@@ -35,13 +35,31 @@ const AdminLogin = () => {
     e.preventDefault()
     setError('')
 
-    const usernameMissing = !username.trim()
-    const passwordMissing = !password
+    let uError = ''
+    let pError = ''
 
-    setUsernameError(usernameMissing ? 'Username is required' : '')
-    setPasswordError(passwordMissing ? 'Password is required' : '')
+    if (!username.trim()) {
+      uError = 'Username is required'
+    } else if (username.trim().includes(' ')) {
+      uError = 'Username cannot contain spaces'
+    }
 
-    if (usernameMissing || passwordMissing) return
+    if (!password) {
+      pError = 'Password is required'
+    } else if (password.length < 6) {
+      pError = 'Password must be at least 6 characters'
+    } else if (!/[A-Z]/.test(password)) {
+      pError = 'Password must contain at least one capital letter'
+    } else if (!/\d/.test(password)) {
+      pError = 'Password must contain at least one number'
+    } else if (!/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+/.test(password)) {
+      pError = 'Password must contain at least one special character'
+    }
+
+    setUsernameError(uError)
+    setPasswordError(pError)
+
+    if (uError || pError) return
 
     setSubmitting(true)
     const result = await login(username, password)
@@ -55,8 +73,26 @@ const AdminLogin = () => {
 
   return (
     <div className="admin-login-wrap">
-      <div className="admin-login-card">
-        <h1 className="admin-login-title">RA Capitals Admin</h1>
+      <div style={{ width: '100%', maxWidth: '440px', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <Link to="/" style={{ 
+          alignSelf: 'flex-start',
+          backgroundColor: '#ffffff',
+          color: '#2563eb', 
+          border: '1px solid #dbe4fd',
+          padding: '0.5rem 1rem',
+          borderRadius: '8px',
+          textDecoration: 'none', 
+          fontWeight: '600', 
+          fontSize: '0.9rem', 
+          display: 'flex', 
+          alignItems: 'center', 
+          gap: '0.4rem',
+          boxShadow: '0 2px 10px rgba(37, 99, 235, 0.1)'
+        }}>
+          <span style={{ fontSize: '1.1rem', lineHeight: '1', display: 'flex', alignItems: 'center' }}>←</span> Back to Home
+        </Link>
+        <div className="admin-login-card" style={{ width: '100%', maxWidth: '100%' }}>
+        <h1 className="admin-login-title">Taurus Magnus Admin</h1>
         <p className="muted">Sign in to manage the price list.</p>
         <form onSubmit={handleSubmit} className="admin-form" noValidate>
           <label className="form-label">
@@ -99,6 +135,7 @@ const AdminLogin = () => {
         </form>
       </div>
     </div>
+  </div>
   )
 }
 
