@@ -1,0 +1,26 @@
+name: Deploy to Taurus
+
+on:
+  push:
+    branches:
+      - Racapitalsmvp
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            cd /home/taurus-deploy/RaCapitals
+            git pull
+            cd frontend
+            npm ci
+            npm run build
+            cd ../backend
+            npm ci
+            pm2 restart racapitals-api
