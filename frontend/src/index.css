@@ -2736,8 +2736,8 @@ a:hover {
 }
 
 .admin-header-bar-logo {
-  width: 28px;
-  height: 28px;
+  height: 85px;
+  width: auto;
   display: block;
 }
 

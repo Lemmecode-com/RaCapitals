@@ -99,22 +99,7 @@ const AdminBlogs = () => {
     }
   }
 
-  // Quick toggle featured status
-  const handleToggleFeatured = async (blog) => {
-    const newFeatured = !blog.featured
-    try {
-      await api.put(`/blogs/${blog._id}`, { featured: newFeatured })
-      setBlogs((prev) =>
-        prev.map((item) =>
-          item._id === blog._id ? { ...item, featured: newFeatured } : item
-        )
-      )
-      setFlash(newFeatured ? 'Article featured on spotlight' : 'Article unfeatured')
-    } catch (err) {
-      console.error('Error toggling featured:', err)
-      setFlash('Failed to update featured flag')
-    }
-  }
+
 
   // Delete article
   const handleDelete = async () => {
@@ -230,9 +215,7 @@ const AdminBlogs = () => {
                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
                       Status
                     </th>
-                    <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-                      Featured
-                    </th>
+
                     <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', textAlign: 'right' }}>
                       Actions
                     </th>
@@ -256,15 +239,12 @@ const AdminBlogs = () => {
                         </div>
                       </td>
 
-                      {/* Title & Slug */}
+                      {/* Title */}
                       <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
                         <div style={{ fontWeight: 600, fontSize: '0.9rem', lineHeight: '1.3' }}>
                           <Link to={`/admin/blogs/${b._id}`} style={{ color: 'var(--text-primary)', textDecoration: 'none' }}>
                             {b.title}
                           </Link>
-                        </div>
-                        <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.2rem' }}>
-                          <code>/insights/{b.slug}</code>
                         </div>
                       </td>
 
@@ -317,24 +297,7 @@ const AdminBlogs = () => {
                         </button>
                       </td>
 
-                      {/* Featured Star Toggle */}
-                      <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle' }}>
-                        <button
-                          type="button"
-                          onClick={() => handleToggleFeatured(b)}
-                          title={b.featured ? 'Spotlight article (Click to unfeature)' : 'Click to feature in spotlight banner'}
-                          style={{
-                            background: 'none',
-                            border: 'none',
-                            cursor: 'pointer',
-                            fontSize: '1.25rem',
-                            color: b.featured ? '#f39c12' : 'var(--text-muted)',
-                            padding: '0.2rem'
-                          }}
-                        >
-                          {b.featured ? '★' : '☆'}
-                        </button>
-                      </td>
+
 
                       {/* Actions: View (Opens Admin View Page!), Edit, Delete */}
                       <td style={{ padding: '0.6rem 1rem', verticalAlign: 'middle', textAlign: 'right' }}>
@@ -394,14 +357,7 @@ const AdminBlogs = () => {
                         >
                           {b.status === 'published' ? '● Published' : '○ Draft'}
                         </button>
-                        <button
-                          type="button"
-                          onClick={() => handleToggleFeatured(b)}
-                          className="admin-blog-star-toggle"
-                          title={b.featured ? 'Spotlight (Click to unfeature)' : 'Click to spotlight'}
-                        >
-                          {b.featured ? '★' : '☆'}
-                        </button>
+
                       </div>
                       <div className="admin-blog-mobile-date-text">
                         {formatShortDate(b.publishedDate)} • {b.readTime || '5 min read'}
@@ -412,9 +368,6 @@ const AdminBlogs = () => {
                   <h4 className="admin-blog-mobile-title">
                     <Link to={`/admin/blogs/${b._id}`}>{b.title}</Link>
                   </h4>
-                  <div className="admin-blog-mobile-slug">
-                    <code>/insights/{b.slug}</code>
-                  </div>
 
                   <div className="admin-blog-mobile-actions">
                     <Link to={`/admin/blogs/${b._id}`} className="row-action-btn">

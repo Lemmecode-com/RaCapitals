@@ -59,7 +59,7 @@ const AdminHeader = ({ onToggleSidebar, isSidebarOpen }) => {
             <span className="admin-hamburger-bar" />
           </button>
           <Link to="/admin" className="admin-header-bar-brand">
-            <img src={logo} alt="Taurus Magnus" className="admin-header-bar-logo" />
+            <img src={logo} alt="Taurus Magnus" className="admin-header-bar-logo" style={{ height: '85px', width: 'auto' }} />
           </Link>
         </div>
         <div className="admin-header-bar-right">
