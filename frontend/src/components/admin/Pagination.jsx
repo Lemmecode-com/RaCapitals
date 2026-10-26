@@ -1,22 +1,23 @@
 import React from 'react'
 
-const Pagination = ({ currentPage, totalPages, onPageChange }) => {
-  if (totalPages <= 1) return null
+const Pagination = ({ currentPage, totalPages, onPageChange, alwaysShow = false }) => {
+  if (totalPages < 1 || (totalPages <= 1 && !alwaysShow)) return null
 
   // Determine page numbers to show
   const pages = []
+  const safeTotalPages = Math.max(1, totalPages || 1)
   
-  if (totalPages <= 5) {
-    for (let i = 1; i <= totalPages; i++) {
+  if (safeTotalPages <= 5) {
+    for (let i = 1; i <= safeTotalPages; i++) {
       pages.push(i)
     }
   } else {
     if (currentPage <= 3) {
-      pages.push(1, 2, 3, 4, '...', totalPages)
-    } else if (currentPage >= totalPages - 2) {
-      pages.push(1, '...', totalPages - 3, totalPages - 2, totalPages - 1, totalPages)
+      pages.push(1, 2, 3, 4, '...', safeTotalPages)
+    } else if (currentPage >= safeTotalPages - 2) {
+      pages.push(1, '...', safeTotalPages - 3, safeTotalPages - 2, safeTotalPages - 1, safeTotalPages)
     } else {
-      pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', totalPages)
+      pages.push(1, '...', currentPage - 1, currentPage, currentPage + 1, '...', safeTotalPages)
     }
   }
 
@@ -56,7 +57,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
       <button
         type="button"
         className="secondary-btn"
-        disabled={currentPage === totalPages}
+        disabled={currentPage >= safeTotalPages}
         onClick={() => onPageChange(currentPage + 1)}
         style={{ padding: '0.4rem 0.8rem', fontSize: '0.85rem' }}
       >

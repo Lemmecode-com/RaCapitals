@@ -24,7 +24,7 @@ const AdminBlogs = () => {
   const [deleteConfirmId, setDeleteConfirmId] = useState(null)
   const [deleting, setDeleting] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
+  const itemsPerPage = 5
 
   const fetchBlogs = async () => {
     setLoading(true)
@@ -396,6 +396,7 @@ const AdminBlogs = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        alwaysShow={true}
       />
 
       {/* Delete Confirmation Modal */}

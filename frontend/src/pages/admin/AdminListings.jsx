@@ -321,21 +321,21 @@ const AdminListings = () => {
             <h3>Company Listings</h3>
           </div>
           <div className="card-body" style={{ padding: 0, overflowX: 'auto' }}>
-            <table style={{ width: '100%', borderCollapse: 'collapse', margin: 0, textAlign: 'left' }}>
+            <table style={{ width: '100%', minWidth: '960px', borderCollapse: 'collapse', margin: 0, textAlign: 'left' }}>
               <thead style={{ background: 'var(--surface-2)' }}>
                 <tr>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Logo</th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Sector</th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Latest Price</th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
-                  <th style={{ padding: '0.75rem 1rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Actions</th>
+                  <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap', width: '48px' }}>Logo</th>
+                  <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Name</th>
+                  <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Sector</th>
+                  <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Latest Price</th>
+                  <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Status</th>
+                  <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em', whiteSpace: 'nowrap' }}>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {paginatedCompanies.map((c) => (
                   <tr key={c._id} style={{ borderBottom: '1px solid var(--border)' }}>
-                    <td style={{ padding: '0.6rem 1rem' }}>
+                    <td style={{ padding: '0.6rem 0.75rem' }}>
                       <div className="dashboard-hero-logo" style={{ width: '32px', height: '32px', borderRadius: '6px' }}>
                         {c.logoUrl ? (
                           <img src={`${apiBaseWithoutApi()}${c.logoUrl}`} alt={`${c.name} logo`} />
@@ -344,25 +344,25 @@ const AdminListings = () => {
                         )}
                       </div>
                     </td>
-                    <td style={{ padding: '0.6rem 1rem', fontWeight: 600, fontSize: '0.9rem' }}>{c.name}</td>
-                    <td style={{ padding: '0.6rem 1rem' }}>{c.sector || '—'}</td>
-                    <td className="mono" style={{ padding: '0.6rem 1rem', fontWeight: 600 }}>
+                    <td style={{ padding: '0.6rem 0.75rem', fontWeight: 600, fontSize: '0.9rem', whiteSpace: 'nowrap' }}>{c.name}</td>
+                    <td style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap' }}>{c.sector || '—'}</td>
+                    <td className="mono" style={{ padding: '0.6rem 0.75rem', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {c.latestPrice == null ? (
                         <button type="button" className="set-price-link" onClick={() => openPriceModal(c)}>Set price</button>
                       ) : (
                         formatINR(c.latestPrice)
                       )}
                     </td>
-                    <td style={{ padding: '0.6rem 1rem' }}>
-                      <span className={`status-badge ${c.isActive ? 'status-live' : 'status-off'}`}>
-                        {c.isActive ? 'Live' : 'Deactivated'}
-                      </span>
-                      {c.drhpFiled && <span className="drhp-badge" style={{ marginLeft: '0.5rem' }}>DRHP</span>}
-                    </td>
-                    <td style={{ padding: '0.6rem 1rem' }}>
-                      <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                        {renderActionsForCard(c)}
+                    <td style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap' }}>
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem', whiteSpace: 'nowrap' }}>
+                        <span className={`status-badge ${c.isActive ? 'status-live' : 'status-off'}`} style={{ margin: 0 }}>
+                          {c.isActive ? 'Live' : 'Deactivated'}
+                        </span>
+                        {c.drhpFiled && <span className="drhp-badge" style={{ margin: 0 }}>DRHP</span>}
                       </div>
+                    </td>
+                    <td style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap' }}>
+                      {renderActionsForCard(c)}
                     </td>
                   </tr>
                 ))}

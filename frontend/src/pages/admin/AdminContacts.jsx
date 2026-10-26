@@ -12,7 +12,7 @@ const AdminContacts = () => {
   const [startDate, setStartDate] = useState('')
   const [endDate, setEndDate] = useState('')
   const [currentPage, setCurrentPage] = useState(1)
-  const itemsPerPage = 10
+  const itemsPerPage = 5
 
   const [selectedMessage, setSelectedMessage] = useState(null)
 
@@ -208,6 +208,7 @@ const AdminContacts = () => {
         currentPage={currentPage}
         totalPages={totalPages}
         onPageChange={setCurrentPage}
+        alwaysShow={true}
       />
 
       {/* Modal for full message view */}

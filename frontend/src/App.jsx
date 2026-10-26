@@ -28,6 +28,10 @@ function ScrollToTop() {
   const { pathname } = useLocation()
   useEffect(() => {
     window.scrollTo(0, 0)
+    const adminContent = document.querySelector('.admin-layout-content')
+    if (adminContent) {
+      adminContent.scrollTo(0, 0)
+    }
   }, [pathname])
   return null
 }
