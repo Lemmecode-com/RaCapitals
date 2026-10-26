@@ -47,13 +47,9 @@ const Navbar = () => {
           <NavLink to="/insights" onClick={closeMenu}>Insights</NavLink>
           <NavLink to="/about" onClick={closeMenu}>About us</NavLink>
           <NavLink to="/contact" onClick={closeMenu}>Contact us</NavLink>
-          {onAdmin ? (
+          {onAdmin && (
             <NavLink to="/admin" onClick={closeMenu}>
               {isAuthenticated ? 'Dashboard' : 'Login'}
-            </NavLink>
-          ) : (
-            <NavLink to={isAuthenticated ? '/admin' : '/admin/login'} onClick={closeMenu}>
-              Login
             </NavLink>
           )}
         </nav>

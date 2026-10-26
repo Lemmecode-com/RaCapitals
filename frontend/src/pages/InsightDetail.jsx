@@ -1,7 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import api from '../services/api'
-import { MOCK_BLOGS } from '../data/mockBlogs'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
@@ -37,26 +36,16 @@ const InsightDetail = () => {
         if (res.data) {
           setBlog(res.data)
         } else {
-          fallbackToMock()
+          setNotFound(true)
         }
       })
       .catch((err) => {
-        console.warn('API error fetching article by slug, trying fallback:', err)
-        fallbackToMock()
+        console.warn('API error fetching article by slug:', err)
+        if (isMounted) setNotFound(true)
       })
       .finally(() => {
         if (isMounted) setLoading(false)
       })
-
-    const fallbackToMock = () => {
-      if (!isMounted) return
-      const foundInMock = MOCK_BLOGS.find((b) => b.slug === slug)
-      if (foundInMock) {
-        setBlog(foundInMock)
-      } else {
-        setNotFound(true)
-      }
-    }
 
     return () => {
       isMounted = false
@@ -70,14 +59,14 @@ const InsightDetail = () => {
       .get('/blogs')
       .then((res) => {
         if (!isMounted) return
-        if (Array.isArray(res.data) && res.data.length > 0) {
+        if (Array.isArray(res.data)) {
           setAllBlogs(res.data)
         } else {
-          setAllBlogs(MOCK_BLOGS)
+          setAllBlogs([])
         }
       })
       .catch(() => {
-        if (isMounted) setAllBlogs(MOCK_BLOGS)
+        if (isMounted) setAllBlogs([])
       })
 
     return () => {
@@ -94,14 +83,13 @@ const InsightDetail = () => {
   }, [blog, notFound])
 
   const relatedArticles = useMemo(() => {
-    if (!blog) return []
-    const sourcePool = allBlogs.length > 0 ? allBlogs : MOCK_BLOGS
+    if (!blog || allBlogs.length === 0) return []
 
     if (blog.relatedSlugs && blog.relatedSlugs.length > 0) {
-      const matched = sourcePool.filter((b) => blog.relatedSlugs.includes(b.slug))
+      const matched = allBlogs.filter((b) => blog.relatedSlugs.includes(b.slug))
       if (matched.length > 0) return matched
     }
-    return sourcePool
+    return allBlogs
       .filter((b) => b.slug !== blog.slug && b.category === blog.category)
       .slice(0, 2)
   }, [blog, allBlogs])
@@ -171,18 +159,11 @@ const InsightDetail = () => {
       <ComplianceRibbon />
 
       <main className="page-main insight-detail-page">
-        {/* Navigation / Breadcrumb Row */}
+        {/* Navigation Row */}
         <div className="insight-top-bar">
           <Link to="/insights" className="insight-back-link">
             <span>←</span> All Market Insights
           </Link>
-          <div className="insight-breadcrumbs">
-            <Link to="/">Home</Link>
-            <span>/</span>
-            <Link to="/insights">Insights</Link>
-            <span>/</span>
-            <span className="current">{blog.category}</span>
-          </div>
         </div>
 
         {/* Article Header */}

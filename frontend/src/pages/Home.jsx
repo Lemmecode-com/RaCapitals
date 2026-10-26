@@ -7,7 +7,6 @@ import Footer from '../components/common/Footer'
 import Navbar from '../components/common/Navbar'
 
 import { formatINR, formatShortDate } from '../utils/format'
-import { MOCK_BLOGS } from '../data/mockBlogs'
 
 const PREVIEW_LIMIT = 12
 const MARQUEE_DURATION = 22
@@ -209,17 +208,17 @@ const Home = () => {
         if (!cancelled) {
           setDrhpCompanies(drhpRes.data || [])
           setEvents(eventsRes.data || [])
-          if (Array.isArray(blogsRes.data) && blogsRes.data.length > 0) {
+          if (Array.isArray(blogsRes.data)) {
             setBlogs(blogsRes.data)
           } else {
-            setBlogs(MOCK_BLOGS.slice(0, 3))
+            setBlogs([])
           }
         }
       } catch {
         if (!cancelled) {
           setDrhpCompanies([])
           setEvents([])
-          setBlogs(MOCK_BLOGS.slice(0, 3))
+          setBlogs([])
         }
       }
     }
@@ -382,22 +381,6 @@ const Home = () => {
               )}
             </div>
           </div>
-          <style jsx>{`
-            .home-marquee-track {
-              overflow: hidden;
-              position: relative;
-            }
-            .home-marquee-content {
-              display: flex;
-              gap: 1rem;
-              animation: marqueeScroll ${MARQUEE_DURATION}s linear infinite;
-              width: max-content;
-            }
-            @keyframes marqueeScroll {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-          `}</style>
         </section>
 
 
@@ -545,36 +528,38 @@ const Home = () => {
           )}
         </section>
 
-        <section className="home-insights-section" aria-labelledby="insights-heading">
-          <div className="home-section-header">
-            <div>
-              <p className="home-eyebrow">RESEARCH & ANALYSIS</p>
-              <h2 id="insights-heading" className="home-section-title">Market Insights</h2>
+        {blogs.length > 0 && (
+          <section className="home-insights-section" aria-labelledby="insights-heading">
+            <div className="home-section-header">
+              <div>
+                <p className="home-eyebrow">RESEARCH & ANALYSIS</p>
+                <h2 id="insights-heading" className="home-section-title">Market Insights</h2>
+              </div>
+              <Link to="/insights" className="home-marquee-cta">View all insights →</Link>
             </div>
-            <Link to="/insights" className="home-marquee-cta">View all insights →</Link>
-          </div>
-          <div className="home-insights-grid">
-            {(blogs.length > 0 ? blogs : MOCK_BLOGS.slice(0, 3)).map((blog) => {
-              const blogKey = blog._id || blog.id || blog.slug
-              return (
-                <article key={blogKey} className="home-insight-card">
-                  <div className="home-insight-badge-row">
-                    <span className="home-insight-tag">{blog.category}</span>
-                    <span className="home-insight-time">{blog.readTime || '5 min read'}</span>
-                  </div>
-                  <h3 className="home-insight-title">
-                    <Link to={`/insights/${blog.slug}`}>{blog.title}</Link>
-                  </h3>
-                  <p className="home-insight-excerpt">{blog.excerpt}</p>
-                  <div className="home-insight-footer">
-                    <span className="home-insight-author">{blog.author || 'RA Research Desk'}</span>
-                    <Link to={`/insights/${blog.slug}`} className="home-insight-link">Read analysis →</Link>
-                  </div>
-                </article>
-              )
-            })}
-          </div>
-        </section>
+            <div className="home-insights-grid">
+              {blogs.map((blog) => {
+                const blogKey = blog._id || blog.id || blog.slug
+                return (
+                  <article key={blogKey} className="home-insight-card">
+                    <div className="home-insight-badge-row">
+                      <span className="home-insight-tag">{blog.category}</span>
+                      <span className="home-insight-time">{blog.readTime || '5 min read'}</span>
+                    </div>
+                    <h3 className="home-insight-title">
+                      <Link to={`/insights/${blog.slug}`}>{blog.title}</Link>
+                    </h3>
+                    <p className="home-insight-excerpt">{blog.excerpt}</p>
+                    <div className="home-insight-footer">
+                      <span className="home-insight-author">{blog.author || 'RA Research Desk'}</span>
+                      <Link to={`/insights/${blog.slug}`} className="home-insight-link">Read analysis →</Link>
+                    </div>
+                  </article>
+                )
+              })}
+            </div>
+          </section>
+        )}
 
         <section className="home-faq-section" aria-labelledby="faq-heading">
           <div className="home-faq-header">

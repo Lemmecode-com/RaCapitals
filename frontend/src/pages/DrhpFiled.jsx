@@ -24,10 +24,36 @@ const DrhpFiled = () => {
       <Navbar />
       <ComplianceRibbon />
       <main className="page-main">
-        <div className="page-header">
-          <Link to="/catalog" className="back-pill">← Back to Price List</Link>
-          <h1>DRHP Filed</h1>
-          <p className="page-subtitle">Companies that have filed their Draft Red Herring Prospectus.</p>
+        <div className="drhp-hero-header">
+          <div className="drhp-hero-badge">IPO WATCH</div>
+          <h1 className="drhp-hero-title">
+            DRHP-filed <span className="drhp-hero-title-accent">companies</span>
+          </h1>
+          <p className="drhp-hero-desc">
+            Unlisted companies that have filed a Draft Red Herring Prospectus with SEBI — an early step toward an IPO. Indicative prices, for information only; a DRHP filing is not a guarantee of any IPO.
+          </p>
+
+          <div className="drhp-stepper" aria-label="IPO Pipeline Progress">
+            <div className="drhp-step active">
+              <div className="drhp-step-circle">1</div>
+              <span className="drhp-step-label">Unlisted</span>
+            </div>
+            <div className="drhp-step-line active" />
+            <div className="drhp-step active">
+              <div className="drhp-step-circle">2</div>
+              <span className="drhp-step-label">DRHP filed</span>
+            </div>
+            <div className="drhp-step-line" />
+            <div className="drhp-step">
+              <div className="drhp-step-circle">3</div>
+              <span className="drhp-step-label">SEBI nod</span>
+            </div>
+            <div className="drhp-step-line" />
+            <div className="drhp-step">
+              <div className="drhp-step-circle">4</div>
+              <span className="drhp-step-label">IPO</span>
+            </div>
+          </div>
         </div>
 
         {loading ? (

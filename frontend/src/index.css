@@ -7398,6 +7398,23 @@ h1, h2, h3, h4, h5, h6 {
   color: #2563eb;
 }
 
+.home-marquee-track {
+  overflow: hidden;
+  position: relative;
+}
+
+.home-marquee-content {
+  display: flex;
+  gap: 1rem;
+  animation: marqueeScroll 22s linear infinite;
+  width: max-content;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
 .drhp-badge {
   background: #2563eb;
   color: #ffffff;
@@ -7407,6 +7424,138 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 999px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+/* ============================================================
+   DRHP Filed Page Header & Stepper Styles (IPO Watch)
+   ============================================================ */
+.drhp-hero-header {
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 1.5rem;
+  padding: 0.25rem 1rem 1.25rem;
+}
+
+.drhp-hero-badge {
+  color: #2563eb;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  margin-bottom: 0.65rem;
+}
+
+.drhp-hero-title {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: clamp(1.75rem, 3.2vw, 2.5rem);
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+  margin: 0 0 0.75rem;
+}
+
+.drhp-hero-title-accent {
+  color: #2563eb;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.drhp-hero-desc {
+  font-size: 0.95rem;
+  color: #475569;
+  line-height: 1.6;
+  max-width: 660px;
+  margin: 0 auto 1.85rem;
+}
+
+/* Stepper Component */
+.drhp-stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  margin: 0 auto;
+  max-width: 540px;
+  padding: 0 0.5rem;
+}
+
+.drhp-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  min-width: 64px;
+}
+
+.drhp-step-circle {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: #ffffff;
+  border: 2px solid #cbd5e1;
+  color: #64748b;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.25s ease;
+}
+
+.drhp-step.active .drhp-step-circle {
+  border-color: #2563eb;
+  color: #2563eb;
+  background: rgba(37, 99, 235, 0.04);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.drhp-step-label {
+  margin-top: 0.5rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.drhp-step.active .drhp-step-label {
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.drhp-step-line {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+  min-width: 25px;
+  max-width: 60px;
+  margin: 0 0.25rem 1.35rem 0.25rem;
+}
+
+.drhp-step-line.active {
+  background: #2563eb;
+}
+
+@media (max-width: 640px) {
+  .drhp-stepper {
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+  }
+  .drhp-step {
+    min-width: 60px;
+  }
+  .drhp-step-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 0.85rem;
+  }
+  .drhp-step-label {
+    font-size: 0.75rem;
+  }
+  .drhp-step-line {
+    min-width: 18px;
+    margin-bottom: 1.4rem;
+  }
 }
 
 /* ============================================================

@@ -1,11 +1,18 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../services/api'
-import { MOCK_BLOGS, BLOG_CATEGORIES } from '../data/mockBlogs'
+import { formatShortDate, apiBaseWithoutApi } from '../utils/format'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
-import { formatShortDate, apiBaseWithoutApi } from '../utils/format'
+
+export const BLOG_CATEGORIES = [
+  'All',
+  'Valuation & Analysis',
+  'Guides & Education',
+  'Pre-IPO News',
+  'Tax & Legal'
+]
 
 const resolveCoverSrc = (coverImage) => {
   if (!coverImage) return ''
@@ -32,15 +39,11 @@ const Insights = () => {
       .get('/blogs')
       .then((res) => {
         if (!isMounted) return
-        if (Array.isArray(res.data) && res.data.length > 0) {
-          setBlogs(res.data)
-        } else {
-          setBlogs(MOCK_BLOGS)
-        }
+        setBlogs(Array.isArray(res.data) ? res.data : [])
       })
       .catch((err) => {
-        console.warn('Failed to load insights from API, falling back to mock:', err)
-        if (isMounted) setBlogs(MOCK_BLOGS)
+        console.warn('Failed to load insights from API:', err)
+        if (isMounted) setBlogs([])
       })
       .finally(() => {
         if (isMounted) setLoading(false)
@@ -222,19 +225,25 @@ const Insights = () => {
             <section className="insights-grid-section">
               {filteredBlogs.length === 0 ? (
                 <div className="insights-empty-state">
-                  <div className="insights-empty-icon">🔍</div>
-                  <h3>No insights found</h3>
-                  <p>We couldn't find any articles matching your search query "{searchQuery}".</p>
-                  <button
-                    type="button"
-                    className="insights-reset-btn"
-                    onClick={() => {
-                      setSearchQuery('')
-                      setSelectedCategory('All')
-                    }}
-                  >
-                    Reset Filters
-                  </button>
+                  <div className="insights-empty-icon">{blogs.length === 0 ? '📰' : '🔍'}</div>
+                  <h3>{blogs.length === 0 ? 'No Market Insights Published Yet' : 'No insights found'}</h3>
+                  <p>
+                    {blogs.length === 0
+                      ? 'In-depth valuation analyses and pre-IPO research will appear here once published from the Admin CMS.'
+                      : `We couldn't find any articles matching your search query "${searchQuery}".`}
+                  </p>
+                  {blogs.length > 0 && (
+                    <button
+                      type="button"
+                      className="insights-reset-btn"
+                      onClick={() => {
+                        setSearchQuery('')
+                        setSelectedCategory('All')
+                      }}
+                    >
+                      Reset Filters
+                    </button>
+                  )}
                 </div>
               ) : (
                 <div className="insights-cards-grid">

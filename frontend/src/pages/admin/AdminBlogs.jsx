@@ -4,7 +4,7 @@ import api from '../../services/api'
 import ConfirmDialog from '../../components/common/ConfirmDialog'
 import Pagination from '../../components/admin/Pagination'
 import { formatShortDate, apiBaseWithoutApi } from '../../utils/format'
-import { BLOG_CATEGORIES } from '../../data/mockBlogs'
+import { BLOG_CATEGORIES } from '../Insights'
 
 const resolveCoverSrc = (coverImage) => {
   if (!coverImage) return ''
