@@ -34,7 +34,7 @@ const AdminContacts = () => {
       setLoading(true)
       try {
         const res = await api.get('/contact')
-        setSubmissions(res.data || [])
+        setSubmissions(Array.isArray(res.data) ? res.data : [])
       } catch {
         setError('Failed to load contact submissions.')
       } finally {
@@ -57,7 +57,7 @@ const AdminContacts = () => {
   }
 
   // Derived state for filters
-  const filteredSubmissions = submissions.filter((s) => {
+  const filteredSubmissions = (Array.isArray(submissions) ? submissions : []).filter((s) => {
     const matchSearch =
       s.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
       s.name.toLowerCase().includes(searchTerm.toLowerCase())

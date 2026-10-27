@@ -30,9 +30,10 @@ const AdminBlogs = () => {
     setLoading(true)
     try {
       const res = await api.get('/blogs/admin/all')
-      setBlogs(res.data || [])
+      setBlogs(Array.isArray(res.data) ? res.data : [])
     } catch (err) {
       console.error('Failed to fetch admin blogs:', err)
+      setBlogs([])
       setFlash('Error loading articles from server')
     } finally {
       setLoading(false)
@@ -51,6 +52,7 @@ const AdminBlogs = () => {
 
   // Filtered list
   const filteredBlogs = useMemo(() => {
+    if (!Array.isArray(blogs)) return []
     return blogs.filter((b) => {
       const matchesCategory = category === 'All' || b.category === category
       const matchesStatus =

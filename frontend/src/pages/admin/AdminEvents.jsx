@@ -42,8 +42,8 @@ const AdminEvents = () => {
         api.get('/events'),
         api.get('/companies/admin/all')
       ])
-      setEvents(evRes.data)
-      setCompanies(coRes.data)
+      setEvents(Array.isArray(evRes.data) ? evRes.data : [])
+      setCompanies(Array.isArray(coRes.data) ? coRes.data : [])
     } catch (err) {
       console.error(err)
     } finally {

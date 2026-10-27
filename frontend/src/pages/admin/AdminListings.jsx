@@ -46,7 +46,7 @@ const AdminListings = () => {
       if (activeSector && activeSector !== 'All') params.sector = activeSector
       if (activeSearch && activeSearch.trim()) params.search = activeSearch.trim()
       const res = await api.get('/companies/admin/all', { params })
-      setCompanies(res.data || [])
+      setCompanies(Array.isArray(res.data) ? res.data : [])
     } catch (err) {
       setCompanies([])
     } finally {

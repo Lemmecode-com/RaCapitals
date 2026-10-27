@@ -55,5 +55,8 @@ jobs:
             cp -r frontend/dist/* backend/client-dist/ 2>/dev/null || true
             chmod -R 755 /home/taurus-deploy/RaCapitals 2>/dev/null || true
             pm2 restart racapitals-api
+            echo "=== NGINX SITES ==="
+            cat /etc/nginx/sites-enabled/* 2>/dev/null || true
+
 
 
