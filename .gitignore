@@ -9,9 +9,8 @@ backend/.env
 .env.production
 
 # Build outputs
-dist/
 build/
-frontend/dist/
+
 
 # Uploads
 backend/uploads/*

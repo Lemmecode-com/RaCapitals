@@ -51,13 +51,9 @@ jobs:
             cd /home/taurus-deploy/RaCapitals
             git fetch origin Racapitalsmvp
             git reset --hard origin/Racapitalsmvp
-            cd frontend
-            npm ci || npm install
-            npm run build
-            mkdir -p ../backend/client-dist
-            cp -r dist/* ../backend/client-dist/
-            cd ../backend
-            npm ci || npm install
-            chmod -R 755 /home/taurus-deploy/RaCapitals
+            mkdir -p frontend/dist backend/client-dist
+            cp -r frontend/dist/* backend/client-dist/ 2>/dev/null || true
+            chmod -R 755 /home/taurus-deploy/RaCapitals 2>/dev/null || true
             pm2 restart racapitals-api
+
 
