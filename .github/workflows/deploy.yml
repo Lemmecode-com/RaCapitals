@@ -46,12 +46,15 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          timeout: 60s
           script: |
             cd /home/taurus-deploy/RaCapitals
-            git pull
+            git fetch origin Racapitalsmvp
+            git reset --hard origin/Racapitalsmvp
+            chmod -R u+w /home/taurus-deploy/RaCapitals 2>/dev/null || true
             cd frontend
-            npm ci
+            npm ci || npm install
             npm run build
             cd ../backend
-            npm ci
+            npm ci || npm install
             pm2 restart racapitals-api
