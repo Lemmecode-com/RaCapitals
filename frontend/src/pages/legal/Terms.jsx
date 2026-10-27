@@ -1,9 +1,24 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import Footer from '../../components/common/Footer'
 import Navbar from '../../components/common/Navbar'
 import ComplianceRibbon from '../../components/common/ComplianceRibbon'
 
 const Terms = () => {
+  const [showTopBtn, setShowTopBtn] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowTopBtn(window.scrollY > 400)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
   return (
     <div className="page-wrap">
       <Navbar />
@@ -30,7 +45,7 @@ const Terms = () => {
           </p>
         </div>
 
-        <nav className="legal-toc" aria-label="Contents">
+        <nav id="toc" className="legal-toc" aria-label="Contents">
           <h2>Contents</h2>
           <ol>
             <li><a href="#section-1">About these Terms and the Platform</a></li>
@@ -235,12 +250,27 @@ const Terms = () => {
         </section>
 
         <nav className="legal-related" aria-label="Related legal documents">
+          <span className="legal-related-label">Related documents:</span>
           <Link to="/terms">Terms of Use</Link>
           <Link to="/privacy">Privacy Policy</Link>
-          <Link to="/disclaimer">Declaration of Risk</Link>
-          <Link to="/disclaimer">Disclaimer</Link>
+          <Link to="/disclaimer">Declaration of Risk &amp; Disclaimer</Link>
         </nav>
       </main>
+
+      {showTopBtn && (
+        <button
+          type="button"
+          className="legal-back-to-top"
+          onClick={scrollToTop}
+          aria-label="Back to top"
+          title="Back to top"
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M18 15l-6-6-6 6" />
+          </svg>
+          <span>Top</span>
+        </button>
+      )}
 
       <Footer />
     </div>
