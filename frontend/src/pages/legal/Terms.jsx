@@ -29,9 +29,7 @@ const Terms = () => {
           <h1>Terms of Use</h1>
           <div className="legal-meta">
             <span className="legal-badge">Version 1.0</span>
-            <span className="legal-badge">
-              Effective: <mark className="legal-ph">[DD Month YYYY]</mark>
-            </span>
+            <span className="legal-badge">Effective: 27 October 2026</span>
           </div>
         </header>
 
@@ -71,7 +69,7 @@ const Terms = () => {
         <section id="section-1" className="legal-section">
           <h2><span className="legal-num">1.</span> About these Terms and the Platform</h2>
           <p>
-            These Terms of Use (the &quot;Terms&quot;) govern your access to and use of the website operated under the name Taurus Magnus (the &quot;Platform&quot;). The Platform is owned and operated by <mark className="legal-ph">[LEGAL ENTITY NAME, e.g. Taurus Magnus Private Limited]</mark> (registration no. <mark className="legal-ph">[CIN / LLPIN / registration number]</mark>), whose registered office is at <mark className="legal-ph">[Registered office address, City, State, PIN]</mark> (&quot;Taurus Magnus&quot;, &quot;we&quot;, &quot;us&quot; or &quot;our&quot;).
+            These Terms of Use (the &quot;Terms&quot;) govern your access to and use of the website operated under the name Taurus Magnus (the &quot;Platform&quot;). The Platform is owned and operated by Taurus Magnus (registration no. <mark className="legal-ph">[CIN / LLPIN / registration number]</mark>), whose registered office is at <mark className="legal-ph">[Registered office address, City, State, PIN]</mark> (&quot;Taurus Magnus&quot;, &quot;we&quot;, &quot;us&quot; or &quot;our&quot;).
           </p>
           <p>
             Taurus Magnus is an information and research platform for unlisted and pre-IPO shares in India. On the Platform you can browse indicative prices, lot sizes, corporate events, DRHP filing information and market insight articles, and you can send us an enquiry about a company you are interested in.
@@ -239,7 +237,7 @@ const Terms = () => {
         <section id="section-17" className="legal-section">
           <h2><span className="legal-num">17.</span> Contact Us</h2>
           <p>
-            <mark className="legal-ph">[LEGAL ENTITY NAME, e.g. Taurus Magnus Private Limited]</mark><br/>
+            <strong>Taurus Magnus</strong><br/>
             <mark className="legal-ph">[Registered office address, City, State, PIN]</mark><br/>
             Email: <mark className="legal-ph">[official contact email]</mark><br/>
             Phone / WhatsApp: <mark className="legal-ph">[official phone / WhatsApp number]</mark>
