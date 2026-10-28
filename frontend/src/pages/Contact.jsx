@@ -33,7 +33,7 @@ const ContactBriefcaseIcon = () => (
   </svg>
 )
 
-const CONTACT_EMAIL = 'contact@taurusmagnus.example'
+const CONTACT_EMAIL = 'taurusmagnus2026@gmail.com'
 
 const Contact = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
@@ -126,21 +126,21 @@ const Contact = () => {
             <ContactOfficeIcon />
             <div className="contact-card-body">
               <h3>Registered Office</h3>
-              <p>[Registered Office Address Line 1]<br />[City, State, PIN]<br />India</p>
+              <p>SA CAPITALS, Shivam Colony<br />Behat Road, Saharanpur<br />Uttar Pradesh, India</p>
             </div>
           </div>
           <div className="contact-card contact-card-compact">
             <ContactMailIcon />
             <div className="contact-card-body">
               <h3>Email</h3>
-              <p className="mono">{CONTACT_EMAIL}</p>
+              <p className="mono"><a href={`mailto:${CONTACT_EMAIL}`} style={{ color: 'inherit', textDecoration: 'none' }}>{CONTACT_EMAIL}</a></p>
             </div>
           </div>
           <div className="contact-card contact-card-compact">
             <ContactPhoneIcon />
             <div className="contact-card-body">
               <h3>Phone / WhatsApp</h3>
-              <p className="mono">+91 99999 99999</p>
+              <p className="mono"><a href="https://wa.me/919149169733" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>+91 91491 69733</a></p>
             </div>
           </div>
         </section>

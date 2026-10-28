@@ -96,7 +96,7 @@ const Insights = () => {
   }, [blogs])
 
   const handleWhatsAppDesk = () => {
-    const number = import.meta.env.VITE_WHATSAPP_NUMBER || '919999999999'
+    const number = import.meta.env.VITE_WHATSAPP_NUMBER || '919149169733'
     const message = `Hi Taurus Magnus team, I was reading your Market Insights and would like to enquire about current pre-IPO opportunities.`
     window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer')
   }

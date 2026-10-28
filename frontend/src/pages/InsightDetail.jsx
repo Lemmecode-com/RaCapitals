@@ -103,7 +103,7 @@ const InsightDetail = () => {
   }
 
   const handleWhatsAppEnquiry = () => {
-    const number = import.meta.env.VITE_WHATSAPP_NUMBER || '919999999999'
+    const number = import.meta.env.VITE_WHATSAPP_NUMBER || '919149169733'
     const message = `Hi Taurus Magnus team, I read your insight "${blog?.title}". I would like to enquire about availability and lot pricing for these unlisted shares.`
     const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`
     window.open(url, '_blank', 'noopener,noreferrer')

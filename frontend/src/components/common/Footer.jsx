@@ -28,8 +28,8 @@ const Footer = () => {
         </div>
         <div className="footer-col">
           <h3>Connect</h3>
-          <a href="mailto:contact@taurusmagnus.example">Email Us</a>
-          <a href="https://wa.me/919999999999" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a href="mailto:taurusmagnus2026@gmail.com">Email Us</a>
+          <a href="https://wa.me/919149169733" target="_blank" rel="noopener noreferrer">WhatsApp</a>
         </div>
       </div>
       <div className="footer-bottom">

@@ -69,7 +69,7 @@ const Terms = () => {
         <section id="section-1" className="legal-section">
           <h2><span className="legal-num">1.</span> About these Terms and the Platform</h2>
           <p>
-            These Terms of Use (the &quot;Terms&quot;) govern your access to and use of the website operated under the name Taurus Magnus (the &quot;Platform&quot;). The Platform is owned and operated by Taurus Magnus (registration no. <mark className="legal-ph">[CIN / LLPIN / registration number]</mark>), whose registered office is at <mark className="legal-ph">[Registered office address, City, State, PIN]</mark> (&quot;Taurus Magnus&quot;, &quot;we&quot;, &quot;us&quot; or &quot;our&quot;).
+            These Terms of Use (the &quot;Terms&quot;) govern your access to and use of the website operated under the name Taurus Magnus (the &quot;Platform&quot;). The Platform is owned and operated by Taurus Magnus (registration no. <mark className="legal-ph">[CIN / LLPIN / registration number]</mark>), whose registered office is at SA CAPITALS, Shivam Colony, Behat Road, Saharanpur, Uttar Pradesh (&quot;Taurus Magnus&quot;, &quot;we&quot;, &quot;us&quot; or &quot;our&quot;).
           </p>
           <p>
             Taurus Magnus is an information and research platform for unlisted and pre-IPO shares in India. On the Platform you can browse indicative prices, lot sizes, corporate events, DRHP filing information and market insight articles, and you can send us an enquiry about a company you are interested in.
@@ -212,7 +212,7 @@ const Terms = () => {
         <section id="section-14" className="legal-section">
           <h2><span className="legal-num">14.</span> Governing Law and Disputes</h2>
           <p>
-            These Terms are governed by the laws of India. If a dispute arises, the parties will first try to resolve it in good faith through discussion for 30 days after one party gives the other written notice of the dispute. If it is not resolved in that time, the courts at <mark className="legal-ph">[CITY, STATE]</mark> will have exclusive jurisdiction.
+            These Terms are governed by the laws of India. If a dispute arises, the parties will first try to resolve it in good faith through discussion for 30 days after one party gives the other written notice of the dispute. If it is not resolved in that time, the courts at Saharanpur, Uttar Pradesh will have exclusive jurisdiction.
           </p>
         </section>
 
@@ -238,9 +238,9 @@ const Terms = () => {
           <h2><span className="legal-num">17.</span> Contact Us</h2>
           <p>
             <strong>Taurus Magnus</strong><br/>
-            <mark className="legal-ph">[Registered office address, City, State, PIN]</mark><br/>
-            Email: <mark className="legal-ph">[official contact email]</mark><br/>
-            Phone / WhatsApp: <mark className="legal-ph">[official phone / WhatsApp number]</mark>
+            SA CAPITALS, Shivam Colony, Behat Road, Saharanpur, Uttar Pradesh, India<br/>
+            Email: <a href="mailto:taurusmagnus2026@gmail.com">taurusmagnus2026@gmail.com</a><br/>
+            Phone / WhatsApp: <a href="https://wa.me/919149169733" target="_blank" rel="noopener noreferrer">+91 91491 69733</a>
           </p>
           <p>
             For privacy-related requests and complaints, please see the Grievance Officer details in our <Link to="/privacy">Privacy Policy</Link>.
