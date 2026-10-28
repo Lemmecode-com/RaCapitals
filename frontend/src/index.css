@@ -8613,6 +8613,7 @@ h1, h2, h3, h4, h5, h6 {
 .insight-card-link:hover {
   transform: translateX(3px);
   color: var(--brass, #b08d57);
+  text-decoration: none;
 }
 
 /* Empty State */
@@ -8744,7 +8745,8 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .insight-back-link:hover {
-  text-decoration: underline;
+  text-decoration: none;
+  transform: translateX(-3px);
 }
 
 .insight-breadcrumbs {
@@ -9181,6 +9183,14 @@ h1, h2, h3, h4, h5, h6 {
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.insight-related-all-link:hover {
+  text-decoration: none;
+  transform: translateX(3px);
 }
 
 .insight-related-grid {
@@ -9254,6 +9264,12 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
+  transition: transform 0.15s ease;
+}
+
+.insight-related-link:hover {
+  text-decoration: none;
+  transform: translateX(3px);
 }
 
 /* ============================================================
@@ -9367,6 +9383,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .home-insight-link:hover {
   transform: translateX(3px);
+  text-decoration: none;
 }
 
 /* Responsive Overrides */
@@ -10663,4 +10680,39 @@ h1, h2, h3, h4, h5, h6 {
   .admin-login-logo-img {
     height: 56px;
   }
+}
+
+
+/* Ensure market insight links never show underlines */
+.insight-back-link,
+.insight-back-link:hover,
+.insight-back-link:focus,
+.insight-back-link:active,
+.insight-back-link *,
+.insight-related-all-link,
+.insight-related-all-link:hover,
+.insight-related-all-link:focus,
+.insight-related-all-link:active,
+.insight-related-all-link *,
+.insight-related-link,
+.insight-related-link:hover,
+.insight-related-link:focus,
+.insight-related-link:active,
+.insight-related-link *,
+.insight-card-link,
+.insight-card-link:hover,
+.insight-card-link:focus,
+.insight-card-link:active,
+.insight-card-link *,
+.home-insight-link,
+.home-insight-link:hover,
+.home-insight-link:focus,
+.home-insight-link:active,
+.home-insight-link *,
+.insights-read-btn,
+.insights-read-btn:hover,
+.insights-read-btn:focus,
+.insights-read-btn:active,
+.insights-read-btn * {
+  text-decoration: none !important;
 }

@@ -77,7 +77,7 @@ const Insights = () => {
   // Featured blog (featured: true or fallback to first)
   const featuredBlog = useMemo(() => {
     if (selectedCategory !== 'All' || searchQuery.trim()) return null
-    return blogs.find((b) => b.featured) || blogs[0] || null
+    return blogs.find((b) => b.featured) || null
   }, [blogs, selectedCategory, searchQuery])
 
   // Remaining articles for the grid
