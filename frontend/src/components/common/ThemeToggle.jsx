@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useTheme } from '../../context/ThemeContext'
 
 const THEME_COLORS = {
-  'indigo-light': { pageBg: '#F5F5FA', brass: '#4F46E5' },
+  'indigo-light': { pageBg: '#F5F5FA', brass: '#2563EB' },
 }
 
 const THEME_OPTIONS = [
