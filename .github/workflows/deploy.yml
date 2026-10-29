@@ -46,6 +46,11 @@ jobs:
     steps:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
+        env:
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
+          VITE_WHATSAPP_NUMBER: ${{ secrets.VITE_WHATSAPP_NUMBER }}
+          ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
+          ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
@@ -63,10 +68,10 @@ jobs:
             cd backend && npm ci && cd ..
 
             echo ">>> Installing frontend dependencies and building"
-            cd frontend && npm ci && VITE_API_BASE_URL=$VITE_API_BASE_URL VITE_WHATSAPP_NUMBER=$VITE_WHATSAPP_NUMBER npm run build && cd ..
+            cd frontend && npm ci && npm run build && cd ..
 
             echo ">>> Seeding admin user if not exists"
-            cd backend && ADMIN_USERNAME=$ADMIN_USERNAME ADMIN_PASSWORD=$ADMIN_PASSWORD node seedAdmin.js && cd ..
+            cd backend && node seedAdmin.js && cd ..
 
             echo ">>> Reloading API (zero downtime)"
             pm2 reload racapitals-api
