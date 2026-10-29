@@ -61,6 +61,9 @@ jobs:
             set -e
             cd /home/taurus-deploy/RaCapitals
 
+            echo ">>> Fixing ownership"
+            sudo chown -R taurus-deploy:taurus-deploy /home/taurus-deploy/RaCapitals
+
             echo ">>> Pulling latest code"
             git pull origin Racapitalsmvp
 
