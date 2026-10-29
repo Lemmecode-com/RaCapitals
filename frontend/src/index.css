@@ -10527,7 +10527,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .admin-login-wrap .password-toggle {
   position: absolute;
-  right: 0.75rem;
+  right: 0.85rem;
+  top: 50%;
+  transform: translateY(-50%);
   background: none;
   border: none;
   cursor: pointer;
@@ -10536,12 +10538,14 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: center;
+  line-height: 0;
+  z-index: 2;
   transition: color 0.15s ease, transform 0.15s ease;
 }
 
 .admin-login-wrap .password-toggle:hover {
   color: var(--brass);
-  transform: scale(1.1);
+  transform: translateY(-50%) scale(1.12);
 }
 
 /* Animated Error Alert */
