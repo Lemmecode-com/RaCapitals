@@ -68,7 +68,8 @@ jobs:
             cd backend && npm ci && cd ..
 
             echo ">>> Installing frontend dependencies and building"
-            cd frontend && npm ci && npm run build && cd ..
+            find frontend/node_modules -maxdepth 0 -not -user taurus-deploy -exec chown -R taurus-deploy:taurus-deploy {} \; 2>/dev/null || true
+            cd frontend && npm ci 2>&1 && VITE_API_BASE_URL=$VITE_API_BASE_URL VITE_WHATSAPP_NUMBER=$VITE_WHATSAPP_NUMBER npm run build 2>&1 && cd ..
 
             echo ">>> Seeding admin user if not exists"
             cd backend && node seedAdmin.js && cd ..
