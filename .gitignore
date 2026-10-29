@@ -10,6 +10,9 @@ backend/.env
 
 # Build outputs
 build/
+frontend/dist/
+backend/client-dist/
+backend/public/
 
 
 # Uploads

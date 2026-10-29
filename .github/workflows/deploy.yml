@@ -51,6 +51,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           timeout: 180s
+          envs: VITE_API_BASE_URL,VITE_WHATSAPP_NUMBER,ADMIN_USERNAME,ADMIN_PASSWORD
           script: |
             set -e
             cd /home/taurus-deploy/RaCapitals
@@ -62,7 +63,10 @@ jobs:
             cd backend && npm ci && cd ..
 
             echo ">>> Installing frontend dependencies and building"
-            cd frontend && npm ci && npm run build && cd ..
+            cd frontend && npm ci && VITE_API_BASE_URL=$VITE_API_BASE_URL VITE_WHATSAPP_NUMBER=$VITE_WHATSAPP_NUMBER npm run build && cd ..
+
+            echo ">>> Seeding admin user if not exists"
+            cd backend && ADMIN_USERNAME=$ADMIN_USERNAME ADMIN_PASSWORD=$ADMIN_PASSWORD node seedAdmin.js && cd ..
 
             echo ">>> Reloading API (zero downtime)"
             pm2 reload racapitals-api
