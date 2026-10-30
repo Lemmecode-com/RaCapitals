@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../../services/api'
 import ConfirmDialog from '../../components/common/ConfirmDialog.jsx'
@@ -21,6 +21,179 @@ const eventTypeClass = (type) => {
     case 'Leadership Change': return 'event-tag-leadership'
     default: return 'event-tag-other'
   }
+}
+
+
+function CompanySelect({ companies, value, onChange }) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const containerRef = useRef(null)
+  const inputRef = useRef(null)
+
+  const selectedCompany = useMemo(
+    () => companies.find((c) => c._id === value),
+    [companies, value]
+  )
+
+  const sortedCompanies = useMemo(() => {
+    return [...companies].sort((a, b) => (a.name || '').localeCompare(b.name || ''))
+  }, [companies])
+
+  const filtered = useMemo(() => {
+    if (!search.trim()) return sortedCompanies
+    const q = search.toLowerCase().trim()
+    return sortedCompanies.filter((c) => (c.name || '').toLowerCase().includes(q))
+  }, [sortedCompanies, search])
+
+  // Sync search input with selected company when closed or when value changes
+  useEffect(() => {
+    if (!isOpen) {
+      setSearch(selectedCompany ? selectedCompany.name : '')
+    }
+  }, [isOpen, selectedCompany])
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (containerRef.current && !containerRef.current.contains(e.target)) {
+        setIsOpen(false)
+        setSearch(selectedCompany ? selectedCompany.name : '')
+      }
+    }
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false)
+        setSearch(selectedCompany ? selectedCompany.name : '')
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isOpen, selectedCompany])
+
+  const handleSelect = (companyId) => {
+    onChange(companyId)
+    const match = companies.find((c) => c._id === companyId)
+    setSearch(match ? match.name : '')
+    setIsOpen(false)
+  }
+
+  const handleClear = (e) => {
+    e.stopPropagation()
+    onChange('')
+    setSearch('')
+    if (inputRef.current) inputRef.current.focus()
+    setIsOpen(true)
+  }
+
+  const handleFocus = (e) => {
+    setIsOpen(true)
+    e.target.select()
+  }
+
+  const handleInputKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      if (isOpen) {
+        e.stopPropagation()
+        setIsOpen(false)
+        setSearch(selectedCompany ? selectedCompany.name : '')
+      }
+    } else if (e.key === 'Enter') {
+      if (isOpen && filtered.length > 0) {
+        e.preventDefault()
+        e.stopPropagation()
+        handleSelect(filtered[0]._id)
+      }
+    }
+  }
+
+  return (
+    <div className="searchable-select-wrap" ref={containerRef}>
+      <div className="searchable-select-input-box">
+        <input
+          ref={inputRef}
+          type="text"
+          className="form-input searchable-select-input"
+          placeholder="Search company (or select General)..."
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value)
+            if (!isOpen) setIsOpen(true)
+          }}
+          onFocus={handleFocus}
+          onKeyDown={handleInputKeyDown}
+          autoComplete="off"
+        />
+        <div className="searchable-select-actions">
+          {(value || search) && (
+            <button
+              type="button"
+              className="searchable-select-clear-btn"
+              onClick={handleClear}
+              title="Clear to General"
+              tabIndex={-1}
+            >
+              ✕
+            </button>
+          )}
+          <button
+            type="button"
+            className="searchable-select-arrow-btn"
+            onClick={() => {
+              if (isOpen) {
+                setIsOpen(false)
+                setSearch(selectedCompany ? selectedCompany.name : '')
+              } else {
+                setIsOpen(true)
+                if (inputRef.current) {
+                  inputRef.current.focus()
+                  inputRef.current.select()
+                }
+              }
+            }}
+            tabIndex={-1}
+            title={isOpen ? 'Close' : 'Open'}
+          >
+            {isOpen ? '▲' : '▼'}
+          </button>
+        </div>
+      </div>
+
+      {isOpen && (
+        <div className="searchable-select-dropdown">
+          <div
+            className={`searchable-select-option ${!value ? 'selected' : ''}`}
+            onMouseDown={(e) => {
+              e.preventDefault()
+              handleSelect('')
+            }}
+          >
+            — General —
+          </div>
+          {filtered.length > 0 ? (
+            filtered.map((c) => (
+              <div
+                key={c._id}
+                className={`searchable-select-option ${value === c._id ? 'selected' : ''}`}
+                onMouseDown={(e) => {
+                  e.preventDefault()
+                  handleSelect(c._id)
+                }}
+              >
+                {c.name}
+              </div>
+            ))
+          ) : (
+            <div className="searchable-select-no-results">
+              No company found for "{search}"
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  )
 }
 
 const AdminEvents = () => {
@@ -244,15 +417,14 @@ const AdminEvents = () => {
                   <input type="date" value={form.eventDate} onChange={(e) => setForm({ ...form, eventDate: e.target.value })} className="form-input" />
                 </label>
               </div>
-              <label className="form-label">
-                Company (optional)
-                <select value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="form-input">
-                  <option value="">— General —</option>
-                  {companies.map((c) => (
-                    <option key={c._id} value={c._id}>{c.name}</option>
-                  ))}
-                </select>
-              </label>
+              <div className="form-label">
+                <span>Company (optional)</span>
+                <CompanySelect
+                  companies={companies}
+                  value={form.company}
+                  onChange={(companyId) => setForm({ ...form, company: companyId })}
+                />
+              </div>
               <label className="form-label">
                 Description
                 <textarea

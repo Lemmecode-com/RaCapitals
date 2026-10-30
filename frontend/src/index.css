@@ -10730,3 +10730,120 @@ h1, h2, h3, h4, h5, h6 {
 .insights-read-btn * {
   text-decoration: none !important;
 }
+
+
+/* Searchable Select (Company combobox in Admin forms) */
+.searchable-select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.searchable-select-input-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.searchable-select-input {
+  width: 100%;
+  padding-right: 3.2rem !important;
+  cursor: text;
+}
+
+.searchable-select-actions {
+  position: absolute;
+  right: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  pointer-events: auto;
+}
+
+.searchable-select-clear-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.1rem;
+  line-height: 1;
+  color: var(--text-soft);
+  cursor: pointer;
+  padding: 2px 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.searchable-select-clear-btn:hover {
+  color: var(--rust, #e11d48);
+  background: rgba(var(--rust-rgb, 161, 74, 61), 0.1);
+}
+
+.searchable-select-arrow-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.65rem;
+  line-height: 1;
+  color: var(--text-soft);
+  cursor: pointer;
+  padding: 3px 4px;
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s ease;
+}
+
+.searchable-select-arrow-btn:hover {
+  color: var(--page-text);
+}
+
+.searchable-select-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 220px;
+  overflow-y: auto;
+  background: var(--card-bg, #1a2b3c);
+  border: 1px solid var(--border, var(--paper-2));
+  border-radius: 6px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+}
+
+.searchable-select-option {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  color: var(--page-text, var(--ink));
+  cursor: pointer;
+  border-bottom: 1px solid var(--paper-2);
+  transition: background 0.15s ease, color 0.15s ease;
+  user-select: none;
+}
+
+.searchable-select-option:last-child {
+  border-bottom: none;
+}
+
+.searchable-select-option:hover {
+  background: var(--surface-2, rgba(255, 255, 255, 0.05));
+  color: var(--brass);
+}
+
+.searchable-select-option.selected {
+  background: rgba(var(--brass-rgb), 0.18);
+  color: var(--brass);
+  font-weight: 600;
+}
+
+.searchable-select-no-results {
+  padding: 0.75rem;
+  font-size: 0.85rem;
+  color: var(--text-soft);
+  text-align: center;
+  font-style: italic;
+}
