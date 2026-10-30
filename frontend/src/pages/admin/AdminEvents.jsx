@@ -230,25 +230,7 @@ const AdminEvents = () => {
                   maxLength={150}
                 />
               </label>
-              <label className="form-label">
-                Description
-                <textarea
-                  className="form-input"
-                  rows={5}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                />
-              </label>
               <div className="form-row">
-                <label className="form-label">
-                  Company (optional)
-                  <select value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="form-input">
-                    <option value="">— General —</option>
-                    {companies.map((c) => (
-                      <option key={c._id} value={c._id}>{c.name}</option>
-                    ))}
-                  </select>
-                </label>
                 <label className="form-label">
                   Event Type
                   <select value={form.eventType} onChange={(e) => setForm({ ...form, eventType: e.target.value })} className="form-input">
@@ -257,10 +239,28 @@ const AdminEvents = () => {
                     ))}
                   </select>
                 </label>
+                <label className="form-label">
+                  Event Date
+                  <input type="date" value={form.eventDate} onChange={(e) => setForm({ ...form, eventDate: e.target.value })} className="form-input" />
+                </label>
               </div>
               <label className="form-label">
-                Event Date
-                <input type="date" value={form.eventDate} onChange={(e) => setForm({ ...form, eventDate: e.target.value })} className="form-input" />
+                Company (optional)
+                <select value={form.company} onChange={(e) => setForm({ ...form, company: e.target.value })} className="form-input">
+                  <option value="">— General —</option>
+                  {companies.map((c) => (
+                    <option key={c._id} value={c._id}>{c.name}</option>
+                  ))}
+                </select>
+              </label>
+              <label className="form-label">
+                Description
+                <textarea
+                  className="form-input"
+                  rows={5}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                />
               </label>
               {formError && <p className="form-error">{formError}</p>}
               <div className="modal-actions">
