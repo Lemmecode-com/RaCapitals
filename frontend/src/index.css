@@ -10847,3 +10847,25 @@ h1, h2, h3, h4, h5, h6 {
   text-align: center;
   font-style: italic;
 }
+
+
+/* Ensure all portal confirmation modals use solid admin styling without gradient */
+.modal-backdrop .primary-btn {
+  background: var(--brass) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border: 1px solid var(--brass) !important;
+}
+
+.modal-backdrop .primary-btn:hover {
+  background: var(--page-text) !important;
+  color: var(--page-bg) !important;
+  border-color: var(--page-text) !important;
+}
+
+.modal-backdrop .danger-btn-solid {
+  background: var(--rust) !important;
+  background-image: none !important;
+  color: #ffffff !important;
+  border-color: var(--rust) !important;
+}
