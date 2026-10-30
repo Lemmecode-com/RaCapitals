@@ -3469,7 +3469,7 @@ a:hover {
 
 .event-modal-backdrop {
   align-items: flex-start;
-  padding-top: 4.5rem;
+  padding-top: 0;
   padding-bottom: 1.5rem;
   overflow-y: auto;
   z-index: 9999;
