@@ -65,7 +65,8 @@ jobs:
             sudo chown -R taurus-deploy:taurus-deploy /home/taurus-deploy/RaCapitals
 
             echo ">>> Pulling latest code"
-            git pull origin Racapitalsmvp
+            git fetch origin Racapitalsmvp
+            git reset --hard origin/Racapitalsmvp
 
             echo ">>> Installing backend dependencies"
             cd backend && npm ci && cd ..
