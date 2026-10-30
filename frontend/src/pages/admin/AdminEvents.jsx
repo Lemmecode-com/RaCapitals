@@ -232,7 +232,12 @@ const AdminEvents = () => {
               </label>
               <label className="form-label">
                 Description
-                <textarea className="contact-form-textarea" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+                <textarea
+                  className="form-input"
+                  rows={5}
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                />
               </label>
               <div className="form-row">
                 <label className="form-label">
