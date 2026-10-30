@@ -2809,6 +2809,8 @@ a:hover {
   height: 100%;
   overflow: hidden;
   box-sizing: border-box;
+  position: relative;
+  z-index: 50;
 }
 
 .admin-layout-content {
@@ -3469,9 +3471,12 @@ a:hover {
   align-items: flex-start;
   padding-top: 4.5rem;
   padding-bottom: 1.5rem;
+  overflow-y: auto;
+  z-index: 9999;
 }
 .event-modal-backdrop .modal {
   max-height: calc(100vh - 6rem);
+  overflow-y: auto;
 }
 
 .modal h2 {
@@ -5729,6 +5734,7 @@ a:hover {
 /* ---------- Modals ---------- */
 .admin-layout .modal-backdrop {
   background: rgba(var(--page-bg-rgb), 0.7);
+  z-index: 9999;
 }
 
 .admin-layout .modal {

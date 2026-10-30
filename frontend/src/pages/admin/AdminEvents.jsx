@@ -209,13 +209,24 @@ const AdminEvents = () => {
 
       {formOpen && (
         <div className="modal-backdrop event-modal-backdrop" onClick={closeForm}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal" style={{ maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={closeForm}>&times;</button>
             <h2>{editing ? 'Edit Event' : 'Add New Event'}</h2>
             <form className="admin-form" onSubmit={handleSubmit}>
               <label className="form-label">
-                Title
-                <input type="text" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="form-input" />
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span>Title</span>
+                  <span style={{ fontSize: '0.75rem', color: (form.title || '').length >= 150 ? 'var(--danger, #e74c3c)' : 'var(--text-muted, #888)' }}>
+                    {(form.title || '').length}/150
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  className="form-input"
+                  maxLength={150}
+                />
               </label>
               <label className="form-label">
                 Description
