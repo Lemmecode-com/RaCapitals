@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { createPortal } from 'react-dom'
 
 const ConfirmDialog = ({
   isOpen,
@@ -24,9 +25,9 @@ const ConfirmDialog = ({
   const confirmClass =
     variant === 'danger' ? 'primary-btn danger-btn-solid' : 'primary-btn'
 
-  return (
+  const dialog = (
     <div
-      className="modal-backdrop event-modal-backdrop"
+      className="modal-backdrop"
       onClick={onCancel}
       role="dialog"
       aria-modal="true"
@@ -50,6 +51,8 @@ const ConfirmDialog = ({
       </div>
     </div>
   )
+
+  return createPortal(dialog, document.body)
 }
 
 export default ConfirmDialog
