@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import api from '../../services/api'
 import { apiBaseWithoutApi, formatINR } from '../../utils/format'
@@ -50,6 +51,18 @@ const AdminCompanyDetail = () => {
     const t = setTimeout(() => setFlash(''), 3000)
     return () => clearTimeout(t)
   }, [flash])
+
+  useEffect(() => {
+    if (!editModalOpen && !priceModalOpen) return undefined
+    const handleKey = (e) => {
+      if (e.key === 'Escape') {
+        setEditModalOpen(false)
+        setPriceModalOpen(false)
+      }
+    }
+    window.addEventListener('keydown', handleKey)
+    return () => window.removeEventListener('keydown', handleKey)
+  }, [editModalOpen, priceModalOpen])
 
   const openEdit = () => {
     setEditForm({
@@ -286,8 +299,8 @@ const AdminCompanyDetail = () => {
           <div className="card-header">
             <h3>Description</h3>
           </div>
-          <div className="card-body">
-            <p style={{ margin: 0, lineHeight: 1.5, fontSize: '0.85rem' }}>
+          <div className="card-body" style={{ maxHeight: '450px', overflowY: 'auto' }}>
+            <p style={{ margin: 0, lineHeight: 1.65, fontSize: '0.88rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--page-text)' }}>
               {company.description || <span className="muted">No description provided.</span>}
             </p>
           </div>
@@ -297,7 +310,7 @@ const AdminCompanyDetail = () => {
           <div className="card-header">
             <h3>Price History <span className="muted" style={{ fontWeight: 'normal', fontSize: '0.9rem' }}>({history.length} records)</span></h3>
           </div>
-          <div className="card-body" style={{ padding: 0, maxHeight: '400px', overflowY: 'auto' }}>
+          <div className="card-body" style={{ padding: 0, maxHeight: '450px', overflowY: 'auto' }}>
             {history.length === 0 ? (
               <p className="muted" style={{ padding: '1rem', margin: 0, fontSize: '0.85rem' }}>No price records yet. Use "Update Price" to add the first one.</p>
             ) : (
@@ -322,8 +335,8 @@ const AdminCompanyDetail = () => {
         </div>
       </div>
 
-      {priceModalOpen && (
-        <div className="modal-backdrop" onClick={() => setPriceModalOpen(false)}>
+      {priceModalOpen && createPortal(
+        <div className="admin-modal-portal modal-backdrop" onClick={() => setPriceModalOpen(false)}>
           <div className="modal small" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={() => setPriceModalOpen(false)}>&times;</button>
             <h2>Update Price — {company.name}</h2>
@@ -347,11 +360,12 @@ const AdminCompanyDetail = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
-      {editModalOpen && (
-        <div className="modal-backdrop" onClick={() => setEditModalOpen(false)}>
+      {editModalOpen && createPortal(
+        <div className="admin-modal-portal modal-backdrop" onClick={() => setEditModalOpen(false)}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={() => setEditModalOpen(false)}>&times;</button>
             <h2>Edit — {company.name}</h2>
@@ -366,7 +380,7 @@ const AdminCompanyDetail = () => {
               </label>
               <label className="form-label">
                 Description
-                <textarea value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} className="form-input" rows={3} />
+                <textarea value={editForm.description} onChange={(e) => setEditForm({ ...editForm, description: e.target.value })} className="form-input" rows={6} />
               </label>
               <div className="form-row">
                 <label className="form-label">
@@ -403,7 +417,8 @@ const AdminCompanyDetail = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )

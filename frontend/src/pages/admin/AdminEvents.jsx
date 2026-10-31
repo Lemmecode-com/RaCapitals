@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef, useMemo } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import api from '../../services/api'
 import ConfirmDialog from '../../components/common/ConfirmDialog.jsx'
@@ -382,9 +383,9 @@ const AdminEvents = () => {
         />
       )}
 
-      {formOpen && (
-        <div className="modal-backdrop event-modal-backdrop" onClick={closeForm}>
-            <div className="modal" style={{ maxHeight: '90vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
+      {formOpen && createPortal(
+        <div className="admin-modal-portal modal-backdrop event-modal-backdrop" onClick={closeForm}>
+          <div className="modal" style={{ maxHeight: 'calc(100vh - var(--admin-header-height, 80px) - 24px)', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={closeForm}>&times;</button>
             <h2>{editing ? 'Edit Event' : 'Add New Event'}</h2>
             <form className="admin-form" onSubmit={handleSubmit}>
@@ -441,7 +442,8 @@ const AdminEvents = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {confirmId && (

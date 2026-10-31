@@ -1,4 +1,6 @@
 :root {
+  /* Default admin header bar height (dynamically measured by AdminHeader) */
+  --admin-header-height: 80px;
   /* Black theme defaults (closest to the prior dark theme) */
   --page-bg: #0F1B2D;
   --page-bg-rgb: 15, 27, 45;
@@ -3723,21 +3725,32 @@ a:hover {
   inset: 0;
   background: rgba(var(--ink-rgb), 0.55);
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 1rem;
-  z-index: 9999;
+  justify-content: flex-start;
+  padding-top: calc(var(--admin-header-height, 80px) + 2px);
+  padding-bottom: 2rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  z-index: 99990;
+  overflow-y: auto;
+  box-sizing: border-box;
 }
 
 .modal {
   background: var(--card-bg);
   width: 100%;
   max-width: 540px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 0;
+  margin-bottom: 2rem;
   padding: 1.5rem 1.5rem 1.75rem 1.5rem;
   border-top: 4px solid var(--brass);
-  border-radius: 2px;
-  max-height: 90vh;
+  border-radius: 4px;
+  max-height: calc(100vh - var(--admin-header-height, 80px) - 24px);
   overflow-y: auto;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45);
 }
 
 .modal.small {
@@ -3745,15 +3758,21 @@ a:hover {
 }
 
 .event-modal-backdrop {
-  align-items: flex-start;
-  padding-top: 0;
-  padding-bottom: 1.5rem;
-  overflow-y: auto;
-  z-index: 9999;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding-top: calc(var(--admin-header-height, 80px) + 2px) !important;
+  padding-bottom: 2rem !important;
+  overflow-y: auto !important;
+  z-index: 99990 !important;
 }
 .event-modal-backdrop .modal {
-  max-height: calc(100vh - 6rem);
-  overflow-y: auto;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  margin-top: 0 !important;
+  max-height: calc(100vh - var(--admin-header-height, 80px) - 24px) !important;
+  overflow-y: auto !important;
 }
 
 .modal h2 {
@@ -5624,8 +5643,8 @@ a:hover {
   background: var(--surface-3);
   border-bottom: 2px solid var(--brass);
   color: var(--page-text);
-  z-index: 10;
-  position: relative;
+  z-index: 100000 !important;
+  position: relative !important;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -5881,7 +5900,10 @@ a:hover {
 /* ---------- Form inputs / search / chips ---------- */
 .admin-layout .search-input,
 .admin-layout .form-input,
-.admin-layout .contact-form-textarea {
+.admin-layout .contact-form-textarea,
+.admin-modal-portal .form-input,
+.admin-modal-portal textarea,
+.admin-modal-portal input {
   background: var(--surface-2);
   border-color: rgba(var(--brass-rgb), 0.3);
   color: var(--page-text);
@@ -5892,7 +5914,9 @@ a:hover {
 .admin-layout .form-input::placeholder,
 .admin-layout .contact-form-textarea::placeholder,
 .admin-layout input::placeholder,
-.admin-layout textarea::placeholder {
+.admin-layout textarea::placeholder,
+.admin-modal-portal input::placeholder,
+.admin-modal-portal textarea::placeholder {
   color: var(--text-faint, #9ca3af) !important;
   font-weight: 400 !important;
   font-family: var(--font-body) !important;
@@ -5900,7 +5924,8 @@ a:hover {
 }
 
 .admin-layout .search-input:focus,
-.admin-layout .form-input:focus {
+.admin-layout .form-input:focus,
+.admin-modal-portal .form-input:focus {
   outline-color: var(--brass);
   color: var(--page-text);
 }
@@ -6020,16 +6045,56 @@ a:hover {
 }
 
 /* ---------- Modals ---------- */
-.admin-layout .modal-backdrop {
-  background: rgba(var(--page-bg-rgb), 0.7);
-  z-index: 9999;
+.admin-layout .modal-backdrop,
+.admin-modal-portal.modal-backdrop,
+.admin-modal-portal .modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(var(--page-bg-rgb, 15, 27, 45), 0.75) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
+  padding-top: calc(var(--admin-header-height, 80px) + 2px) !important;
+  padding-bottom: 2rem !important;
+  padding-left: 1rem !important;
+  padding-right: 1rem !important;
+  z-index: 99990 !important;
+  overflow-y: auto !important;
+  box-sizing: border-box !important;
+  -webkit-overflow-scrolling: touch;
 }
 
-.admin-layout .modal {
-  background: var(--card-bg);
-  border-top-color: var(--brass);
-  color: var(--page-text);
-  position: relative;
+.admin-layout .modal,
+.admin-modal-portal.modal,
+.admin-modal-portal .modal {
+  background: var(--card-bg) !important;
+  border-top: 4px solid var(--brass) !important;
+  border-radius: 4px;
+  color: var(--page-text) !important;
+  position: relative !important;
+  margin-top: 0 !important;
+  margin-bottom: 2rem !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+  max-width: 540px !important;
+  max-height: calc(100vh - var(--admin-header-height, 80px) - 24px) !important;
+  overflow-y: auto !important;
+  flex-shrink: 0 !important;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45) !important;
+}
+
+.admin-layout .modal.small,
+.admin-modal-portal.modal.small,
+.admin-modal-portal .modal.small {
+  max-width: 380px !important;
 }
 
 .modal-close-btn {
@@ -6055,8 +6120,11 @@ a:hover {
 }
 
 .admin-layout .modal h2,
+.admin-modal-portal .modal h2,
 .admin-layout .confirm-dialog-title,
-.admin-layout .confirm-dialog-message {
+.admin-modal-portal .confirm-dialog-title,
+.admin-layout .confirm-dialog-message,
+.admin-modal-portal .confirm-dialog-message {
   color: var(--page-text);
 }
 
@@ -6598,8 +6666,16 @@ h1, h2, h3, h4, h5, h6 {
 
 .admin-layout-content > * {
   opacity: 0;
-  transform: translateY(12px);
-  animation: fadeInUp 0.45s ease-out forwards;
+  animation: fadeInAdmin 0.25s ease-out forwards;
+}
+
+@keyframes fadeInAdmin {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 .admin-layout-content > *:nth-child(1) { animation-delay: 0.05s; }

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../services/api'
@@ -11,6 +11,21 @@ const AdminHeader = ({ onToggleSidebar, isSidebarOpen }) => {
   const navigate = useNavigate()
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
   const [unread, setUnread] = useState(0)
+  const headerRef = useRef(null)
+
+  useEffect(() => {
+    const updateHeaderHeight = () => {
+      if (headerRef.current) {
+        const height = headerRef.current.offsetHeight
+        if (height > 0) {
+          document.documentElement.style.setProperty('--admin-header-height', `${height}px`)
+        }
+      }
+    }
+    updateHeaderHeight()
+    window.addEventListener('resize', updateHeaderHeight)
+    return () => window.removeEventListener('resize', updateHeaderHeight)
+  }, [isAuthenticated])
 
   useEffect(() => {
     const fetchUnread = async () => {
@@ -43,7 +58,7 @@ const AdminHeader = ({ onToggleSidebar, isSidebarOpen }) => {
   if (!isAuthenticated) return null
 
   return (
-    <header className="admin-header-bar">
+    <header ref={headerRef} className="admin-header-bar">
       <div className="admin-header-bar-inner">
         <div className="admin-header-bar-left">
           <button

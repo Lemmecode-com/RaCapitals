@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import api from '../../services/api'
 import { apiBaseWithoutApi, formatINR } from '../../utils/format'
@@ -378,8 +379,8 @@ const AdminListings = () => {
         onPageChange={setCurrentPage}
       />
 
-      {formOpen && (
-        <div className="modal-backdrop event-modal-backdrop" onClick={closeForm}>
+      {formOpen && createPortal(
+        <div className="admin-modal-portal modal-backdrop event-modal-backdrop" onClick={closeForm}>
           <div className="modal" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={closeForm}>&times;</button>
             <h2>{editing ? 'Edit Listing' : 'Add New Listing'}</h2>
@@ -399,7 +400,7 @@ const AdminListings = () => {
               </label>
               <label className="form-label">
                 Description (optional)
-                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="form-input" rows={3} />
+                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="form-input" rows={4} />
               </label>
               <div className="form-row">
                 <label className="form-label">
@@ -417,27 +418,28 @@ const AdminListings = () => {
                 </label>
               </div>
               <label className="form-label">
-<InfoTooltip text="International Securities Identification Number — a unique code for the share. Leave blank if not yet assigned.">
-                   ISIN (optional)
-                 </InfoTooltip>
-                 <input type="text" value={form.isin} onChange={(e) => setForm({ ...form, isin: e.target.value })} className="form-input" />
-               </label>
-               <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                 <input
-                   type="checkbox"
-                   checked={form.drhpFiled}
-                    onChange={(e) => setForm({ ...form, drhpFiled: e.target.checked })}
-                 />
-                 <span>DRHP Filed</span>
-               </label>
-                {formError && <p className="form-error">{formError}</p>}
+                <InfoTooltip text="International Securities Identification Number — a unique code for the share. Leave blank if not yet assigned.">
+                  ISIN (optional)
+                </InfoTooltip>
+                <input type="text" value={form.isin} onChange={(e) => setForm({ ...form, isin: e.target.value })} className="form-input" />
+              </label>
+              <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
+                <input
+                  type="checkbox"
+                  checked={form.drhpFiled}
+                  onChange={(e) => setForm({ ...form, drhpFiled: e.target.checked })}
+                />
+                <span>DRHP Filed</span>
+              </label>
+              {formError && <p className="form-error">{formError}</p>}
               <div className="modal-actions">
                 <button type="button" className="secondary-btn" onClick={closeForm}>Cancel</button>
                 <button type="submit" className="primary-btn">{editing ? 'Save Changes' : 'Create Listing'}</button>
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       <ConfirmDialog
@@ -470,8 +472,8 @@ const AdminListings = () => {
         onCancel={() => setReactivateTarget(null)}
       />
 
-      {priceModal && (
-        <div className="modal-backdrop event-modal-backdrop" onClick={closePriceModal}>
+      {priceModal && createPortal(
+        <div className="admin-modal-portal modal-backdrop event-modal-backdrop" onClick={closePriceModal}>
           <div className="modal small" onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={closePriceModal}>&times;</button>
             <h2>Update Price — {priceModal.name}</h2>
@@ -487,7 +489,8 @@ const AdminListings = () => {
               </div>
             </form>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
