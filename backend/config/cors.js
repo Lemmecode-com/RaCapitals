@@ -1,13 +1,18 @@
-const defaultAllowedOrigins = [
+const productionOrigins = [
   'https://taurusmagnus.com',
-  'https://www.taurusmagnus.com',
+  'https://www.taurusmagnus.com'
+]
+
+const devOrigins = [
   'http://localhost:5173',
   'http://localhost:3000',
   'http://localhost:5000'
 ]
 
 export const getAllowedOrigins = () => {
-  const origins = [...defaultAllowedOrigins]
+  const isProduction = process.env.NODE_ENV === 'production'
+  const origins = isProduction ? [...productionOrigins] : [...productionOrigins, ...devOrigins]
+
   if (process.env.ALLOWED_ORIGINS) {
     process.env.ALLOWED_ORIGINS.split(',').forEach((o) => {
       const trimmed = o.trim()
