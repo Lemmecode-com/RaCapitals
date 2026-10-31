@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import Footer from '../../components/common/Footer'
 import Navbar from '../../components/common/Navbar'
 import ComplianceRibbon from '../../components/common/ComplianceRibbon'
+import { getWhatsAppUrl, getWhatsAppDisplayNumber } from '../../utils/whatsapp'
 
 const Terms = () => {
   const [showTopBtn, setShowTopBtn] = useState(false)
@@ -240,7 +241,7 @@ const Terms = () => {
             <strong>Taurus Magnus</strong><br/>
             SA CAPITALS, Shivam Colony, Behat Road, Saharanpur, Uttar Pradesh, India<br/>
             Email: <a href="mailto:taurusmagnus2026@gmail.com">taurusmagnus2026@gmail.com</a><br/>
-            Phone / WhatsApp: <a href="https://wa.me/919149169733" target="_blank" rel="noopener noreferrer">+91 91491 69733</a>
+            Phone / WhatsApp: <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer">{getWhatsAppDisplayNumber()}</a>
           </p>
           <p>
             For privacy-related requests and complaints, please see the Grievance Officer details in our <Link to="/privacy">Privacy Policy</Link>.

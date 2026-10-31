@@ -3,6 +3,7 @@ import Footer from '../components/common/Footer'
 import Navbar from '../components/common/Navbar'
 import FloatingParticles from '../components/common/FloatingParticles'
 import api from '../services/api'
+import { getWhatsAppUrl, getWhatsAppDisplayNumber } from '../utils/whatsapp'
 
 const ContactMailIcon = () => (
   <svg className="contact-card-icon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -140,7 +141,7 @@ const Contact = () => {
             <ContactPhoneIcon />
             <div className="contact-card-body">
               <h3>Phone / WhatsApp</h3>
-              <p className="mono"><a href="https://wa.me/919149169733" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>+91 91491 69733</a></p>
+              <p className="mono"><a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer" style={{ color: 'inherit', textDecoration: 'none' }}>{getWhatsAppDisplayNumber()}</a></p>
             </div>
           </div>
         </section>

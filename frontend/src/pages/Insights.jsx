@@ -5,6 +5,7 @@ import { formatShortDate, apiBaseWithoutApi } from '../utils/format'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
+import { getWhatsAppUrl } from '../utils/whatsapp'
 
 export const BLOG_CATEGORIES = [
   'All',
@@ -96,9 +97,8 @@ const Insights = () => {
   }, [blogs])
 
   const handleWhatsAppDesk = () => {
-    const number = import.meta.env.VITE_WHATSAPP_NUMBER || '919149169733'
     const message = `Hi Taurus Magnus team, I was reading your Market Insights and would like to enquire about current pre-IPO opportunities.`
-    window.open(`https://wa.me/${number}?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer')
+    window.open(getWhatsAppUrl(message), '_blank', 'noopener,noreferrer')
   }
 
   return (

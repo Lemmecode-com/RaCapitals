@@ -10,7 +10,7 @@ jest.unstable_mockModule('../models/AdminUser.js', () => ({
   default: { findOne: mockFindOne }
 }))
 
-const { default: app } = await import('../app.js')
+const { default: app } = await import('../server.js')
 
 let hashedPassword
 beforeAll(async () => {

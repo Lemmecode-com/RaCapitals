@@ -5,6 +5,7 @@ import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import Navbar from '../components/common/Navbar'
 import Footer from '../components/common/Footer'
 import { formatShortDate, apiBaseWithoutApi } from '../utils/format'
+import { getWhatsAppUrl } from '../utils/whatsapp'
 
 const resolveCoverSrc = (coverImage) => {
   if (!coverImage) return ''
@@ -103,9 +104,8 @@ const InsightDetail = () => {
   }
 
   const handleWhatsAppEnquiry = () => {
-    const number = import.meta.env.VITE_WHATSAPP_NUMBER || '919149169733'
     const message = `Hi Taurus Magnus team, I read your insight "${blog?.title}". I would like to enquire about availability and lot pricing for these unlisted shares.`
-    const url = `https://wa.me/${number}?text=${encodeURIComponent(message)}`
+    const url = getWhatsAppUrl(message)
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 

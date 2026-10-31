@@ -1,14 +1,9 @@
-const FALLBACK_WHATSAPP_NUMBER = '919149169733'
-const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || FALLBACK_WHATSAPP_NUMBER
-
-if (!import.meta.env.VITE_WHATSAPP_NUMBER) {
-  console.warn('WhatsApp number not configured - using placeholder')
-}
+import { getWhatsAppUrl } from '../../utils/whatsapp'
 
 const EnquireButton = ({ companyName }) => {
   const handleClick = () => {
     const message = `Hi, I'm interested in ${companyName}. Please share more details.`
-    const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`
+    const url = getWhatsAppUrl(message)
     window.open(url, '_blank', 'noopener,noreferrer')
   }
 

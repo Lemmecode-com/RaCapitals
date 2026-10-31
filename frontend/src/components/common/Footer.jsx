@@ -1,5 +1,6 @@
 import logo from '../../assets/logo-taurus-magnus.png'
 import { Link } from 'react-router-dom'
+import { getWhatsAppUrl } from '../../utils/whatsapp'
 
 const Footer = () => {
   return (
@@ -32,7 +33,7 @@ const Footer = () => {
         <div className="footer-col">
           <h3>Connect</h3>
           <a href="mailto:taurusmagnus2026@gmail.com">Email Us</a>
-          <a href="https://wa.me/919149169733" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          <a href={getWhatsAppUrl()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
         </div>
       </div>
       <div className="footer-bottom">
