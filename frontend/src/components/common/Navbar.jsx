@@ -19,8 +19,9 @@ const Navbar = () => {
   return (
     <header className="navbar">
       <div className="navbar-inner">
-        <Link to="/" className="wordmark" onClick={closeMenu}>
-          <img src={logo} alt="Taurus Magnus" style={{ height: '85px', width: 'auto' }} />
+        <Link to="/" className="wordmark brand-lockup" onClick={closeMenu}>
+          <img src={logo} alt="Taurus Magnus" className="brand-logo-img" />
+          <span className="brand-tagline">INVEST TODAY. GROW TOMORROW.</span>
         </Link>
 
         <button

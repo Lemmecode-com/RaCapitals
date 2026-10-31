@@ -6,7 +6,10 @@ const Footer = () => {
     <footer className="footer">
       <div className="footer-inner">
         <div className="footer-brand">
-          <img src={logo} alt="Taurus Magnus" className="footer-logo" />
+          <div className="footer-logo-wrap brand-lockup">
+            <img src={logo} alt="Taurus Magnus" className="footer-logo brand-logo-img" />
+            <span className="brand-tagline footer-tagline">INVEST TODAY. GROW TOMORROW.</span>
+          </div>
           <div>
             <p className="footer-brand-name">TAURUS MAGNUS</p>
             <p className="footer-text">

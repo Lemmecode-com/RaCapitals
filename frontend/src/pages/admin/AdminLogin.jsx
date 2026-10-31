@@ -92,12 +92,13 @@ const AdminLogin = () => {
           </div>
 
           <div>
-            <Link to="/" title="Taurus Magnus Home" className="admin-login-logo-link">
+            <Link to="/" title="Taurus Magnus Home" className="admin-login-logo-link brand-lockup">
               <img 
                 src={logo} 
                 alt="Taurus Magnus" 
-                className="admin-login-logo-img"
+                className="admin-login-logo-img brand-logo-img"
               />
+              <span className="brand-tagline">INVEST TODAY. GROW TOMORROW.</span>
             </Link>
           </div>
 

@@ -265,6 +265,79 @@ a:hover {
   white-space: nowrap;
 }
 
+/* Brand Logo Lockup & Tagline */
+.wordmark.brand-lockup,
+.brand-lockup,
+.admin-header-bar-brand.brand-lockup {
+  display: inline-flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  text-decoration: none !important;
+  line-height: 1 !important;
+  gap: 2px !important;
+}
+
+.wordmark.brand-lockup:hover,
+.brand-lockup:hover {
+  text-decoration: none;
+  opacity: 0.92;
+}
+
+.wordmark.brand-lockup .brand-logo-img,
+.brand-logo-img {
+  height: 70px !important;
+  width: auto !important;
+  display: block;
+}
+
+.brand-tagline {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.49rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  color: #006CFC;
+  text-transform: uppercase;
+  white-space: nowrap;
+  line-height: 1;
+  text-align: center;
+  margin-top: 1px;
+  opacity: 0.95;
+}
+
+.footer-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.footer-logo-wrap .footer-logo {
+  height: 70px !important;
+  width: auto;
+  display: block;
+}
+
+.footer-tagline {
+  font-size: 0.49rem;
+  font-weight: 500;
+  letter-spacing: 0.03em;
+  margin-top: 2px;
+}
+
+@media (max-width: 767px) {
+  .wordmark.brand-lockup .brand-logo-img,
+  .brand-logo-img {
+    height: 52px !important;
+  }
+  .brand-tagline {
+    font-size: 0.42rem;
+    letter-spacing: 0.02em;
+    margin-top: 1px;
+  }
+}
+
 .nav-links {
   display: flex;
   gap: 1.5rem;
@@ -2172,14 +2245,16 @@ a:hover {
 .company-logo {
   width: 96px;
   height: 96px;
-  background: transparent;
+  background: #ffffff;
   border: 1px solid var(--paper-2);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
   flex-shrink: 0;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .company-logo-thumb-btn {
@@ -2196,7 +2271,7 @@ a:hover {
 }
 
 .company-logo-thumb-btn:hover img {
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 .company-logo-thumb-btn:focus-visible {
@@ -2205,10 +2280,13 @@ a:hover {
 }
 
 .company-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 4px;
+  display: block;
 }
 
 .logo-lightbox-overlay {
@@ -3279,21 +3357,24 @@ a:hover {
   height: 140px;
   max-width: 140px;
   max-height: 140px;
-  background: var(--card-bg);
+  background: #ffffff;
   border: 1px solid var(--paper-2);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px;
+  border-radius: 16px;
   overflow: hidden;
+  padding: 10px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
 .detail-logo-preview img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 20px;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .detail-logo-preview .logo-placeholder {
@@ -3672,19 +3753,23 @@ a:hover {
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  background: var(--paper);
+  background: #ffffff;
   border: 1px solid var(--paper-2);
-  border-radius: 4px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  padding: 4px;
 }
 
 .preview-card-logo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .preview-card-name-wrap {
@@ -4990,7 +5075,6 @@ a:hover {
 .page-wrap .step-card,
 .page-wrap .stat-card,
 .page-wrap .contact-card-compact,
-.page-wrap .company-logo,
 .page-wrap .chart-wrap,
 .page-wrap .catalog-card,
 .page-wrap .catalog-table-wrap,
@@ -4999,6 +5083,12 @@ a:hover {
   border-color: rgba(var(--brass-rgb), 0.25);
   color: var(--page-text);
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+}
+
+.page-wrap .company-logo {
+  background: #ffffff;
+  border-color: rgba(var(--brass-rgb), 0.25);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
 }
 
 .page-wrap .preview-card:hover,
@@ -5026,7 +5116,7 @@ a:hover {
 }
 
 .page-wrap .preview-card-logo {
-  background: var(--page-bg);
+  background: #ffffff;
 }
 
 .page-wrap .sparkline-empty {
