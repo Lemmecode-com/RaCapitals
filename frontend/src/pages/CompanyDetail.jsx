@@ -8,6 +8,7 @@ import InfoTooltip from '../components/common/InfoTooltip'
 import Navbar from '../components/common/Navbar'
 import FloatingParticles from '../components/common/FloatingParticles'
 import PriceHistoryChart from '../components/detail/PriceHistoryChart'
+import CompanyAbout from '../components/detail/CompanyAbout'
 import { apiBaseWithoutApi, formatINR } from '../utils/format'
 
 const buildLogoSrc = (logoUrl) => {
@@ -139,12 +140,14 @@ const CompanyDetail = () => {
           </div>
         </section>
 
-        {company.description && (
-          <section className="company-section">
-            <h2 className="section-title">About</h2>
-            <p>{company.description}</p>
-          </section>
-        )}
+        <section className="company-section">
+          <h2 className="section-title">About {company.name}</h2>
+          <CompanyAbout
+            description={company.description}
+            companyName={company.name}
+            sector={company.sector}
+          />
+        </section>
 
         <section className="company-section">
           <h2 className="section-title">Price History</h2>
