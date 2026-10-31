@@ -20,7 +20,7 @@ const Disclaimer = () => {
           differ materially based on availability, lot size, and counterparty terms.
         </p>
         <p>
-          PLACEHOLDER CONTENT — PENDING LEGAL REVIEW. RA Capitals does not guarantee the accuracy, completeness,
+          PLACEHOLDER CONTENT — PENDING LEGAL REVIEW. Taurus Magnus does not guarantee the accuracy, completeness,
           or timeliness of any information on this site, and shall not be liable for any losses arising from
           reliance on it.
         </p>
