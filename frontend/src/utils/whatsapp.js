@@ -1,4 +1,4 @@
-const FALLBACK_WHATSAPP_NUMBER = '919149169733'
+const FALLBACK_WHATSAPP_NUMBER = '917819075990'
 
 export const getWhatsAppNumber = () => {
   return import.meta.env.VITE_WHATSAPP_NUMBER || FALLBACK_WHATSAPP_NUMBER
