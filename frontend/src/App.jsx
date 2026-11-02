@@ -43,6 +43,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/catalog" element={<Catalog />} />
+        <Route path="/company" element={<Navigate to="/catalog" replace />} />
         <Route path="/company/:id" element={<CompanyDetail />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
@@ -150,6 +151,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   )
