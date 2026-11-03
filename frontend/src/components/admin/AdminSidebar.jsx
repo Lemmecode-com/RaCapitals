@@ -1,6 +1,4 @@
 import { NavLink } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import api from '../../services/api'
 
 const AdminSidebar = ({ isOpen = false, onNavigate }) => {
   const base = 'admin-sidebar-item'
@@ -34,26 +32,33 @@ const AdminSidebar = ({ isOpen = false, onNavigate }) => {
           Listings
         </NavLink>
         <NavLink
-           to="/admin/contacts"
-           className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
-           onClick={handleClick}
-         >
-           Contact Submissions
-         </NavLink>
-         <NavLink
-           to="/admin/events"
-           className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
-           onClick={handleClick}
-         >
-           Events
-         </NavLink>
-         <NavLink
-           to="/admin/blogs"
-           className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
-           onClick={handleClick}
-         >
-           Market Insights
-         </NavLink>
+          to="/admin/enquiries"
+          className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
+          onClick={handleClick}
+        >
+          Share Enquiries
+        </NavLink>
+        <NavLink
+          to="/admin/contacts"
+          className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
+          onClick={handleClick}
+        >
+          Contact Submissions
+        </NavLink>
+        <NavLink
+          to="/admin/events"
+          className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
+          onClick={handleClick}
+        >
+          Events
+        </NavLink>
+        <NavLink
+          to="/admin/blogs"
+          className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
+          onClick={handleClick}
+        >
+          Market Insights
+        </NavLink>
       </nav>
     </aside>
   )

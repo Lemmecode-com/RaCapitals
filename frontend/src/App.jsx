@@ -11,6 +11,7 @@ import AdminListings from './pages/admin/AdminListings'
 import AdminCompanyDetail from './pages/admin/AdminCompanyDetail'
 import AdminEvents from './pages/admin/AdminEvents'
 import AdminContacts from './pages/admin/AdminContacts'
+import AdminEnquiries from './pages/admin/AdminEnquiries'
 import AdminBlogs from './pages/admin/AdminBlogs'
 import AdminBlogEditor from './pages/admin/AdminBlogEditor'
 import AdminBlogDetail from './pages/admin/AdminBlogDetail'
@@ -97,6 +98,16 @@ function App() {
             <ProtectedRoute>
               <AdminLayout>
                 <AdminContacts />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/enquiries"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminEnquiries />
               </AdminLayout>
             </ProtectedRoute>
           }

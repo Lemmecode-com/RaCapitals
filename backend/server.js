@@ -9,6 +9,7 @@ import authRoutes from './routes/authRoutes.js'
 import contactRoutes from './routes/contactRoutes.js'
 import eventRoutes from './routes/eventRoutes.js'
 import blogRoutes from './routes/blogRoutes.js'
+import enquiryRoutes from './routes/enquiryRoutes.js'
 
 dotenv.config()
 
@@ -32,6 +33,8 @@ app.use('/api/prices', priceRoutes)
 app.use('/api/contact', contactRoutes)
 app.use('/api/events', eventRoutes)
 app.use('/api/blogs', blogRoutes)
+app.use('/api/enquiries', enquiryRoutes)
+app.use('/api/admin/enquiries', enquiryRoutes)
 
 const PORT = process.env.PORT || 5000
 
