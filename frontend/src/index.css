@@ -11722,17 +11722,16 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   gap: 0.5rem;
   overflow-x: auto;
-  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
   padding-bottom: 0.25rem;
 }
 
 .detail-nav-tabs::-webkit-scrollbar {
-  height: 4px;
-}
-
-.detail-nav-tabs::-webkit-scrollbar-thumb {
-  background: var(--border);
-  border-radius: 999px;
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .detail-nav-tab {
@@ -11862,10 +11861,19 @@ h1, h2, h3, h4, h5, h6 {
 .financial-table-container {
   width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
   border: 1px solid var(--border);
   border-radius: 10px;
   background: var(--card-bg, #FFFFFF);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.financial-table-container::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
 }
 
 .financial-table {
