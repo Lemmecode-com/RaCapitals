@@ -3,6 +3,8 @@ import EnquireButton from '../common/EnquireButton'
 import { apiBaseWithoutApi, formatINR } from '../../utils/format'
 
 const CompanyPreviewCard = ({ company }) => {
+  if (!company) return null
+
   const history = company.priceHistory || []
   const latestPrice = company.latestPrice != null
     ? company.latestPrice
@@ -11,9 +13,11 @@ const CompanyPreviewCard = ({ company }) => {
     ? `${apiBaseWithoutApi()}${company.logoUrl}`
     : null
   const initial = company.name ? company.name.charAt(0).toUpperCase() : '?'
+  const targetUrl = company._id ? `/company/${company._id}` : '/catalog'
+
   return (
     <article className="preview-card card-hover-tilt">
-      <Link to={`/company/${company._id}`} className="preview-card-link" aria-label={`View ${company.name}`}>
+      <Link to={targetUrl} className="preview-card-link" aria-label={`View ${company.name || 'company details'}`}>
         <div className="preview-card-top">
           <div className="preview-card-logo">
             {logoSrc ? (

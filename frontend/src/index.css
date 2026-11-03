@@ -1178,6 +1178,11 @@ a:hover {
   100% { transform: translateX(-50%); }
 }
 
+.home-marquee-track:hover .home-marquee-content,
+.home-marquee-content:hover {
+  animation-play-state: paused;
+}
+
 .home-marquee-card {
   flex: 0 0 260px;
   background: rgba(219, 234, 254, 0.55);
@@ -1192,13 +1197,18 @@ a:hover {
   gap: 0.4rem;
   min-height: 170px;
   color: #111827;
+  text-decoration: none;
+  cursor: pointer;
   box-shadow: 0 12px 28px rgba(31, 41, 55, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.home-marquee-card:hover {
+.home-marquee-card:hover,
+.home-marquee-card:focus-visible {
   transform: translateY(-3px);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.08);
+  text-decoration: none;
+  color: #111827;
 }
 
 .home-marquee-card.skeleton {

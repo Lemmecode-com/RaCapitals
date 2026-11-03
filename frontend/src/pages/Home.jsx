@@ -350,7 +350,12 @@ const Home = () => {
                 <div className="home-marquee-empty">No listings match your search.</div>
               ) : (
                 [...visible, ...visible].map((c, i) => (
-                  <article key={`${c._id}-${i}`} className="home-marquee-card">
+                  <Link
+                    to={c._id ? `/company/${c._id}` : '/catalog'}
+                    key={`${c._id || 'card'}-${i}`}
+                    className="home-marquee-card"
+                    aria-label={`View ${c.name} details`}
+                  >
                     <div className="home-marquee-card-top">
                       <h3 className="home-marquee-card-name">{c.name}</h3>
                       {c.sector && <span className="home-marquee-card-sector">{c.sector}</span>}
@@ -376,7 +381,7 @@ const Home = () => {
                         })()}
                       </div>
                     )}
-                  </article>
+                  </Link>
                 ))
               )}
             </div>
