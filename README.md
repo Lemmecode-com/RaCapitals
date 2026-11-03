@@ -1,4 +1,4 @@
-# RA Capitals
+# Taurus Magnus
 
 Unlisted / pre-IPO shares information platform (catalog with WhatsApp-based enquiries). MVP phase — no payments, no live trading.
 

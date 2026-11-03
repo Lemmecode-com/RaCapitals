@@ -8,7 +8,9 @@ const CompanySchema = new mongoose.Schema({
   lotSize: { type: Number, required: true },
   faceValue: { type: Number },
   isin: { type: String },
-  isActive: { type: Boolean, default: true }
+  isActive: { type: Boolean, default: true },
+  drhpFiled: { type: Boolean, default: false },
+  drhpFiledDate: { type: Date, default: null }
 }, { timestamps: true })
 
 export default mongoose.model('Company', CompanySchema)

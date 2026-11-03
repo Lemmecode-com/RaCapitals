@@ -10,7 +10,7 @@ const Privacy = () => {
       <main className="page-main legal-page">
         <h1>Privacy Policy</h1>
         <p>
-          PLACEHOLDER CONTENT — PENDING LEGAL REVIEW. This page describes how RA Capitals collects, uses,
+          PLACEHOLDER CONTENT — PENDING LEGAL REVIEW. This page describes how Taurus Magnus collects, uses,
           and safeguards information you provide when using this website.
         </p>
         <p>
