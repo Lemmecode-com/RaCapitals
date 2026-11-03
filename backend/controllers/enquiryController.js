@@ -2,10 +2,12 @@ import mongoose from 'mongoose'
 import ShareEnquiry from '../models/ShareEnquiry.js'
 import Company from '../models/Company.js'
 
-// Simple email regex for optional email validation
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-// Phone: at least 7 digits, allows +, -, spaces, parentheses
-const PHONE_REGEX = /^[+0-9\s\-()]{7,25}$/
+// Strict email regex (requires @ and valid domain with .)
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+// Phone: strictly 10 digits, no special characters or letters
+const PHONE_REGEX = /^[0-9]{10}$/
+// Name: strictly letters and spaces only, min 2 and max 70 chars
+const NAME_REGEX = /^[a-zA-Z\s]{2,70}$/
 
 /**
  * Public: Submit a share purchase enquiry
@@ -24,22 +26,20 @@ export const createShareEnquiry = async (req, res) => {
       return res.status(400).json({ message: 'Invalid company ID provided.' })
     }
 
-    if (!name || typeof name !== 'string' || name.trim().length < 2) {
-      return res.status(400).json({ message: 'A valid full name (minimum 2 characters) is required.' })
+    if (!name || typeof name !== 'string' || !NAME_REGEX.test(name.trim())) {
+      return res.status(400).json({ message: 'Name must contain only letters and spaces (minimum 2 characters).' })
     }
 
     if (!phone || typeof phone !== 'string' || !PHONE_REGEX.test(phone.trim())) {
-      return res.status(400).json({ message: 'A valid contact phone number is required (at least 7 digits).' })
+      return res.status(400).json({ message: 'A valid 10-digit mobile number is required.' })
+    }
+
+    if (!email || typeof email !== 'string' || !EMAIL_REGEX.test(email.trim())) {
+      return res.status(400).json({ message: 'A valid email address is required.' })
     }
 
     // 2. Validate optional fields
-    let cleanEmail = ''
-    if (email && typeof email === 'string' && email.trim()) {
-      cleanEmail = email.trim().toLowerCase()
-      if (!EMAIL_REGEX.test(cleanEmail)) {
-        return res.status(400).json({ message: 'Please enter a valid email address.' })
-      }
-    }
+    let cleanEmail = email.trim().toLowerCase()
 
     let parsedQty = null
     if (quantity !== undefined && quantity !== null && quantity !== '') {

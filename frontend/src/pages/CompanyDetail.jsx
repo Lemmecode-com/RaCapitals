@@ -6,9 +6,9 @@ import EnquireButton from '../components/common/EnquireButton'
 import Footer from '../components/common/Footer'
 import InfoTooltip from '../components/common/InfoTooltip'
 import Navbar from '../components/common/Navbar'
-import FloatingParticles from '../components/common/FloatingParticles'
 import PriceHistoryChart from '../components/detail/PriceHistoryChart'
 import CompanyAbout from '../components/detail/CompanyAbout'
+import ShareEnquiryForm from '../components/detail/ShareEnquiryForm'
 import { apiBaseWithoutApi, formatINR } from '../utils/format'
 
 const buildLogoSrc = (logoUrl) => {
@@ -76,9 +76,6 @@ const CompanyDetail = () => {
       <Navbar />
       <ComplianceRibbon />
       <main className="page-main">
-        <div className="particles-container">
-          <FloatingParticles />
-        </div>
         <header className="company-header">
           <div className="company-logo">
             {logoSrc ? (
@@ -140,23 +137,28 @@ const CompanyDetail = () => {
           </div>
         </section>
 
-        <section className="company-section">
-          <h2 className="section-title">About {company.name}</h2>
-          <CompanyAbout
-            description={company.description}
-            companyName={company.name}
-            sector={company.sector}
-          />
-        </section>
+        {/* 2-Column Desktop Grid Layout: Main info on Left, Sticky Enquiry Form on Right */}
+        <div className="company-detail-grid">
+          <div className="company-detail-main">
+            <section className="company-section">
+              <h2 className="section-title">About {company.name}</h2>
+              <CompanyAbout
+                description={company.description}
+                companyName={company.name}
+                sector={company.sector}
+              />
+            </section>
 
-        <section className="company-section">
-          <h2 className="section-title">Price History</h2>
-          <PriceHistoryChart priceHistory={history} />
-        </section>
+            <section className="company-section">
+              <h2 className="section-title">Price History</h2>
+              <PriceHistoryChart priceHistory={history} />
+            </section>
+          </div>
 
-        <section className="company-enquire">
-          <EnquireButton companyName={company.name} />
-        </section>
+          <aside className="company-detail-sidebar">
+            <ShareEnquiryForm company={company} latestPrice={latestPrice} />
+          </aside>
+        </div>
       </main>
 
       {isLightboxOpen && logoSrc && (

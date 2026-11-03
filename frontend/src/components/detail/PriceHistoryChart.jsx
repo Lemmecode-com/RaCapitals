@@ -14,7 +14,7 @@ const PriceHistoryChart = ({ priceHistory }) => {
   const [paper2, setPaper2] = useState(() =>
     getComputedStyle(document.documentElement).getPropertyValue('--paper-2').trim() || '#E5E7EB'
   )
-  const [resetKey, setResetKey] = useState(0)
+  const [hasAnimated, setHasAnimated] = useState(false)
   const wrapRef = useRef(null)
 
   useEffect(() => {
@@ -30,7 +30,8 @@ const PriceHistoryChart = ({ priceHistory }) => {
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            setResetKey((k) => k + 1)
+            setHasAnimated(true)
+            observer.unobserve(node)
           }
         })
       },
@@ -66,8 +67,8 @@ const PriceHistoryChart = ({ priceHistory }) => {
       animations: {
         enabled: true,
         easing: 'easeinout',
-        speed: 1600,
-        dynamicAnimation: { enabled: true }
+        speed: 1000,
+        dynamicAnimation: { enabled: false }
       },
       background: 'transparent',
       fontFamily: 'inherit'
@@ -137,7 +138,6 @@ const PriceHistoryChart = ({ priceHistory }) => {
   return (
     <div className="chart-wrap" ref={wrapRef}>
       <Chart
-        key={resetKey}
         options={options}
         series={series}
         type="area"

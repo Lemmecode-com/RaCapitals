@@ -11308,3 +11308,401 @@ h1, h2, h3, h4, h5, h6 {
   color: #ffffff !important;
   border-color: var(--rust) !important;
 }
+
+
+/* ==========================================================================
+   Share Purchase Enquiry Component (Issue #28 / TM-ISSUE-04)
+   ========================================================================== */
+.company-enquire {
+  margin-top: 2rem;
+}
+
+.share-enquiry-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.25rem;
+  margin-top: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+.share-enquiry-header {
+  margin-bottom: 1.75rem;
+}
+
+.share-enquiry-badge {
+  display: inline-block;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brass, #2563eb);
+  background: rgba(37, 99, 235, 0.08);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  margin-bottom: 0.6rem;
+}
+
+.share-enquiry-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--page-text);
+  margin: 0 0 0.4rem 0;
+}
+
+.share-enquiry-subtitle {
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+  max-width: 720px;
+}
+
+.share-enquiry-alert {
+  padding: 0.85rem 1.15rem;
+  border-radius: 10px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.share-enquiry-alert-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.share-enquiry-alert-content p {
+  margin: 0.2rem 0 0 0;
+}
+
+.share-enquiry-alert-close {
+  background: transparent;
+  border: none;
+  font-size: 1.35rem;
+  line-height: 1;
+  cursor: pointer;
+  color: inherit;
+  opacity: 0.7;
+}
+
+.share-enquiry-alert-close:hover {
+  opacity: 1;
+}
+
+.share-enquiry-success {
+  background: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.35);
+  color: #059669;
+}
+
+.share-enquiry-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  color: #dc2626;
+}
+
+.share-enquiry-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+
+.share-enquiry-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.share-enquiry-field.full-width {
+  grid-column: 1 / -1;
+  margin-top: 1.25rem;
+}
+
+.share-enquiry-label {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--page-text);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.share-enquiry-hint {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--muted);
+}
+
+.share-enquiry-opt {
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.share-enquiry-required {
+  color: var(--rust, #ef4444);
+  margin-left: 2px;
+}
+
+.share-enquiry-input,
+.share-enquiry-textarea {
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-2, var(--page-bg));
+  color: var(--page-text);
+  font-size: 0.92rem;
+  font-family: inherit;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-sizing: border-box;
+}
+
+.share-enquiry-input:focus,
+.share-enquiry-textarea:focus {
+  outline: none;
+  border-color: var(--brass);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.share-enquiry-input.is-invalid,
+.share-enquiry-textarea.is-invalid {
+  border-color: var(--rust, #ef4444);
+  background: rgba(239, 68, 68, 0.03);
+}
+
+.share-enquiry-textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.5;
+}
+
+.share-enquiry-est {
+  font-size: 0.76rem;
+  color: var(--brass);
+  font-weight: 600;
+  margin-top: 0.15rem;
+}
+
+.share-enquiry-err-msg {
+  font-size: 0.76rem;
+  color: var(--rust, #ef4444);
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+
+.share-enquiry-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+  flex-wrap: wrap;
+}
+
+.share-enquiry-submit-btn {
+  padding: 0.85rem 1.85rem;
+  background: var(--brass, #2563eb);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s ease, transform 0.1s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.share-enquiry-submit-btn:hover:not(:disabled) {
+  filter: brightness(1.08);
+  transform: translateY(-1px);
+}
+
+.share-enquiry-submit-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.share-enquiry-or-divider {
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+.share-enquiry-whatsapp-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem 1.4rem;
+  background: rgba(37, 211, 102, 0.1);
+  color: #0f766e;
+  border: 1px solid rgba(37, 211, 102, 0.35);
+  border-radius: 8px;
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.share-enquiry-whatsapp-btn:hover {
+  background: rgba(37, 211, 102, 0.18);
+  transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+  .share-enquiry-card {
+    padding: 1.5rem 1.25rem;
+  }
+  .share-enquiry-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .share-enquiry-actions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+  .share-enquiry-submit-btn,
+  .share-enquiry-whatsapp-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .share-enquiry-or-divider {
+    justify-content: center;
+  }
+}
+
+
+/* ==========================================================================
+   2-Column Detail Layout with Compact Sticky Right Sidebar (Issue #28)
+   ========================================================================== */
+.company-detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 330px;
+  gap: 2.25rem;
+  align-items: start;
+  margin-top: 1rem;
+}
+
+.company-detail-main {
+  min-width: 0;
+  flex: 1;
+}
+
+.company-detail-sidebar {
+  position: sticky;
+  top: 90px;
+  z-index: 20;
+  width: 100%;
+}
+
+.company-detail-sidebar .share-enquiry-card {
+  margin-top: 0;
+  padding: 1.25rem 1.15rem;
+  border-radius: 12px;
+}
+
+.company-detail-sidebar .share-enquiry-header {
+  margin-bottom: 0.95rem;
+}
+
+.company-detail-sidebar .share-enquiry-badge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  padding: 0.25rem 0.65rem;
+  margin-bottom: 0;
+  display: inline-block;
+}
+
+.company-detail-sidebar .share-enquiry-title {
+  font-size: 1.15rem;
+  line-height: 1.3;
+  margin: 0 0 0.25rem 0;
+}
+
+.company-detail-sidebar .share-enquiry-subtitle {
+  font-size: 0.78rem;
+  line-height: 1.4;
+  margin-bottom: 0.2rem;
+}
+
+.company-detail-sidebar .share-enquiry-grid {
+  grid-template-columns: 1fr;
+  gap: 0.65rem;
+}
+
+.company-detail-sidebar .share-enquiry-field {
+  gap: 0.25rem;
+}
+
+.company-detail-sidebar .share-enquiry-label {
+  font-size: 0.78rem;
+}
+
+.company-detail-sidebar .share-enquiry-input,
+.company-detail-sidebar .share-enquiry-textarea {
+  padding: 0.55rem 0.75rem;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+
+.company-detail-sidebar .share-enquiry-textarea {
+  min-height: 65px;
+}
+
+.company-detail-sidebar .share-enquiry-field.full-width {
+  margin-top: 0;
+}
+
+.company-detail-sidebar .share-enquiry-actions {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.company-detail-sidebar .share-enquiry-submit-btn,
+.company-detail-sidebar .share-enquiry-whatsapp-btn {
+  width: 100%;
+  justify-content: center;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.88rem;
+}
+
+.company-detail-sidebar .share-enquiry-or-divider {
+  justify-content: center;
+  font-size: 0.72rem;
+  margin: 0.05rem 0;
+}
+
+@media (max-width: 1024px) {
+  .company-detail-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  .company-detail-sidebar {
+    position: static;
+  }
+}
+
+
+/* Stabilize Company Detail Layout & Scroll (Issue #28) */
+.company-detail-grid,
+.company-detail-main,
+.company-detail-sidebar {
+  animation: none !important;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
