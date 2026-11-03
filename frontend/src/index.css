@@ -11706,3 +11706,223 @@ h1, h2, h3, h4, h5, h6 {
   opacity: 1 !important;
   visibility: visible !important;
 }
+
+/* ============================================================
+   Company Details Rich Unlisted Data Wireframe & Tabs (TM-ISSUE-05)
+   ============================================================ */
+
+.detail-nav-tabs-wrapper {
+  margin-bottom: 1.75rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.5rem;
+}
+
+.detail-nav-tabs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  padding-bottom: 0.25rem;
+}
+
+.detail-nav-tabs::-webkit-scrollbar {
+  height: 4px;
+}
+
+.detail-nav-tabs::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 999px;
+}
+
+.detail-nav-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.6rem 1rem;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--text-soft);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.detail-nav-tab:hover {
+  background: var(--surface-3);
+  color: var(--page-text);
+  border-color: var(--brass);
+}
+
+.detail-nav-tab.active {
+  background: #0B1C2C;
+  color: #FFFFFF;
+  border-color: var(--brass);
+  font-weight: 600;
+  box-shadow: 0 2px 8px rgba(11, 28, 44, 0.15);
+}
+
+[data-theme="black"] .detail-nav-tab.active {
+  background: #1E3A5F;
+  color: #FFFFFF;
+  border-color: var(--brass);
+}
+
+.detail-nav-tab .tab-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.detail-tab-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+  animation: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+}
+
+/* Fundamentals Grid */
+.fundamentals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 1rem;
+}
+
+.fundamental-card {
+  background: var(--card-bg, #FFFFFF);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 1.1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.fundamental-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--brass);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.fundamental-label {
+  font-size: 0.76rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
+  color: var(--text-soft);
+}
+
+.fundamental-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--page-text);
+}
+
+.fundamental-tip {
+  font-size: 0.74rem;
+  color: var(--text-faint);
+  line-height: 1.35;
+  margin-top: auto;
+}
+
+/* Financials Table & Periodic Toggles */
+.toggle-tab-btn {
+  padding: 0.35rem 0.85rem;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  color: var(--text-soft);
+  transition: all 0.2s ease;
+}
+
+.toggle-tab-btn:hover {
+  color: var(--page-text);
+}
+
+.toggle-tab-btn.active {
+  background: #0B1C2C;
+  color: #FFFFFF;
+  font-weight: 600;
+}
+
+[data-theme="black"] .toggle-tab-btn.active {
+  background: #1E3A5F;
+  color: #FFFFFF;
+}
+
+.financial-table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--card-bg, #FFFFFF);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.financial-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.financial-table th {
+  padding: 0.8rem 1rem;
+  background: var(--surface-2);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-soft);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.financial-table td {
+  padding: 0.8rem 1rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--page-text);
+  white-space: nowrap;
+}
+
+.financial-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.financial-table tbody tr:hover td {
+  background: var(--surface-2);
+}
+
+.financial-table tr.row-bold td {
+  font-weight: 600;
+  background: rgba(0, 0, 0, 0.015);
+}
+
+.financial-table tr.row-highlight td {
+  background: rgba(176, 141, 87, 0.08);
+  font-weight: 700;
+}
+
+/* FAQ Accordion */
+.faq-item-card {
+  background: var(--card-bg, #FFFFFF) !important;
+  border-color: var(--border) !important;
+}
+
+.faq-item-card:hover {
+  border-color: var(--brass) !important;
+}
+
+.faq-item-card.open {
+  border-color: var(--brass) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+

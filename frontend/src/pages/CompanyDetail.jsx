@@ -2,13 +2,17 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import api from '../services/api'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
-import EnquireButton from '../components/common/EnquireButton'
 import Footer from '../components/common/Footer'
 import InfoTooltip from '../components/common/InfoTooltip'
 import Navbar from '../components/common/Navbar'
 import PriceHistoryChart from '../components/detail/PriceHistoryChart'
 import CompanyAbout from '../components/detail/CompanyAbout'
 import ShareEnquiryForm from '../components/detail/ShareEnquiryForm'
+import CompanyFundamentalsGrid from '../components/detail/CompanyFundamentalsGrid'
+import CompanyFinancialsTable from '../components/detail/CompanyFinancialsTable'
+import CompanyShareholding from '../components/detail/CompanyShareholding'
+import CompanyFundingRounds from '../components/detail/CompanyFundingRounds'
+import CompanyFaqAccordion from '../components/detail/CompanyFaqAccordion'
 import { apiBaseWithoutApi, formatINR } from '../utils/format'
 
 const buildLogoSrc = (logoUrl) => {
@@ -17,12 +21,23 @@ const buildLogoSrc = (logoUrl) => {
   return `${apiBaseWithoutApi()}${logoUrl}`
 }
 
+const TABS = [
+  { id: 'overview', label: 'Overview & Chart', icon: '📈' },
+  { id: 'fundamentals', label: 'Fundamentals', icon: '🏛️' },
+  { id: 'financials', label: 'Financial Statements', icon: '📑' },
+  { id: 'shareholding', label: 'Shareholding Pattern', icon: '👥' },
+  { id: 'funding', label: 'Funding & Valuation', icon: '🚀' },
+  { id: 'faqs', label: 'Due Diligence & FAQs', icon: '❓' },
+  { id: 'all', label: 'View All Sections', icon: '📑' }
+]
+
 const CompanyDetail = () => {
   const { id } = useParams()
   const [company, setCompany] = useState(null)
   const [loading, setLoading] = useState(true)
   const [notFound, setNotFound] = useState(false)
   const [isLightboxOpen, setIsLightboxOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('overview')
 
   useEffect(() => {
     const fetchCompany = async () => {
@@ -32,11 +47,7 @@ const CompanyDetail = () => {
         const res = await api.get(`/companies/${id}`)
         setCompany(res.data)
       } catch (err) {
-        if (err?.response?.status === 404) {
-          setNotFound(true)
-        } else {
-          setNotFound(true)
-        }
+        setNotFound(true)
       } finally {
         setLoading(false)
       }
@@ -140,19 +151,76 @@ const CompanyDetail = () => {
         {/* 2-Column Desktop Grid Layout: Main info on Left, Sticky Enquiry Form on Right */}
         <div className="company-detail-grid">
           <div className="company-detail-main">
-            <section className="company-section">
-              <h2 className="section-title">About {company.name}</h2>
-              <CompanyAbout
-                description={company.description}
-                companyName={company.name}
-                sector={company.sector}
-              />
-            </section>
+            {/* Interactive Tab Switcher */}
+            <div className="detail-nav-tabs-wrapper">
+              <nav className="detail-nav-tabs" aria-label="Company Data Navigation">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    className={`detail-nav-tab ${activeTab === tab.id ? 'active' : ''}`}
+                    onClick={() => setActiveTab(tab.id)}
+                  >
+                    <span className="tab-icon">{tab.icon}</span>
+                    <span>{tab.label}</span>
+                  </button>
+                ))}
+              </nav>
+            </div>
 
-            <section className="company-section">
-              <h2 className="section-title">Price History</h2>
-              <PriceHistoryChart priceHistory={history} />
-            </section>
+            {/* TAB: Overview & Chart */}
+            {(activeTab === 'overview' || activeTab === 'all') && (
+              <div className="detail-tab-pane">
+                <section className="company-section">
+                  <h2 className="section-title">About {company.name}</h2>
+                  <CompanyAbout
+                    description={company.description}
+                    companyName={company.name}
+                    sector={company.sector}
+                  />
+                </section>
+
+                <section className="company-section">
+                  <h2 className="section-title">Indicative Price History</h2>
+                  <PriceHistoryChart priceHistory={history} />
+                </section>
+              </div>
+            )}
+
+            {/* TAB: Key Fundamentals */}
+            {(activeTab === 'fundamentals' || activeTab === 'all') && (
+              <div className="detail-tab-pane">
+                <CompanyFundamentalsGrid company={company} latestPrice={latestPrice} />
+              </div>
+            )}
+
+            {/* TAB: Financial Statements */}
+            {(activeTab === 'financials' || activeTab === 'all') && (
+              <div className="detail-tab-pane">
+                <CompanyFinancialsTable companyName={company.name} />
+              </div>
+            )}
+
+            {/* TAB: Shareholding & Cap Table */}
+            {(activeTab === 'shareholding' || activeTab === 'all') && (
+              <div className="detail-tab-pane">
+                <CompanyShareholding companyName={company.name} />
+              </div>
+            )}
+
+            {/* TAB: Funding & Valuation */}
+            {(activeTab === 'funding' || activeTab === 'all') && (
+              <div className="detail-tab-pane">
+                <CompanyFundingRounds companyName={company.name} />
+              </div>
+            )}
+
+            {/* TAB: FAQs & Due Diligence */}
+            {(activeTab === 'faqs' || activeTab === 'all') && (
+              <div className="detail-tab-pane">
+                <CompanyFaqAccordion companyName={company.name} />
+              </div>
+            )}
           </div>
 
           <aside className="company-detail-sidebar">
