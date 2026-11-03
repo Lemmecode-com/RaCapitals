@@ -8,16 +8,26 @@ const Navbar = () => {
   const location = useLocation()
   const onAdmin = location.pathname.startsWith('/admin')
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
     setIsMenuOpen(false)
   }, [location.pathname])
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 8)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   const toggleMenu = () => setIsMenuOpen((v) => !v)
   const closeMenu = () => setIsMenuOpen(false)
 
   return (
-    <header className="navbar">
+    <header className={`navbar ${isScrolled ? 'is-scrolled' : ''}`}>
       <div className="navbar-inner">
         <Link to="/" className="wordmark brand-lockup" onClick={closeMenu}>
           <img src={logo} alt="Taurus Magnus" className="brand-logo-img" />
