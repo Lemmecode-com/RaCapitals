@@ -11929,6 +11929,38 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--brass) !important;
 }
 
+/* Financials YoY Growth Badges */
+.growth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-family: var(--font-mono, monospace);
+  line-height: 1;
+}
+
+.growth-badge.growth-positive {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10B981;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.growth-badge.growth-negative {
+  background: rgba(239, 68, 68, 0.12);
+  color: #EF4444;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.growth-badge.growth-neutral {
+  background: var(--surface-2);
+  color: var(--text-soft);
+  border: 1px solid var(--border);
+}
+
+
 .faq-item-card.open {
   border-color: var(--brass) !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);

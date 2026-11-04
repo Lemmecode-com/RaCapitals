@@ -104,8 +104,17 @@ const CompanyDetail = () => {
           </div>
           <div className="company-header-text">
             <h1>{company.name}</h1>
-            {company.sector && <span className="sector-badge">{company.sector}</span>}
-            {company.isin && <p className="muted mono">ISIN: {company.isin}</p>}
+            <div className="company-badge-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginTop: '0.35rem' }}>
+              {company.sector && <span className="sector-badge">{company.sector}</span>}
+              {company.industry && <span className="sector-badge outline" style={{ background: 'transparent', border: '1px solid var(--border)', color: 'var(--text-soft)' }}>{company.industry}</span>}
+              {company.drhpFiled && <span className="sector-badge" style={{ background: '#FEF3C7', color: '#92400E', border: '1px solid #FCD34D' }}>DRHP Filed</span>}
+            </div>
+            <div className="company-id-row" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.85rem', marginTop: '0.5rem', fontSize: '0.82rem', color: 'var(--text-soft)' }}>
+              {company.isin && <span><strong style={{ color: 'var(--brass)' }}>ISIN:</strong> <span className="mono">{company.isin}</span></span>}
+              {company.cin && <span><strong style={{ color: 'var(--brass)' }}>CIN:</strong> <span className="mono">{company.cin}</span></span>}
+              {company.foundedYear && <span><strong style={{ color: 'var(--brass)' }}>Founded:</strong> {company.foundedYear}</span>}
+              {company.registeredOffice && <span><strong style={{ color: 'var(--brass)' }}>HQ:</strong> {company.registeredOffice}</span>}
+            </div>
           </div>
         </header>
 
@@ -197,7 +206,7 @@ const CompanyDetail = () => {
             {/* TAB: Financial Statements */}
             {(activeTab === 'financials' || activeTab === 'all') && (
               <div className="detail-tab-pane">
-                <CompanyFinancialsTable companyName={company.name} />
+                <CompanyFinancialsTable companyId={company._id} companyName={company.name} />
               </div>
             )}
 

@@ -1,21 +1,85 @@
 import { formatINR } from '../../utils/format'
 
 const CompanyFundamentalsGrid = ({ company, latestPrice }) => {
-  // Mock institutional fundamentals (ready for dynamic backend integration in TM-ISSUE-06)
-  const fundamentals = [
-    { label: 'Market Cap (Est.)', value: '₹ 18,450 Cr', tip: 'Estimated market valuation based on current unlisted price and total share count' },
-    { label: 'Indicative Price', value: formatINR(latestPrice || 1250), tip: 'Latest OTC unlisted transaction benchmark price' },
-    { label: 'Face Value (FV)', value: formatINR(company?.faceValue || 10), tip: 'Original nominal value stated on share certificate' },
-    { label: 'Book Value (BVPS)', value: '₹ 342.50', tip: 'Total equity minus liabilities divided by shares outstanding' },
-    { label: 'P/E Ratio (TTM)', value: '28.4x', tip: 'Price to Earnings multiple based on trailing twelve months PAT' },
-    { label: 'P/B Ratio', value: '3.65x', tip: 'Price to Book Value multiple' },
-    { label: 'Return on Equity (ROE)', value: '18.2%', tip: 'Net income returned as percentage of shareholder equity' },
-    { label: 'ROCE', value: '21.5%', tip: 'Return on capital employed, assessing profitability efficiency' },
-    { label: 'EPS (Diluted)', value: '₹ 44.10', tip: 'Earnings per share after dilutive convertible securities' },
-    { label: 'Debt to Equity', value: '0.24', tip: 'Financial leverage ratio — below 1 indicates strong balance sheet' },
-    { label: '52W Range', value: `${formatINR(company?.low52 || 850)} – ${formatINR(company?.high52 || 1400)}`, tip: 'Lowest and highest transaction price observed in past year' },
-    { label: 'Total Shares Outstanding', value: '14.76 Cr', tip: 'Total issued and registered demat equity shares' }
+  if (!company) return null
+
+  // Helper to format large share counts into Crores
+  const formatShares = (count) => {
+    if (!count) return null
+    const num = Number(count)
+    if (isNaN(num)) return null
+    if (num >= 10000000) {
+      return `${(num / 10000000).toFixed(2)} Cr shares`
+    }
+    return `${num.toLocaleString('en-IN')} shares`
+  }
+
+  // Define candidate fundamental metrics with graceful suppression if not available
+  const candidateFundamentals = [
+    {
+      label: 'Market Cap (Est.)',
+      value: company.marketCap ? `₹ ${Number(company.marketCap).toLocaleString('en-IN')} Cr` : null,
+      tip: 'Estimated market valuation based on current unlisted price and total share count'
+    },
+    {
+      label: 'Indicative Price',
+      value: latestPrice ? formatINR(latestPrice) : null,
+      tip: 'Latest OTC unlisted transaction benchmark price'
+    },
+    {
+      label: 'Face Value (FV)',
+      value: company.faceValue ? formatINR(company.faceValue) : null,
+      tip: 'Nominal face value per share stated in corporate charter'
+    },
+    {
+      label: 'Book Value (BVPS)',
+      value: company.bookValue ? `₹ ${Number(company.bookValue).toLocaleString('en-IN', { maximumFractionDigits: 2 })}` : null,
+      tip: 'Total net equity divided by total outstanding shares'
+    },
+    {
+      label: 'P/E Ratio',
+      value: company.peRatio ? `${Number(company.peRatio).toFixed(1)}x` : null,
+      tip: 'Price to Earnings valuation multiple'
+    },
+    {
+      label: 'P/B Ratio',
+      value: company.pbRatio ? `${Number(company.pbRatio).toFixed(1)}x` : null,
+      tip: 'Price to Book Value multiple'
+    },
+    {
+      label: 'Return on Equity (ROE)',
+      value: company.roe ? `${Number(company.roe).toFixed(1)}%` : null,
+      tip: 'Net profitability generated as a percentage of shareholder equity'
+    },
+    {
+      label: 'Minimum Lot Size',
+      value: company.lotSize ? `${company.lotSize} shares` : null,
+      tip: 'Minimum order quantity for unlisted share purchase transactions'
+    },
+    {
+      label: '52W Price Range',
+      value: (company.low52 && company.high52) ? `${formatINR(company.low52)} – ${formatINR(company.high52)}` : null,
+      tip: 'Lowest and highest recorded unlisted price over past 52 weeks'
+    },
+    {
+      label: 'Total Shares Outstanding',
+      value: formatShares(company.outstandingShares),
+      tip: 'Total issued and registered demat shares'
+    },
+    {
+      label: 'Industry Classification',
+      value: company.industry || null,
+      tip: 'Specific business sector segment'
+    },
+    {
+      label: 'Founded Year',
+      value: company.foundedYear ? `${company.foundedYear}` : null,
+      tip: 'Original company incorporation year'
+    }
   ]
+
+  // Suppress cards with null/empty values cleanly (prevents NaN or empty cards)
+  const availableFundamentals = candidateFundamentals.filter(item => item.value !== null && item.value !== undefined)
 
   return (
     <div className="detail-tab-pane">
@@ -28,18 +92,23 @@ const CompanyFundamentalsGrid = ({ company, latestPrice }) => {
         </div>
       </div>
 
-      <div className="fundamentals-grid">
-        {fundamentals.map((f, idx) => (
-          <div key={idx} className="fundamental-card">
-            <span className="fundamental-label">{f.label}</span>
-            <span className="fundamental-value mono">{f.value}</span>
-            <span className="fundamental-tip">{f.tip}</span>
-          </div>
-        ))}
-      </div>
+      {availableFundamentals.length === 0 ? (
+        <div style={{ padding: '2rem 1rem', textAlign: 'center', background: 'var(--card-bg)', borderRadius: '10px', border: '1px solid var(--border)' }}>
+          <p className="muted">Key fundamentals and valuation ratios are currently being collated for this listing.</p>
+        </div>
+      ) : (
+        <div className="fundamentals-grid">
+          {availableFundamentals.map((f, idx) => (
+            <div key={idx} className="fundamental-card">
+              <span className="fundamental-label">{f.label}</span>
+              <span className="fundamental-value mono">{f.value}</span>
+              <span className="fundamental-tip">{f.tip}</span>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
 
 export default CompanyFundamentalsGrid
-

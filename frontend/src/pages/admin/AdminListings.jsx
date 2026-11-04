@@ -10,10 +10,20 @@ import Pagination from '../../components/admin/Pagination'
 const EMPTY_FORM = {
   name: '',
   sector: '',
+  industry: '',
+  cin: '',
+  registeredOffice: '',
+  foundedYear: '',
   description: '',
   lotSize: '',
   faceValue: '',
   isin: '',
+  marketCap: '',
+  peRatio: '',
+  pbRatio: '',
+  roe: '',
+  bookValue: '',
+  outstandingShares: '',
   drhpFiled: false,
 }
 
@@ -78,10 +88,20 @@ const AdminListings = () => {
     setForm({
       name: company.name || '',
       sector: company.sector || '',
+      industry: company.industry || '',
+      cin: company.cin || '',
+      registeredOffice: company.registeredOffice || '',
+      foundedYear: company.foundedYear ?? '',
       description: company.description || '',
       lotSize: company.lotSize ?? '',
       faceValue: company.faceValue ?? '',
       isin: company.isin || '',
+      marketCap: company.marketCap ?? '',
+      peRatio: company.peRatio ?? '',
+      pbRatio: company.pbRatio ?? '',
+      roe: company.roe ?? '',
+      bookValue: company.bookValue ?? '',
+      outstandingShares: company.outstandingShares ?? '',
       drhpFiled: Boolean(company.drhpFiled),
     })
     setFormError('')
@@ -131,10 +151,20 @@ const AdminListings = () => {
       const payload = {
         name: form.name.trim(),
         sector: form.sector.trim(),
+        industry: form.industry ? form.industry.trim() : '',
+        cin: form.cin ? form.cin.trim() : '',
+        registeredOffice: form.registeredOffice ? form.registeredOffice.trim() : '',
+        foundedYear: form.foundedYear === '' ? null : Number(form.foundedYear),
         description: form.description.trim(),
         lotSize: form.lotSize === '' ? undefined : Number(form.lotSize),
-        faceValue: form.faceValue === '' ? undefined : Number(form.faceValue),
-        isin: form.isin.trim(),
+        faceValue: form.faceValue === '' ? null : Number(form.faceValue),
+        isin: form.isin ? form.isin.trim() : '',
+        marketCap: form.marketCap === '' ? null : Number(form.marketCap),
+        peRatio: form.peRatio === '' ? null : Number(form.peRatio),
+        pbRatio: form.pbRatio === '' ? null : Number(form.pbRatio),
+        roe: form.roe === '' ? null : Number(form.roe),
+        bookValue: form.bookValue === '' ? null : Number(form.bookValue),
+        outstandingShares: form.outstandingShares === '' ? null : Number(form.outstandingShares),
         drhpFiled: Boolean(form.drhpFiled),
       }
       if (editing) {
@@ -381,58 +411,136 @@ const AdminListings = () => {
 
       {formOpen && createPortal(
         <div className="admin-modal-portal modal-backdrop event-modal-backdrop" onClick={closeForm}>
-          <div className="modal" onClick={(e) => e.stopPropagation()}>
+          <div className="modal" style={{ maxWidth: '640px', maxHeight: '88vh', overflowY: 'auto' }} onClick={(e) => e.stopPropagation()}>
             <button className="modal-close-btn" type="button" onClick={closeForm}>&times;</button>
-            <h2>{editing ? 'Edit Listing' : 'Add New Listing'}</h2>
+            <h2>{editing ? `Edit Listing — ${editing.name}` : 'Add New Share Listing'}</h2>
+            
             <form onSubmit={handleSubmitCompany} className="admin-form">
-              <label className="form-label">
-                Name *
-                <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="form-input" />
-                {fieldErrors.name && <span className="form-error">{fieldErrors.name}</span>}
-              </label>
-              <label className="form-label">
-                Sector *
-                <input type="text" value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value })} list="sector-list" className="form-input" />
-                {fieldErrors.sector && <span className="form-error">{fieldErrors.sector}</span>}
-                <datalist id="sector-list">
-                  {SECTORS.map((s) => <option key={s} value={s} />)}
-                </datalist>
-              </label>
-              <label className="form-label">
-                Description (optional)
-                <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="form-input" rows={4} />
-              </label>
-              <div className="form-row">
+              {/* Section 1: Basic Info */}
+              <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem', marginBottom: '0.75rem' }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--brass)' }}>1. Basic Listing Information</h4>
+                
                 <label className="form-label">
-                  <InfoTooltip text="Minimum number of shares a buyer must purchase in one transaction.">
-                    Lot Size *
-                  </InfoTooltip>
-                  <input type="number" value={form.lotSize} onChange={(e) => setForm({ ...form, lotSize: e.target.value })} className="form-input" />
-                  {fieldErrors.lotSize && <span className="form-error">{fieldErrors.lotSize}</span>}
+                  Company Name *
+                  <input type="text" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="form-input" placeholder="e.g. Tata Technologies" />
+                  {fieldErrors.name && <span className="form-error">{fieldErrors.name}</span>}
                 </label>
+
+                <div className="form-row">
+                  <label className="form-label">
+                    Sector *
+                    <input type="text" value={form.sector} onChange={(e) => setForm({ ...form, sector: e.target.value })} list="sector-list" className="form-input" placeholder="e.g. IT, Consumer" />
+                    {fieldErrors.sector && <span className="form-error">{fieldErrors.sector}</span>}
+                    <datalist id="sector-list">
+                      {SECTORS.map((s) => <option key={s} value={s} />)}
+                    </datalist>
+                  </label>
+                  <label className="form-label">
+                    Industry Sub-Segment
+                    <input type="text" value={form.industry} onChange={(e) => setForm({ ...form, industry: e.target.value })} className="form-input" placeholder="e.g. Engineering R&D Services" />
+                  </label>
+                </div>
+
                 <label className="form-label">
-                  <InfoTooltip text="The share's original nominal value set at incorporation — unrelated to its current market price.">
-                    Face Value (optional)
-                  </InfoTooltip>
-                  <input type="number" step="0.01" value={form.faceValue} onChange={(e) => setForm({ ...form, faceValue: e.target.value })} className="form-input" />
+                  Description (optional)
+                  <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="form-input" rows={3} placeholder="Brief summary of company business and background..." />
+                </label>
+
+                <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginTop: '0.4rem' }}>
+                  <input
+                    type="checkbox"
+                    checked={form.drhpFiled}
+                    onChange={(e) => setForm({ ...form, drhpFiled: e.target.checked })}
+                  />
+                  <span>DRHP Filed (Draft Red Herring Prospectus with SEBI)</span>
                 </label>
               </div>
-              <label className="form-label">
-                <InfoTooltip text="International Securities Identification Number — a unique code for the share. Leave blank if not yet assigned.">
-                  ISIN (optional)
-                </InfoTooltip>
-                <input type="text" value={form.isin} onChange={(e) => setForm({ ...form, isin: e.target.value })} className="form-input" />
-              </label>
-              <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer' }}>
-                <input
-                  type="checkbox"
-                  checked={form.drhpFiled}
-                  onChange={(e) => setForm({ ...form, drhpFiled: e.target.checked })}
-                />
-                <span>DRHP Filed</span>
-              </label>
+
+              {/* Section 2: Corporate Identifiers */}
+              <div style={{ borderBottom: '1px solid var(--border)', paddingBottom: '0.75rem', marginBottom: '0.75rem' }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--brass)' }}>2. Corporate Legal Identifiers</h4>
+                
+                <div className="form-row">
+                  <label className="form-label">
+                    <InfoTooltip text="Corporate Identification Number registered with MCA.">
+                      CIN
+                    </InfoTooltip>
+                    <input type="text" value={form.cin} onChange={(e) => setForm({ ...form, cin: e.target.value })} className="form-input" placeholder="U72200PN..." />
+                  </label>
+
+                  <label className="form-label">
+                    <InfoTooltip text="International Securities Identification Number — a unique code for the share.">
+                      ISIN
+                    </InfoTooltip>
+                    <input type="text" value={form.isin} onChange={(e) => setForm({ ...form, isin: e.target.value })} className="form-input" placeholder="INE..." />
+                  </label>
+                </div>
+
+                <div className="form-row">
+                  <label className="form-label">
+                    Founded Year
+                    <input type="number" value={form.foundedYear} onChange={(e) => setForm({ ...form, foundedYear: e.target.value })} className="form-input" placeholder="e.g. 1994" />
+                  </label>
+                  <label className="form-label">
+                    Registered Office (HQ)
+                    <input type="text" value={form.registeredOffice} onChange={(e) => setForm({ ...form, registeredOffice: e.target.value })} className="form-input" placeholder="City, State" />
+                  </label>
+                </div>
+              </div>
+
+              {/* Section 3: Trading & Valuation Fundamentals */}
+              <div style={{ marginBottom: '0.75rem' }}>
+                <h4 style={{ margin: '0 0 0.5rem 0', color: 'var(--brass)' }}>3. Fundamentals & Multiples</h4>
+                
+                <div className="form-row">
+                  <label className="form-label">
+                    Lot Size *
+                    <input type="number" value={form.lotSize} onChange={(e) => setForm({ ...form, lotSize: e.target.value })} className="form-input" placeholder="e.g. 50" />
+                    {fieldErrors.lotSize && <span className="form-error">{fieldErrors.lotSize}</span>}
+                  </label>
+                  <label className="form-label">
+                    Face Value (₹)
+                    <input type="number" step="0.01" value={form.faceValue} onChange={(e) => setForm({ ...form, faceValue: e.target.value })} className="form-input" placeholder="e.g. 2" />
+                  </label>
+                </div>
+
+                <div className="form-row">
+                  <label className="form-label">
+                    Market Cap (₹ Cr)
+                    <input type="number" step="any" value={form.marketCap} onChange={(e) => setForm({ ...form, marketCap: e.target.value })} className="form-input" placeholder="e.g. 41250" />
+                  </label>
+                  <label className="form-label">
+                    P/E Ratio
+                    <input type="number" step="0.1" value={form.peRatio} onChange={(e) => setForm({ ...form, peRatio: e.target.value })} className="form-input" placeholder="e.g. 28.4" />
+                  </label>
+                </div>
+
+                <div className="form-row">
+                  <label className="form-label">
+                    P/B Ratio
+                    <input type="number" step="0.01" value={form.pbRatio} onChange={(e) => setForm({ ...form, pbRatio: e.target.value })} className="form-input" placeholder="e.g. 3.65" />
+                  </label>
+                  <label className="form-label">
+                    Return on Equity (ROE %)
+                    <input type="number" step="0.1" value={form.roe} onChange={(e) => setForm({ ...form, roe: e.target.value })} className="form-input" placeholder="e.g. 18.2" />
+                  </label>
+                </div>
+
+                <div className="form-row">
+                  <label className="form-label">
+                    Book Value (₹)
+                    <input type="number" step="0.01" value={form.bookValue} onChange={(e) => setForm({ ...form, bookValue: e.target.value })} className="form-input" placeholder="e.g. 84.50" />
+                  </label>
+                  <label className="form-label">
+                    Outstanding Shares
+                    <input type="number" value={form.outstandingShares} onChange={(e) => setForm({ ...form, outstandingShares: e.target.value })} className="form-input" placeholder="e.g. 405668530" />
+                  </label>
+                </div>
+              </div>
+
               {formError && <p className="form-error">{formError}</p>}
-              <div className="modal-actions">
+
+              <div className="modal-actions" style={{ position: 'sticky', bottom: 0, background: 'var(--card-bg)', paddingTop: '0.75rem', borderTop: '1px solid var(--border)' }}>
                 <button type="button" className="secondary-btn" onClick={closeForm}>Cancel</button>
                 <button type="submit" className="primary-btn">{editing ? 'Save Changes' : 'Create Listing'}</button>
               </div>
