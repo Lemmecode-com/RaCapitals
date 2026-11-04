@@ -290,9 +290,9 @@ const ShareEnquiryForm = ({ company, latestPrice }) => {
           </label>
           <textarea
             id="enquiry-message"
-            rows="3"
+            rows="2"
             className={`share-enquiry-textarea ${errors.message ? 'is-invalid' : ''}`}
-            placeholder="Specify preferred transaction timeline, demat details, or any questions about unlisted shares transfer..."
+            placeholder="Preferences, timeline, or questions (optional)..."
             value={formData.message}
             onChange={handleChange('message')}
           />

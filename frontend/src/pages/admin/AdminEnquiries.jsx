@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import api from '../../services/api'
 import Pagination from '../../components/admin/Pagination'
+import { exportToCsv } from '../../utils/exportUtils'
 
 const STATUS_CHIPS = [
   { id: 'all', label: 'All' },
@@ -186,12 +187,64 @@ const AdminEnquiries = () => {
     }
   }
 
+  const handleExport = (format = 'csv') => {
+    if (!enquiries || enquiries.length === 0) {
+      setFlash('No enquiries available to export.')
+      return
+    }
+
+    const columns = [
+      { label: 'Company', key: 'companyName' },
+      { label: 'Customer Name', key: 'name' },
+      { label: 'Phone', key: 'phone' },
+      { label: 'Email', key: 'email' },
+      { label: 'Quantity', key: 'quantity' },
+      { label: 'Status', key: 'status' },
+      {
+        label: 'Date',
+        accessor: (row) =>
+          new Date(row.createdAt).toLocaleDateString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+      },
+      { label: 'Message / Remarks', key: 'message' },
+    ]
+
+    const filename = `Share_Enquiries_${selectedStatus}_${new Date().toISOString().slice(0, 10)}.csv`
+    exportToCsv(filename, columns, enquiries)
+    setFlash(`Exported ${enquiries.length} enquiry record(s) (${format.toUpperCase()})`)
+  }
+
   return (
     <div className="dashboard-wrap">
-      {/* Header matching Listings */}
-      <div className="admin-page-header">
+      {/* Header matching Listings with Export Actions */}
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1>Share Enquiries</h1>
+        </div>
+        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="secondary-btn"
+            style={{ fontSize: '0.85rem', padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+            onClick={() => handleExport('csv')}
+            title="Download CSV file for current view"
+          >
+            <span>📥</span> Export CSV
+          </button>
+          <button
+            type="button"
+            className="secondary-btn"
+            style={{ fontSize: '0.85rem', padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
+            onClick={() => handleExport('excel')}
+            title="Download Excel-compatible file"
+          >
+            <span>📊</span> Export Excel
+          </button>
         </div>
       </div>
 

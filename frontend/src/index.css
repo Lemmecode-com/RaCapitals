@@ -11966,3 +11966,300 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+
+/* Homepage DRHP Grid: 4 columns across (4x2 = 8 cards) */
+.home-drhp-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.25rem;
+}
+
+.home-drhp-card {
+  padding: 1.25rem !important;
+}
+
+.home-drhp-card-name {
+  font-size: 1.15rem !important;
+  line-height: 1.35 !important;
+}
+
+.home-drhp-card-sector {
+  font-size: 0.82rem !important;
+  margin: 0 0 1rem 0 !important;
+}
+
+.home-drhp-card-price {
+  font-size: 1.1rem !important;
+}
+
+@media (max-width: 1024px) {
+  .home-drhp-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-drhp-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ============================================================
+   Company Detail Compact & Spacious Redesign (Refined Proportions)
+   ============================================================ */
+
+.company-header h1 {
+  font-size: 1.7rem !important;
+  line-height: 1.2 !important;
+}
+
+.company-badge-row .sector-badge {
+  font-size: 0.72rem !important;
+  padding: 0.2rem 0.55rem !important;
+}
+
+.detail-nav-tabs-wrapper {
+  margin-bottom: 1.25rem !important;
+  padding-bottom: 0.35rem !important;
+}
+
+.detail-nav-tab {
+  padding: 0.42rem 0.8rem !important;
+  font-size: 0.82rem !important;
+  gap: 0.35rem !important;
+  border-radius: 6px !important;
+}
+
+.detail-nav-tab .tab-icon {
+  font-size: 0.85rem !important;
+}
+
+.detail-tab-pane {
+  gap: 1.25rem !important;
+}
+
+/* Compact Fundamentals Grid */
+.fundamentals-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 0.75rem !important;
+}
+
+.fundamental-card {
+  padding: 0.75rem 0.85rem !important;
+  border-radius: 8px !important;
+  gap: 0.25rem !important;
+}
+
+.fundamental-card-head {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 0.25rem !important;
+}
+
+.fundamental-label {
+  font-size: 0.68rem !important;
+  letter-spacing: 0.04em !important;
+  font-weight: 600 !important;
+}
+
+.fundamental-info-icon {
+  font-size: 0.72rem !important;
+  color: var(--text-faint, #9ca3af) !important;
+  cursor: help !important;
+}
+
+.fundamental-value {
+  font-family: inherit !important;
+  font-size: 0.96rem !important;
+  font-weight: 500 !important;
+  line-height: 1.35 !important;
+  color: var(--page-text, #111827) !important;
+}
+
+/* Compact Sidebar & Purchase Enquiry Card */
+.company-detail-grid {
+  grid-template-columns: minmax(0, 1fr) 290px !important;
+  gap: 1.5rem !important;
+}
+
+.company-detail-sidebar {
+  width: 290px !important;
+}
+
+.company-detail-sidebar .share-enquiry-card {
+  padding: 0.95rem 0.9rem !important;
+  border-radius: 10px !important;
+}
+
+.company-detail-sidebar .share-enquiry-header {
+  margin-bottom: 0.65rem !important;
+}
+
+.company-detail-sidebar .share-enquiry-badge {
+  font-size: 0.65rem !important;
+  padding: 0.18rem 0.5rem !important;
+}
+
+.company-detail-sidebar .share-enquiry-grid {
+  gap: 0.5rem !important;
+}
+
+.company-detail-sidebar .share-enquiry-label {
+  font-size: 0.72rem !important;
+  margin-bottom: 0.15rem !important;
+}
+
+.company-detail-sidebar .share-enquiry-hint {
+  font-size: 0.68rem !important;
+}
+
+.company-detail-sidebar .share-enquiry-input,
+.company-detail-sidebar .share-enquiry-textarea {
+  padding: 0.42rem 0.65rem !important;
+  font-size: 0.82rem !important;
+  border-radius: 6px !important;
+}
+
+.company-detail-sidebar .share-enquiry-textarea {
+  min-height: 48px !important;
+  max-height: 65px !important;
+}
+
+.company-detail-sidebar .share-enquiry-actions {
+  margin-top: 0.75rem !important;
+  gap: 0.4rem !important;
+}
+
+.company-detail-sidebar .share-enquiry-submit-btn,
+.company-detail-sidebar .share-enquiry-whatsapp-btn {
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.82rem !important;
+}
+
+.company-detail-sidebar .share-enquiry-est {
+  font-size: 0.72rem !important;
+}
+
+@media (max-width: 1024px) {
+  .fundamentals-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .company-detail-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1.5rem !important;
+  }
+  .company-detail-sidebar {
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .fundamentals-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+.fundamental-card.span-2 {
+  grid-column: span 2 !important;
+}
+
+@media (max-width: 640px) {
+  .fundamental-card.span-2 {
+    grid-column: span 1 !important;
+  }
+}
+
+/* ============================================================
+   Refinements: Financials Numbers, Redesigned Tabs, and FAQ
+   ============================================================ */
+
+/* 1. Financials Table Number Sizes & Padding */
+.financial-table {
+  font-size: 0.8rem !important;
+}
+
+.financial-table th {
+  padding: 0.55rem 0.75rem !important;
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+}
+
+.financial-table td {
+  padding: 0.5rem 0.75rem !important;
+  font-size: 0.8rem !important;
+}
+
+.financial-table td.mono {
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+}
+
+.growth-badge {
+  font-size: 0.68rem !important;
+  padding: 0.15rem 0.45rem !important;
+}
+
+/* 2. Redesigned Segmented Navigation Tabs */
+.detail-nav-tabs-wrapper {
+  margin-bottom: 1.5rem !important;
+  border-bottom: none !important;
+  padding-bottom: 0 !important;
+}
+
+.detail-nav-tabs {
+  display: inline-flex !important;
+  background: #F1F5F9 !important;
+  border: 1px solid #E2E8F0 !important;
+  border-radius: 9999px !important;
+  padding: 4px !important;
+  gap: 4px !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+}
+
+.detail-nav-tab {
+  background: transparent !important;
+  border: none !important;
+  border-radius: 9999px !important;
+  padding: 0.42rem 1rem !important;
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  color: #64748B !important;
+  box-shadow: none !important;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  white-space: nowrap !important;
+}
+
+.detail-nav-tab:hover {
+  color: #0F172A !important;
+  background: rgba(255, 255, 255, 0.65) !important;
+}
+
+.detail-nav-tab.active {
+  background: #FFFFFF !important;
+  color: var(--brass, #2563EB) !important;
+  font-weight: 600 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="black"] .detail-nav-tabs {
+  background: #1E293B !important;
+  border-color: #334155 !important;
+}
+
+[data-theme="black"] .detail-nav-tab {
+  color: #94A3B8 !important;
+}
+
+[data-theme="black"] .detail-nav-tab:hover {
+  color: #F8FAFC !important;
+  background: rgba(255, 255, 255, 0.08) !important;
+}
+
+[data-theme="black"] .detail-nav-tab.active {
+  background: #0F172A !important;
+  color: #60A5FA !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
+}

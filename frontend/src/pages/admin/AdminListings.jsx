@@ -6,6 +6,7 @@ import { apiBaseWithoutApi, formatINR } from '../../utils/format'
 import ConfirmDialog from '../../components/common/ConfirmDialog'
 import InfoTooltip from '../../components/common/InfoTooltip'
 import Pagination from '../../components/admin/Pagination'
+import BulkImportModal from '../../components/admin/BulkImportModal'
 
 const EMPTY_FORM = {
   name: '',
@@ -25,6 +26,7 @@ const EMPTY_FORM = {
   bookValue: '',
   outstandingShares: '',
   drhpFiled: false,
+  price: '',
 }
 
 const SECTORS = ['Fintech', 'Energy', 'Logistics', 'Consumer', 'Healthcare']
@@ -45,6 +47,7 @@ const AdminListings = () => {
   const [flash, setFlash] = useState('')
   const [deactivateTarget, setDeactivateTarget] = useState(null)
   const [reactivateTarget, setReactivateTarget] = useState(null)
+  const [importModalOpen, setImportModalOpen] = useState(false)
   const [currentPage, setCurrentPage] = useState(1)
   const itemsPerPage = 10
 
@@ -103,6 +106,7 @@ const AdminListings = () => {
       bookValue: company.bookValue ?? '',
       outstandingShares: company.outstandingShares ?? '',
       drhpFiled: Boolean(company.drhpFiled),
+      price: company.price ?? '',
     })
     setFormError('')
     setFieldErrors({})
@@ -169,9 +173,23 @@ const AdminListings = () => {
       }
       if (editing) {
         await api.put(`/companies/${editing._id}`, payload)
+        if (form.price !== '' && Number(form.price) > 0 && Number(form.price) !== Number(editing.price)) {
+          try {
+            await api.post(`/prices/${editing._id}`, { price: Number(form.price) })
+          } catch (e) {
+            // non-blocking price update
+          }
+        }
         setFlash(`Updated "${payload.name}"`)
       } else {
-        await api.post('/companies', payload)
+        const createRes = await api.post('/companies', payload)
+        if (form.price !== '' && Number(form.price) > 0 && createRes?.data?._id) {
+          try {
+            await api.post(`/prices/${createRes.data._id}`, { price: Number(form.price) })
+          } catch (e) {
+            // non-blocking price update
+          }
+        }
         setFlash(`Created "${payload.name}"`)
       }
       closeForm()
@@ -309,11 +327,21 @@ const AdminListings = () => {
 
   return (
     <div className="dashboard-wrap">
-      <div className="admin-page-header">
+      <div className="admin-page-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
           <h1>Listings</h1>
         </div>
-        <button type="button" className="primary-btn" onClick={openCreate}>+ Add New Listing</button>
+        <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="secondary-btn"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.88rem' }}
+            onClick={() => setImportModalOpen(true)}
+          >
+            <span>📥</span> Bulk Import
+          </button>
+          <button type="button" className="primary-btn" onClick={openCreate}>+ Add New Listing</button>
+        </div>
       </div>
 
       {flash && <div className="flash">{flash}</div>}
@@ -494,13 +522,24 @@ const AdminListings = () => {
                 
                 <div className="form-row">
                   <label className="form-label">
+                    Indicative Price (₹)
+                    <input type="number" step="0.01" min="0" value={form.price} onChange={(e) => setForm({ ...form, price: e.target.value })} className="form-input" placeholder="e.g. 1050" />
+                  </label>
+                  <label className="form-label">
                     Lot Size *
                     <input type="number" value={form.lotSize} onChange={(e) => setForm({ ...form, lotSize: e.target.value })} className="form-input" placeholder="e.g. 50" />
                     {fieldErrors.lotSize && <span className="form-error">{fieldErrors.lotSize}</span>}
                   </label>
+                </div>
+
+                <div className="form-row">
                   <label className="form-label">
                     Face Value (₹)
                     <input type="number" step="0.01" value={form.faceValue} onChange={(e) => setForm({ ...form, faceValue: e.target.value })} className="form-input" placeholder="e.g. 2" />
+                  </label>
+                  <label className="form-label">
+                    Total Shares Outstanding
+                    <input type="number" value={form.outstandingShares} onChange={(e) => setForm({ ...form, outstandingShares: e.target.value })} className="form-input" placeholder="e.g. 405668530" />
                   </label>
                 </div>
 
@@ -531,10 +570,7 @@ const AdminListings = () => {
                     Book Value (₹)
                     <input type="number" step="0.01" value={form.bookValue} onChange={(e) => setForm({ ...form, bookValue: e.target.value })} className="form-input" placeholder="e.g. 84.50" />
                   </label>
-                  <label className="form-label">
-                    Outstanding Shares
-                    <input type="number" value={form.outstandingShares} onChange={(e) => setForm({ ...form, outstandingShares: e.target.value })} className="form-input" placeholder="e.g. 405668530" />
-                  </label>
+                  <div />
                 </div>
               </div>
 
@@ -600,6 +636,15 @@ const AdminListings = () => {
         </div>,
         document.body
       )}
+
+      <BulkImportModal
+        isOpen={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        onSuccess={(count) => {
+          setFlash(`Successfully imported ${count} listing(s)`)
+          fetchCompanies()
+        }}
+      />
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 /**
  * Sanitizes currency encoding bugs where the Rupee sign (₹) was corrupted to '?',
@@ -242,6 +242,7 @@ function renderParagraphContent(bodyText, sectionTitle) {
 }
 
 const CompanyAbout = ({ description, companyName, sector }) => {
+  const [isExpanded, setIsExpanded] = useState(false)
   const sections = parseCompanyText(description)
 
   if (!description || sections.length === 0) {
@@ -264,9 +265,12 @@ const CompanyAbout = ({ description, companyName, sector }) => {
     )
   }
 
+  const shouldTruncate = sections.length > 1 || (sections[0]?.body && sections[0].body.length > 320)
+  const displayedSections = (shouldTruncate && !isExpanded) ? sections.slice(0, 1) : sections
+
   return (
-    <div className="about-card">
-      {sections.map((section, idx) => (
+    <div className="about-card" style={{ position: 'relative' }}>
+      {displayedSections.map((section, idx) => (
         <div key={idx} className="about-section-block">
           {section.title && (
             <h3 className="about-block-title">
@@ -274,9 +278,38 @@ const CompanyAbout = ({ description, companyName, sector }) => {
               {section.title}
             </h3>
           )}
-          {section.body && renderParagraphContent(section.body, section.title)}
+          {section.body && renderParagraphContent(
+            (!isExpanded && shouldTruncate && sections.length === 1)
+              ? section.body.slice(0, 320) + '…'
+              : section.body,
+            section.title
+          )}
         </div>
       ))}
+
+      {shouldTruncate && (
+        <div style={{ marginTop: '0.85rem', paddingTop: '0.5rem', borderTop: '1px dashed var(--border)' }}>
+          <button
+            type="button"
+            className="read-more-btn"
+            style={{
+              background: 'transparent',
+              border: 'none',
+              color: 'var(--brass, #2563EB)',
+              fontWeight: 600,
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              padding: '0.2rem 0',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem'
+            }}
+            onClick={() => setIsExpanded(prev => !prev)}
+          >
+            {isExpanded ? 'Read Less ↑' : 'Read More ↓'}
+          </button>
+        </div>
+      )}
     </div>
   )
 }

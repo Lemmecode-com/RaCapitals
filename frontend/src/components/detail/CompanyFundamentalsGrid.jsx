@@ -75,6 +75,22 @@ const CompanyFundamentalsGrid = ({ company, latestPrice }) => {
       label: 'Founded Year',
       value: company.foundedYear ? `${company.foundedYear}` : null,
       tip: 'Original company incorporation year'
+    },
+    {
+      label: 'CIN (Corporate ID)',
+      value: company.cin || null,
+      tip: 'Corporate Identification Number registered with Ministry of Corporate Affairs'
+    },
+    {
+      label: 'ISIN (Demat Code)',
+      value: company.isin || null,
+      tip: 'International Securities Identification Number for electronic depository transfer'
+    },
+    {
+      label: 'Registered Office',
+      value: company.registeredOffice || null,
+      tip: 'Official registered headquarters location',
+      span: 2
     }
   ]
 
@@ -99,10 +115,16 @@ const CompanyFundamentalsGrid = ({ company, latestPrice }) => {
       ) : (
         <div className="fundamentals-grid">
           {availableFundamentals.map((f, idx) => (
-            <div key={idx} className="fundamental-card">
-              <span className="fundamental-label">{f.label}</span>
-              <span className="fundamental-value mono">{f.value}</span>
-              <span className="fundamental-tip">{f.tip}</span>
+            <div
+              key={idx}
+              className={`fundamental-card ${f.span ? `span-${f.span}` : ''}`}
+              title={f.tip || ''}
+            >
+              <div className="fundamental-card-head">
+                <span className="fundamental-label">{f.label}</span>
+                {f.tip && <span className="fundamental-info-icon" title={f.tip}>ⓘ</span>}
+              </div>
+              <span className="fundamental-value">{f.value}</span>
             </div>
           ))}
         </div>

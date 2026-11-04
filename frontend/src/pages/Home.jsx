@@ -487,7 +487,7 @@ const Home = () => {
             {drhpCompanies.length === 0 ? (
               <div className="chart-empty">No companies have filed a DRHP yet.</div>
             ) : (
-              drhpCompanies.slice(0, 4).map((c) => (
+              drhpCompanies.slice(0, 8).map((c) => (
                 <Link to={`/company/${c._id}`} key={c._id} className="home-drhp-card">
                   <div className="home-drhp-card-head">
                     <h3 className="home-drhp-card-name">{c.name}</h3>

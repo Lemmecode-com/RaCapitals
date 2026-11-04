@@ -43,7 +43,7 @@ const CompanyFaqAccordion = ({ companyName }) => {
         </p>
       </div>
 
-      <div className="faq-accordion-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+      <div className="faq-accordion-container" style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
         {faqs.map((faq, idx) => {
           const isOpen = openIdx === idx
           return (
@@ -53,7 +53,7 @@ const CompanyFaqAccordion = ({ companyName }) => {
               style={{
                 background: 'var(--surface-card, #ffffff)',
                 border: '1px solid var(--border)',
-                borderRadius: '10px',
+                borderRadius: '8px',
                 overflow: 'hidden',
                 transition: 'border-color 0.2s, box-shadow 0.2s'
               }}
@@ -63,7 +63,7 @@ const CompanyFaqAccordion = ({ companyName }) => {
                 onClick={() => toggle(idx)}
                 style={{
                   width: '100%',
-                  padding: '1rem 1.25rem',
+                  padding: '0.65rem 0.95rem',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
@@ -72,19 +72,35 @@ const CompanyFaqAccordion = ({ companyName }) => {
                   textAlign: 'left',
                   cursor: 'pointer',
                   fontWeight: 600,
-                  fontSize: '0.94rem',
+                  fontSize: '0.86rem',
                   color: isOpen ? 'var(--navy)' : 'var(--text-primary)',
-                  gap: '1rem'
+                  gap: '0.75rem'
                 }}
               >
                 <span>{faq.q}</span>
-                <span style={{ fontSize: '1.1rem', transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s ease', color: 'var(--brass)' }}>
-                  ▼
-                </span>
+                <svg
+                  width="13"
+                  height="13"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  style={{
+                    transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease',
+                    color: isOpen ? 'var(--brass, #2563EB)' : '#94A3B8',
+                    flexShrink: 0
+                  }}
+                  aria-hidden="true"
+                >
+                  <polyline points="6 9 12 15 18 9" />
+                </svg>
               </button>
 
               {isOpen && (
-                <div style={{ padding: '0 1.25rem 1.15rem 1.25rem', fontSize: '0.88rem', lineHeight: '1.6', color: 'var(--text-secondary, #475569)', borderTop: '1px solid var(--border-subtle, #F1F5F9)', paddingTop: '0.85rem' }}>
+                <div style={{ padding: '0 0.95rem 0.85rem 0.95rem', fontSize: '0.82rem', lineHeight: '1.55', color: 'var(--text-secondary, #475569)', borderTop: '1px solid var(--border-subtle, #F1F5F9)', paddingTop: '0.65rem' }}>
                   {faq.a}
                 </div>
               )}
