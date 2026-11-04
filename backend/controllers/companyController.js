@@ -88,7 +88,12 @@ export const createCompany = async (req, res) => {
 export const updateCompany = async (req, res) => {
   try {
     const { id } = req.params
-    const allowedFields = ['name', 'sector', 'description', 'lotSize', 'faceValue', 'isin', 'logoUrl', 'drhpFiled', 'drhpFiledDate']
+    const allowedFields = [
+      'name', 'sector', 'industry', 'cin', 'registeredOffice', 'foundedYear',
+      'description', 'lotSize', 'faceValue', 'isin', 'logoUrl',
+      'marketCap', 'peRatio', 'pbRatio', 'roe', 'bookValue', 'outstandingShares',
+      'drhpFiled', 'drhpFiledDate'
+    ]
 
     const updates = {}
     for (const key of allowedFields) {

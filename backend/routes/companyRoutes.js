@@ -11,6 +11,10 @@ import {
   updateDrhpStatus,
   getDrhpFiledCompanies
 } from '../controllers/companyController.js'
+import {
+  getCompanyFinancials,
+  upsertCompanyFinancial
+} from '../controllers/financialController.js'
 import authMiddleware from '../middleware/authMiddleware.js'
 import upload from '../middleware/uploadMiddleware.js'
 
@@ -22,8 +26,10 @@ router.get('/drhp-filed', getDrhpFiledCompanies)
 router.get('/', getAllCompanies)
 router.get('/admin/all', authMiddleware, getAllCompaniesAdmin)
 router.get('/:id', getCompanyById)
+router.get('/:id/financials', getCompanyFinancials)
 router.post('/', authMiddleware, createCompany)
 router.put('/:id', authMiddleware, updateCompany)
+router.post('/:id/financials', authMiddleware, upsertCompanyFinancial)
 router.patch('/:id/drhp', authMiddleware, updateDrhpStatus)
 router.patch('/:id/deactivate', authMiddleware, deactivateCompany)
 router.patch('/:id/activate', authMiddleware, activateCompany)

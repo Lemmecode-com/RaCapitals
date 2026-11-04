@@ -24,3 +24,4 @@ backend/uploads/*
 # Seed scripts (Dummy data only)
 backend/seedPrices.js
 backend/seedEvents.js
+backend/seedFinancials.js

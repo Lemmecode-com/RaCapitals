@@ -10,6 +10,7 @@ import contactRoutes from './routes/contactRoutes.js'
 import eventRoutes from './routes/eventRoutes.js'
 import blogRoutes from './routes/blogRoutes.js'
 import enquiryRoutes from './routes/enquiryRoutes.js'
+import financialRoutes from './routes/financialRoutes.js'
 
 dotenv.config()
 
@@ -29,6 +30,8 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes)
 app.use('/api/companies', companyRoutes)
+app.use('/api/financials', financialRoutes)
+app.use('/api/admin/financials', financialRoutes)
 app.use('/api/prices', priceRoutes)
 app.use('/api/contact', contactRoutes)
 app.use('/api/events', eventRoutes)
