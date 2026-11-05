@@ -356,6 +356,7 @@ const AdminContacts = () => {
                 <tr>
                   <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Name</th>
                   <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Email</th>
+                  <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Phone</th>
                   <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Message</th>
                   <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Status</th>
                   <th style={{ padding: '0.75rem 0.75rem', borderBottom: '1px solid var(--border)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Date</th>
@@ -374,6 +375,13 @@ const AdminContacts = () => {
                         <a href={`mailto:${s.email}`} style={{ color: 'var(--page-text)', textDecoration: 'none' }}>
                           {s.email}
                         </a>
+                      </td>
+                      <td className="mono" style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap', fontSize: '0.85rem' }}>
+                        {s.phone ? (
+                          <span>{s.phone}</span>
+                        ) : (
+                          <span className="muted">—</span>
+                        )}
                       </td>
                       <td style={{ padding: '0.6rem 0.75rem', maxWidth: '320px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }} title={s.message}>
                         {truncateMessage(s.message)}
@@ -446,10 +454,10 @@ const AdminContacts = () => {
             <button className="modal-close-btn" type="button" onClick={() => setSelectedMessage(null)}>&times;</button>
             <h2 style={{ fontSize: '1.3rem', fontWeight: 700, margin: '0 0 1rem 0' }}>Message Details</h2>
             
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border)' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem', paddingBottom: '0.75rem', borderBottom: '1px solid var(--border)' }}>
               <div>
-                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{selectedMessage.name}</h3>
-                <span className="mono muted" style={{ fontSize: '0.85rem' }}>{selectedMessage.email}</span>
+                <h3 style={{ margin: 0, fontSize: '1.15rem', fontWeight: 600 }}>{selectedMessage.name}</h3>
+                <span className="mono muted" style={{ fontSize: '0.85rem' }}>Received: {new Date(selectedMessage.createdAt).toLocaleString('en-IN')}</span>
               </div>
               <span
                 className="status-badge"
@@ -464,6 +472,25 @@ const AdminContacts = () => {
               >
                 {normalizeStatus(selectedMessage.status)}
               </span>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem', marginBottom: '1.25rem' }}>
+              <div style={{ background: 'var(--surface-2)', padding: '0.6rem 0.85rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+                <span className="muted" style={{ display: 'block', fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.2rem' }}>
+                  Email Address
+                </span>
+                <span className="mono" style={{ fontSize: '0.86rem', color: 'var(--page-text)', wordBreak: 'break-all' }}>
+                  {selectedMessage.email}
+                </span>
+              </div>
+              <div style={{ background: 'var(--surface-2)', padding: '0.6rem 0.85rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+                <span className="muted" style={{ display: 'block', fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.2rem' }}>
+                  Phone Number
+                </span>
+                <span className="mono" style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--page-text)' }}>
+                  {selectedMessage.phone || '—'}
+                </span>
+              </div>
             </div>
 
             <div style={{ marginBottom: '1.25rem' }}>

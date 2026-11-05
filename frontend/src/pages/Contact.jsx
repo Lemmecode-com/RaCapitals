@@ -37,7 +37,7 @@ const ContactBriefcaseIcon = () => (
 const CONTACT_EMAIL = 'taurusmagnus2026@gmail.com'
 
 const Contact = () => {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', phone: '', message: '' })
   const [errors, setErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
   const [success, setSuccess] = useState(false)
@@ -60,6 +60,14 @@ const Contact = () => {
     } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(form.email.trim())) {
       next.email = 'Please enter a valid email address.'
     }
+
+    // Phone validation (strictly 10 digits)
+    const phoneTrimmed = form.phone.trim()
+    if (!phoneTrimmed) {
+      next.phone = 'Please enter your phone number.'
+    } else if (!/^[0-9]{10}$/.test(phoneTrimmed)) {
+      next.phone = 'Please enter a valid 10-digit mobile number.'
+    }
     
     // Message validation
     if (!form.message.trim()) {
@@ -72,7 +80,11 @@ const Contact = () => {
   }
 
   const handleChange = (field) => (e) => {
-    setForm((prev) => ({ ...prev, [field]: e.target.value }))
+    let val = e.target.value
+    if (field === 'phone') {
+      val = val.replace(/[^0-9]/g, '').slice(0, 10)
+    }
+    setForm((prev) => ({ ...prev, [field]: val }))
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }))
     if (success) setSuccess(false)
   }
@@ -89,10 +101,11 @@ const Contact = () => {
       await api.post('/contact', {
         name: form.name.trim(),
         email: form.email.trim(),
+        phone: form.phone.trim(),
         message: form.message.trim()
       })
       setSuccess(true)
-      setForm({ name: '', email: '', message: '' })
+      setForm({ name: '', email: '', phone: '', message: '' })
     } catch {
       setErrors({ form: 'Something went wrong. Please try again later.' })
     } finally {
@@ -187,6 +200,20 @@ const Contact = () => {
                 aria-invalid={Boolean(errors.email)}
               />
               {errors.email && <span className="form-error">{errors.email}</span>}
+            </label>
+            <label className="form-label">
+              Phone Number
+              <input
+                type="tel"
+                inputMode="numeric"
+                maxLength={10}
+                className="form-input mono"
+                value={form.phone}
+                onChange={handleChange('phone')}
+                placeholder="10-digit mobile number"
+                aria-invalid={Boolean(errors.phone)}
+              />
+              {errors.phone && <span className="form-error">{errors.phone}</span>}
             </label>
             <label className="form-label">
               Message

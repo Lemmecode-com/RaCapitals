@@ -428,10 +428,10 @@ Implement the complete Contact Us enhancement, including a public phone field, b
 - Do not add unapproved click-to-dial or WhatsApp actions.
 
 ### Acceptance criteria
-- [ ] Contact submissions persist phone alongside name, email, and message.
-- [ ] Admin listing shows phone and complete message details.
-- [ ] Date filters and sender search work correctly.
-- [ ] Existing contact submission functionality remains intact.
+- [x] Contact submissions persist phone alongside name, email, and message.
+- [x] Admin listing shows phone and complete message details.
+- [x] Date filters and sender search work correctly.
+- [x] Existing contact submission functionality remains intact.
 
 **Priority:** P0-critical  
 **Module:** Full Stack  

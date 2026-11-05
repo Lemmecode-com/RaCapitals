@@ -3,7 +3,8 @@ import {
   createContactSubmission,
   getContactSubmissions,
   getUnreadContactCount,
-  markContactRead
+  markContactRead,
+  updateContactStatus
 } from '../controllers/contactController.js'
 import authMiddleware from '../middleware/authMiddleware.js'
 
@@ -13,5 +14,6 @@ router.post('/', createContactSubmission)
 router.get('/', authMiddleware, getContactSubmissions)
 router.get('/unread-count', authMiddleware, getUnreadContactCount)
 router.patch('/:id/read', authMiddleware, markContactRead)
+router.patch('/:id/status', authMiddleware, updateContactStatus)
 
 export default router
