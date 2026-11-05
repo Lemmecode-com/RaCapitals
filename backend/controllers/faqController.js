@@ -287,3 +287,89 @@ export const reorderFaqs = async (req, res) => {
   }
 }
 
+// POST /api/admin/faqs/bulk-import
+export const bulkImportFaqs = async (req, res) => {
+  try {
+    const { faqs } = req.body
+    if (!Array.isArray(faqs) || faqs.length === 0) {
+      return res.status(400).json({ message: 'No FAQ records provided for import.' })
+    }
+
+    // Load active companies to resolve company name to ID
+    const companies = await Company.find({}).select('_id name').lean()
+    const companyMap = new Map()
+    companies.forEach((c) => {
+      companyMap.set(c.name.trim().toLowerCase(), c._id)
+    })
+
+    const toInsert = []
+    const errors = []
+
+    for (let i = 0; i < faqs.length; i++) {
+      const row = faqs[i]
+      const rowNum = i + 1
+
+      const question = (row.question || '').trim()
+      const answer = (row.answer || '').trim()
+      const companyInput = (row.company || row.companyName || row.company_name || '').trim()
+
+      if (!question) {
+        errors.push({ row: rowNum, error: 'Question is required.' })
+        continue
+      }
+      if (!answer) {
+        errors.push({ row: rowNum, error: 'Answer is required.' })
+        continue
+      }
+
+      let companyId = null
+      if (companyInput) {
+        if (/^[0-9a-fA-F]{24}$/.test(companyInput) && companies.some((c) => c._id.toString() === companyInput)) {
+          companyId = companyInput
+        } else {
+          const matched = companyMap.get(companyInput.toLowerCase())
+          if (matched) {
+            companyId = matched
+          } else {
+            errors.push({ row: rowNum, error: `Company "${companyInput}" not found in database.` })
+            continue
+          }
+        }
+      } else {
+        errors.push({ row: rowNum, error: 'Company name is required.' })
+        continue
+      }
+
+      const order = Number(row.order) || (toInsert.length + 1)
+      const isPublished = row.isPublished !== undefined ? Boolean(row.isPublished) : true
+
+      toInsert.push({
+        company: companyId,
+        question,
+        answer,
+        order,
+        isPublished
+      })
+    }
+
+    if (toInsert.length === 0) {
+      return res.status(400).json({
+        message: 'No valid FAQs could be imported. Please review row-wise errors.',
+        errors,
+        importedCount: 0
+      })
+    }
+
+    const inserted = await ShareFaq.insertMany(toInsert)
+
+    return res.status(200).json({
+      message: `Successfully imported ${inserted.length} FAQ(s).`,
+      importedCount: inserted.length,
+      errorsCount: errors.length,
+      errors
+    })
+  } catch (error) {
+    return res.status(500).json({ message: 'Error bulk importing FAQs', error: error.message })
+  }
+}
+

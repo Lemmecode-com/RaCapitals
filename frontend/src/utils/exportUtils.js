@@ -189,3 +189,49 @@ export const downloadListingSampleTemplate = () => {
   URL.revokeObjectURL(url)
 }
 
+/**
+ * Standard Sample CSV Template for Share FAQs Bulk Ingestion
+ */
+export const downloadFaqSampleTemplate = () => {
+  const headers = ['Company Name', 'Question', 'Answer', 'Order']
+  const sampleRows = [
+    [
+      'Tata Motors',
+      'What is the lock-in period after Tata Motors lists?',
+      'Under current SEBI regulations, pre-IPO equity shares held by non-promoter shareholders are subject to a mandatory 6-month statutory lock-in period starting from the listing date on NSE/BSE.',
+      '1'
+    ],
+    [
+      'Tata Motors',
+      'How are Tata Motors unlisted shares delivered to my demat account?',
+      'Unlisted shares are transferred off-market via CDSL/NSDL Delivery Instruction Slip (DIS) or speed-e electronic transfer directly into your Demat account (Zerodha, Groww, AngelOne, etc.) within 24 to 48 business hours.',
+      '2'
+    ],
+    [
+      'Reliance Industries',
+      'What is the minimum transaction lot size for Reliance Industries?',
+      'The minimum investment is governed by the minimum lot size (e.g. 50 shares) multiplied by the prevailing frozen indicative price per share.',
+      '1'
+    ],
+    [
+      'Reliance Industries',
+      'Can I sell my unlisted shares before the company files for IPO?',
+      'Yes. You can liquidate your position on the secondary OTC unlisted market prior to IPO based on market demand and counterparty bids.',
+      '2'
+    ]
+  ]
+
+  const csvRows = [headers.join(','), ...sampleRows.map((r) => r.map((c) => `"${c.replace(/"/g, '""')}"`).join(','))]
+  const csvContent = '\uFEFF' + csvRows.join('\r\n')
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.setAttribute('href', url)
+  link.setAttribute('download', 'Taurus_Magnus_FAQ_Import_Template.csv')
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+

@@ -6,7 +6,8 @@ import {
   updateFaq,
   deleteFaq,
   toggleFaqPublish,
-  reorderFaqs
+  reorderFaqs,
+  bulkImportFaqs
 } from '../controllers/faqController.js'
 import authMiddleware from '../middleware/authMiddleware.js'
 
@@ -18,9 +19,11 @@ router.get('/company/:companyId', getCompanyFaqs)
 // Admin protected routes (JWT Auth required)
 router.get('/', authMiddleware, getAdminFaqs)
 router.post('/', authMiddleware, createFaq)
+router.post('/bulk-import', authMiddleware, bulkImportFaqs)
 router.put('/:id', authMiddleware, updateFaq)
 router.delete('/:id', authMiddleware, deleteFaq)
 router.patch('/:id/publish', authMiddleware, toggleFaqPublish)
+router.patch('/:id/toggle-publish', authMiddleware, toggleFaqPublish)
 router.patch('/reorder', authMiddleware, reorderFaqs)
 
 export default router

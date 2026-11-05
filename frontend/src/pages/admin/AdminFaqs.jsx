@@ -3,6 +3,7 @@ import { createPortal } from 'react-dom'
 import api from '../../services/api'
 import ConfirmDialog from '../../components/common/ConfirmDialog'
 import Pagination from '../../components/admin/Pagination'
+import BulkImportFaqModal from '../../components/admin/BulkImportFaqModal'
 
 const STATUS_CHIPS = [
   { id: 'all', label: 'All' },
@@ -24,6 +25,7 @@ export default function AdminFaqs() {
 
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false)
   const [editingFaq, setEditingFaq] = useState(null)
   const [formData, setFormData] = useState({
     company: '',
@@ -249,13 +251,22 @@ export default function AdminFaqs() {
             Manage company-specific investor due diligence questions and global pre-IPO templates.
           </p>
         </div>
-        <button
-          type="button"
-          className="primary-btn"
-          onClick={handleOpenCreate}
-        >
-          + Add New FAQ
-        </button>
+        <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
+          <button
+            type="button"
+            className="secondary-btn"
+            onClick={() => setIsBulkModalOpen(true)}
+          >
+            Bulk Import
+          </button>
+          <button
+            type="button"
+            className="primary-btn"
+            onClick={handleOpenCreate}
+          >
+            + Add New FAQ
+          </button>
+        </div>
       </div>
 
       {flash && <div className="flash">{flash}</div>}
@@ -576,6 +587,18 @@ export default function AdminFaqs() {
           onCancel={() => setDeleteTarget(null)}
         />
       )}
+
+      {/* 8. Bulk Import FAQs Modal */}
+      <BulkImportFaqModal
+        isOpen={isBulkModalOpen}
+        onClose={() => setIsBulkModalOpen(false)}
+        onSuccess={() => {
+          setIsBulkModalOpen(false)
+          setFlash('Bulk FAQ import completed successfully.')
+          fetchFaqs()
+        }}
+        companies={companies}
+      />
     </div>
   )
 }

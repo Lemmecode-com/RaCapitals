@@ -335,10 +335,9 @@ const AdminListings = () => {
           <button
             type="button"
             className="secondary-btn"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.88rem' }}
             onClick={() => setImportModalOpen(true)}
           >
-            <span>📥</span> Bulk Import
+            Bulk Import
           </button>
           <button type="button" className="primary-btn" onClick={openCreate}>+ Add New Listing</button>
         </div>
