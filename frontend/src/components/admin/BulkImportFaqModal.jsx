@@ -1,9 +1,9 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { parseCsv, downloadFaqSampleTemplate } from '../../utils/exportUtils'
 import api from '../../services/api'
 
-export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, companies = [] }) {
+export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, companies = [], existingFaqs = [] }) {
   const [file, setFile] = useState(null)
   const [fileName, setFileName] = useState('')
   const [parsedRows, setParsedRows] = useState([])
@@ -12,8 +12,6 @@ export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, compani
   const [importing, setImporting] = useState(false)
   const [importResult, setImportResult] = useState(null)
   const fileInputRef = useRef(null)
-
-  if (!isOpen) return null
 
   const handleReset = () => {
     setFile(null)
@@ -25,46 +23,19 @@ export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, compani
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
 
-  const validateRow = (row, index) => {
-    const errors = []
-    const companyInput = (row.companyname || row.company || '').trim()
-    const question = (row.question || '').trim()
-    const answer = (row.answer || '').trim()
-    const orderNum = Number(row.order) || (index + 1)
-
-    let matchedCompany = null
-    if (!companyInput) {
-      errors.push('Company Name is required.')
-    } else {
-      matchedCompany = companies.find(
-        (c) => c.name.trim().toLowerCase() === companyInput.toLowerCase()
-      )
-      if (!matchedCompany) {
-        errors.push(`Company "${companyInput}" not found in database. Create this listing first.`)
-      }
+  // Automatically reset state every time modal opens or closes
+  useEffect(() => {
+    if (isOpen) {
+      handleReset()
     }
+  }, [isOpen])
 
-    if (!question) {
-      errors.push('Question is required.')
-    }
-
-    if (!answer) {
-      errors.push('Answer is required.')
-    }
-
-    return {
-      rowNumber: index + 1,
-      companyInput,
-      companyId: matchedCompany ? matchedCompany._id : null,
-      companyName: matchedCompany ? matchedCompany.name : companyInput,
-      question,
-      answer,
-      order: orderNum,
-      isPublished: true,
-      isValid: errors.length === 0,
-      errors
-    }
+  const handleClose = () => {
+    handleReset()
+    onClose()
   }
+
+  if (!isOpen) return null
 
   const processFile = (selectedFile) => {
     setParsingError('')
@@ -90,7 +61,72 @@ export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, compani
           return
         }
 
-        const validated = rawObjects.map((row, idx) => validateRow(row, idx))
+        // Map existing FAQs into a set: companyId:::question.toLowerCase()
+        const existingFaqSet = new Set(
+          (existingFaqs || []).map((f) => {
+            const compId = (f.company?._id || f.company || 'global').toString()
+            return `${compId}:::${(f.question || '').trim().toLowerCase()}`
+          })
+        )
+
+        const seenInCsv = new Set()
+
+        const validated = rawObjects.map((row, idx) => {
+          const errors = []
+          const companyInput = (row.companyname || row.company || '').trim()
+          const question = (row.question || '').trim()
+          const answer = (row.answer || '').trim()
+          const orderNum = Number(row.order) || (idx + 1)
+
+          let matchedCompany = null
+          if (!companyInput) {
+            errors.push('Company Name is required.')
+          } else {
+            matchedCompany = companies.find(
+              (c) => c.name.trim().toLowerCase() === companyInput.toLowerCase()
+            )
+            if (!matchedCompany) {
+              errors.push(`Company "${companyInput}" not found. Please add this company first.`)
+            }
+          }
+
+          if (!question) {
+            errors.push('Question is required.')
+          }
+
+          if (!answer) {
+            errors.push('Answer is required.')
+          }
+
+          if (question && matchedCompany) {
+            const compKey = `${matchedCompany._id}:::${question.toLowerCase()}`
+
+            // 1. Check duplicate against existing FAQs
+            if (existingFaqSet.has(compKey)) {
+              errors.push(`Duplicate: This question is already added for ${matchedCompany.name}.`)
+            }
+            // 2. Check duplicate within current CSV file
+            else if (seenInCsv.has(compKey)) {
+              errors.push(`Duplicate: This question appears more than once in this file.`)
+            } else {
+              seenInCsv.add(compKey)
+            }
+          }
+
+          return {
+            rowNumber: idx + 1,
+            companyInput,
+            companyId: matchedCompany ? matchedCompany._id : null,
+            companyName: matchedCompany ? matchedCompany.name : companyInput,
+            question,
+            answer,
+            order: orderNum,
+            isPublished: true,
+            isValid: errors.length === 0,
+            errors
+          }
+        })
+
         setParsedRows(validated)
       } catch (err) {
         console.error('CSV Parsing Error:', err)
@@ -160,7 +196,7 @@ export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, compani
   return createPortal(
     <div
       className="admin-modal-portal modal-backdrop event-modal-backdrop"
-      onClick={onClose}
+      onClick={handleClose}
       role="dialog"
       aria-modal="true"
     >
@@ -183,7 +219,7 @@ export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, compani
               Upload company investor due diligence questions and answers in bulk via CSV.
             </p>
           </div>
-          <button className="modal-close-btn" type="button" onClick={onClose}>&times;</button>
+          <button className="modal-close-btn" type="button" onClick={handleClose}>&times;</button>
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
@@ -343,18 +379,39 @@ export default function BulkImportFaqModal({ isOpen, onClose, onSuccess, compani
 
         {/* Footer Actions */}
         <div style={{ paddingTop: '0.75rem', borderTop: '1px solid var(--border)', display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', alignItems: 'center' }}>
-          <button type="button" className="secondary-btn" onClick={onClose} disabled={importing}>
-            {importResult?.success ? 'Close' : 'Cancel'}
-          </button>
-          {parsedRows.length > 0 && !importResult?.success && (
-            <button
-              type="button"
-              className="primary-btn"
-              disabled={importing || validRows.length === 0}
-              onClick={handleExecuteImport}
-            >
-              {importing ? 'Importing FAQs…' : `Import FAQs (${validRows.length})`}
-            </button>
+          {importResult?.success ? (
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={handleReset}
+              >
+                Upload Another File
+              </button>
+              <button
+                type="button"
+                className="primary-btn"
+                onClick={handleClose}
+              >
+                Done
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button type="button" className="secondary-btn" onClick={handleClose} disabled={importing}>
+                Cancel
+              </button>
+              {parsedRows.length > 0 && (
+                <button
+                  type="button"
+                  className="primary-btn"
+                  disabled={importing || validRows.length === 0}
+                  onClick={handleExecuteImport}
+                >
+                  {importing ? 'Importing FAQs…' : `Import FAQs (${validRows.length})`}
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>

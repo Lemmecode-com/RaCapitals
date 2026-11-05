@@ -178,6 +178,20 @@ export default function AdminFaqs() {
       return
     }
 
+    // Client-side duplicate check (per company)
+    const cleanQ = formData.question.trim().toLowerCase()
+    const targetComp = formData.company ? formData.company : null
+    const isDup = faqs.some((f) => {
+      if (editingFaq && f._id === editingFaq._id) return false
+      const fComp = f.company?._id || f.company || null
+      const sameComp = targetComp ? (fComp?.toString() === targetComp?.toString()) : !fComp
+      return sameComp && (f.question || '').trim().toLowerCase() === cleanQ
+    })
+    if (isDup) {
+      setFormError('This question is already added for this company.')
+      return
+    }
+
     setSubmitting(true)
     try {
       const payload = {
@@ -598,6 +612,7 @@ export default function AdminFaqs() {
           fetchFaqs()
         }}
         companies={companies}
+        existingFaqs={faqs}
       />
     </div>
   )

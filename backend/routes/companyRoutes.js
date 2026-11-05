@@ -9,7 +9,8 @@ import {
   getAllCompaniesAdmin,
   activateCompany,
   updateDrhpStatus,
-  getDrhpFiledCompanies
+  getDrhpFiledCompanies,
+  bulkImportCompanies
 } from '../controllers/companyController.js'
 import {
   getCompanyFinancials,
@@ -21,11 +22,13 @@ import upload from '../middleware/uploadMiddleware.js'
 
 const router = express.Router()
 
-// NOTE: /drhp-filed MUST be registered before /:id, otherwise Express
-// treats "drhp-filed" as a literal :id value.
+// NOTE: Specific routes MUST be registered before /:id, otherwise Express
+// treats the path segment as a literal :id value.
 router.get('/drhp-filed', getDrhpFiledCompanies)
 router.get('/', getAllCompanies)
 router.get('/admin/all', authMiddleware, getAllCompaniesAdmin)
+router.post('/admin/bulk-import', authMiddleware, bulkImportCompanies)
+
 router.get('/:id', getCompanyById)
 router.get('/:id/financials', getCompanyFinancials)
 router.get('/:id/faqs', getCompanyFaqs)

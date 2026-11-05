@@ -181,9 +181,19 @@ export const createFaq = async (req, res) => {
       parsedCompany = company
     }
 
+    const cleanQuestion = question.trim()
+    const escapedQuestion = cleanQuestion.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const existingFaq = await ShareFaq.findOne({
+      company: parsedCompany,
+      question: { $regex: new RegExp(`^${escapedQuestion}$`, 'i') }
+    })
+    if (existingFaq) {
+      return res.status(400).json({ message: 'This question is already added for this company.' })
+    }
+
     const faq = await ShareFaq.create({
       company: parsedCompany,
-      question: question.trim(),
+      question: cleanQuestion,
       answer: answer.trim(),
       order: Number(order) || 0,
       isPublished: isPublished !== undefined ? Boolean(isPublished) : true
@@ -213,6 +223,21 @@ export const updateFaq = async (req, res) => {
     if (answer !== undefined) updates.answer = answer.trim()
     if (order !== undefined) updates.order = Number(order) || 0
     if (isPublished !== undefined) updates.isPublished = Boolean(isPublished)
+
+    const targetCompany = updates.company !== undefined ? updates.company : (await ShareFaq.findById(id).select('company').lean())?.company
+    const targetQuestion = updates.question !== undefined ? updates.question : (await ShareFaq.findById(id).select('question').lean())?.question
+
+    if (targetQuestion) {
+      const escapedQuestion = targetQuestion.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+      const duplicate = await ShareFaq.findOne({
+        _id: { $ne: id },
+        company: targetCompany,
+        question: { $regex: new RegExp(`^${escapedQuestion}$`, 'i') }
+      })
+      if (duplicate) {
+        return res.status(400).json({ message: 'This question is already added for this company.' })
+      }
+    }
 
     const updated = await ShareFaq.findByIdAndUpdate(id, updates, { new: true, runValidators: true })
       .populate('company', 'name sector logoUrl')
@@ -302,6 +327,13 @@ export const bulkImportFaqs = async (req, res) => {
       companyMap.set(c.name.trim().toLowerCase(), c._id)
     })
 
+    // Fetch existing FAQs from database to check for duplicates
+    const existingFaqs = await ShareFaq.find({}).select('company question').lean()
+    const existingFaqSet = new Set(
+      existingFaqs.map(f => `${f.company ? f.company.toString() : 'global'}:::${(f.question || '').trim().toLowerCase()}`)
+    )
+    const batchFaqSet = new Set()
+
     const toInsert = []
     const errors = []
 
@@ -323,15 +355,20 @@ export const bulkImportFaqs = async (req, res) => {
       }
 
       let companyId = null
+      let matchedCompanyName = companyInput
       if (companyInput) {
         if (/^[0-9a-fA-F]{24}$/.test(companyInput) && companies.some((c) => c._id.toString() === companyInput)) {
           companyId = companyInput
+          const comp = companies.find((c) => c._id.toString() === companyInput)
+          if (comp) matchedCompanyName = comp.name
         } else {
           const matched = companyMap.get(companyInput.toLowerCase())
           if (matched) {
             companyId = matched
+            const comp = companies.find((c) => c._id.toString() === matched.toString())
+            if (comp) matchedCompanyName = comp.name
           } else {
-            errors.push({ row: rowNum, error: `Company "${companyInput}" not found in database.` })
+            errors.push({ row: rowNum, error: `Company "${companyInput}" not found. Please add this company first.` })
             continue
           }
         }
@@ -339,6 +376,28 @@ export const bulkImportFaqs = async (req, res) => {
         errors.push({ row: rowNum, error: 'Company name is required.' })
         continue
       }
+
+      const dupKey = `${companyId ? companyId.toString() : 'global'}:::${question.toLowerCase()}`
+
+      // Check if duplicate in database
+      if (existingFaqSet.has(dupKey)) {
+        errors.push({
+          row: rowNum,
+          error: `Duplicate: This question is already added for "${matchedCompanyName}".`
+        })
+        continue
+      }
+
+      // Check if duplicate within current batch / CSV file
+      if (batchFaqSet.has(dupKey)) {
+        errors.push({
+          row: rowNum,
+          error: `Duplicate: This question appears more than once in this file for "${matchedCompanyName}".`
+        })
+        continue
+      }
+
+      batchFaqSet.add(dupKey)
 
       const order = Number(row.order) || (toInsert.length + 1)
       const isPublished = row.isPublished !== undefined ? Boolean(row.isPublished) : true
@@ -354,7 +413,9 @@ export const bulkImportFaqs = async (req, res) => {
 
     if (toInsert.length === 0) {
       return res.status(400).json({
-        message: 'No valid FAQs could be imported. Please review row-wise errors.',
+        message: errors.length > 0
+          ? `No FAQs imported. All ${errors.length} row(s) had errors or were duplicates.`
+          : 'No valid FAQs could be imported. Please review row-wise errors.',
         errors,
         importedCount: 0
       })
@@ -363,7 +424,7 @@ export const bulkImportFaqs = async (req, res) => {
     const inserted = await ShareFaq.insertMany(toInsert)
 
     return res.status(200).json({
-      message: `Successfully imported ${inserted.length} FAQ(s).`,
+      message: `Successfully imported ${inserted.length} FAQ(s).${errors.length > 0 ? ` (${errors.length} duplicate/invalid row(s) skipped)` : ''}`,
       importedCount: inserted.length,
       errorsCount: errors.length,
       errors

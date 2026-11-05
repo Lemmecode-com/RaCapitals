@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { parseCsv, downloadListingSampleTemplate } from '../../utils/exportUtils'
 import api from '../../services/api'
@@ -16,8 +16,6 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
   const [importResult, setImportResult] = useState(null)
   const fileInputRef = useRef(null)
 
-  if (!isOpen) return null
-
   const handleReset = () => {
     setFile(null)
     setFileName('')
@@ -28,6 +26,20 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
     setImportResult(null)
     if (fileInputRef.current) fileInputRef.current.value = ''
   }
+
+  // Automatically reset every time modal is opened
+  useEffect(() => {
+    if (isOpen) {
+      handleReset()
+    }
+  }, [isOpen])
+
+  const handleClose = () => {
+    handleReset()
+    onClose()
+  }
+
+  if (!isOpen) return null
 
   const validateRow = (row, index) => {
     const errors = []
@@ -52,6 +64,21 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
       errors.push('Valid positive Indicative Price is required.')
     }
 
+    const lotSize = Number(lotSizeStr)
+    if (!lotSizeStr || Number.isNaN(lotSize) || lotSize <= 0) {
+      errors.push('Valid positive Lot Size is required (e.g. 50, 100).')
+    }
+
+    let faceValue = undefined
+    if (faceValueStr) {
+      const fv = Number(faceValueStr)
+      if (Number.isNaN(fv) || fv <= 0) {
+        errors.push('Face Value must be a positive number if provided.')
+      } else {
+        faceValue = fv
+      }
+    }
+
     if (cin && cin.length < 15) {
       errors.push('CIN format looks incomplete (typical CIN is 21 characters).')
     }
@@ -66,8 +93,8 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
       sector: sector.trim(),
       industry: (row.industry || '').trim(),
       price: price > 0 ? price : 0,
-      lotSize: lotSizeStr && !Number.isNaN(Number(lotSizeStr)) ? Number(lotSizeStr) : 100,
-      faceValue: faceValueStr && !Number.isNaN(Number(faceValueStr)) ? Number(faceValueStr) : 10,
+      lotSize: lotSize > 0 ? lotSize : undefined,
+      faceValue: faceValue,
       cin: cin.trim(),
       isin: isin.trim(),
       marketCap: row.marketcapcr ? Number(row.marketcapcr) : undefined,
@@ -222,7 +249,7 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
   }
 
   return createPortal(
-    <div className="admin-modal-portal modal-backdrop event-modal-backdrop" onClick={onClose}>
+    <div className="admin-modal-portal modal-backdrop event-modal-backdrop" onClick={handleClose}>
       <div
         className="modal"
         onClick={(e) => e.stopPropagation()}
@@ -235,7 +262,7 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
               Upload pre-IPO listings and financial fundamentals via CSV template.
             </p>
           </div>
-          <button className="modal-close-btn" type="button" onClick={onClose}>&times;</button>
+          <button className="modal-close-btn" type="button" onClick={handleClose}>&times;</button>
         </div>
 
         <div style={{ flex: 1, overflowY: 'auto', paddingRight: '0.25rem' }}>
@@ -363,6 +390,7 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
                       <th style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid var(--border)' }}>Company Name</th>
                       <th style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid var(--border)' }}>Sector</th>
                       <th style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid var(--border)' }}>Price</th>
+                      <th style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid var(--border)' }}>Lot Size</th>
                       <th style={{ padding: '0.5rem 0.75rem', borderBottom: '1px solid var(--border)' }}>Validation Remarks</th>
                     </tr>
                   </thead>
@@ -394,6 +422,7 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
                         <td style={{ padding: '0.5rem 0.75rem', fontWeight: 600 }}>{r.name || '—'}</td>
                         <td style={{ padding: '0.5rem 0.75rem' }}>{r.sector || '—'}</td>
                         <td style={{ padding: '0.5rem 0.75rem' }}>{r.price > 0 ? `₹${r.price}` : '—'}</td>
+                        <td style={{ padding: '0.5rem 0.75rem' }}>{r.lotSize ? `${r.lotSize} shs` : '—'}</td>
                         <td style={{ padding: '0.5rem 0.75rem', color: r.isValid ? 'var(--muted)' : '#b91c1c' }}>
                           {r.isValid ? 'All required fields valid' : r.errors.join('; ')}
                         </td>
@@ -428,23 +457,44 @@ export default function BulkImportModal({ isOpen, onClose, onSuccess }) {
 
         {/* Modal Actions */}
         <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.65rem', marginTop: '1.25rem', paddingTop: '1rem', borderTop: '1px solid var(--border)' }}>
-          <button
-            type="button"
-            className="secondary-btn"
-            onClick={onClose}
-            disabled={importing}
-          >
-            {importResult ? 'Close' : 'Cancel'}
-          </button>
-          {parsedRows.length > 0 && !importResult && (
-            <button
-              type="button"
-              className="primary-btn"
-              disabled={validRows.length === 0 || importing}
-              onClick={handleImport}
-            >
-              {importing ? `Importing...` : `Import ${validRows.length} Valid Record${validRows.length === 1 ? '' : 's'}`}
-            </button>
+          {importResult?.success ? (
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={handleReset}
+              >
+                Upload Another File
+              </button>
+              <button
+                type="button"
+                className="primary-btn"
+                onClick={handleClose}
+              >
+                Done
+              </button>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', gap: '0.65rem' }}>
+              <button
+                type="button"
+                className="secondary-btn"
+                onClick={handleClose}
+                disabled={importing}
+              >
+                Cancel
+              </button>
+              {parsedRows.length > 0 && (
+                <button
+                  type="button"
+                  className="primary-btn"
+                  disabled={validRows.length === 0 || importing}
+                  onClick={handleImport}
+                >
+                  {importing ? 'Importing…' : `Import ${validRows.length} Valid Record${validRows.length === 1 ? '' : 's'}`}
+                </button>
+              )}
+            </div>
           )}
         </div>
       </div>

@@ -219,3 +219,86 @@ export const activateCompany = async (req, res) => {
     res.status(500).json({ message: 'Error activating company', error: error.message })
   }
 }
+
+
+export const bulkImportCompanies = async (req, res) => {
+  try {
+    const { companies } = req.body
+    if (!Array.isArray(companies) || companies.length === 0) {
+      return res.status(400).json({ message: 'No companies provided for import.' })
+    }
+
+    let createdCount = 0
+    let failedCount = 0
+    const failures = []
+
+    for (let i = 0; i < companies.length; i++) {
+      const item = companies[i]
+      const rowNum = item.rowNumber || (i + 1)
+      try {
+        const name = (item.name || '').trim()
+        const sector = (item.sector || '').trim()
+        const lotSize = Number(item.lotSize)
+
+        if (!name) {
+          failedCount++
+          failures.push(`Row ${rowNum}: Company Name is required`)
+          continue
+        }
+        if (!sector) {
+          failedCount++
+          failures.push(`Row ${rowNum} (${name}): Sector is required`)
+          continue
+        }
+        if (!item.lotSize || Number.isNaN(lotSize) || lotSize <= 0) {
+          failedCount++
+          failures.push(`Row ${rowNum} (${name}): Valid positive Lot Size is required`)
+          continue
+        }
+
+        const company = await Company.create({
+          name,
+          sector,
+          industry: item.industry?.trim(),
+          cin: item.cin?.trim(),
+          registeredOffice: item.registeredOffice?.trim(),
+          foundedYear: item.foundedYear ? Number(item.foundedYear) : undefined,
+          description: item.description?.trim(),
+          lotSize,
+          faceValue: item.faceValue ? Number(item.faceValue) : undefined,
+          isin: item.isin?.trim(),
+          marketCap: item.marketCap ? Number(item.marketCap) : undefined,
+          peRatio: item.peRatio ? Number(item.peRatio) : undefined,
+          pbRatio: item.pbRatio ? Number(item.pbRatio) : undefined,
+          roe: item.roe ? Number(item.roe) : undefined,
+          bookValue: item.bookValue ? Number(item.bookValue) : undefined,
+          outstandingShares: item.outstandingShares ? Number(item.outstandingShares) : undefined,
+          drhpFiled: Boolean(item.drhpFiled),
+          drhpFiledDate: item.drhpFiled ? (item.drhpFiledDate || new Date()) : null
+        })
+
+        if (item.price && Number(item.price) > 0) {
+          await PriceHistory.create({
+            company: company._id,
+            price: Number(item.price),
+            recordedAt: new Date()
+          })
+        }
+
+        createdCount++
+      } catch (err) {
+        failedCount++
+        failures.push(`Row ${rowNum} (${item.name || 'Unknown'}): ${err.message}`)
+      }
+    }
+
+    return res.status(200).json({
+      message: `Successfully imported ${createdCount} company record(s).`,
+      createdCount,
+      failedCount,
+      failures
+    })
+  } catch (error) {
+    return res.status(500).json({ message: 'Error bulk importing companies', error: error.message })
+  }
+}
