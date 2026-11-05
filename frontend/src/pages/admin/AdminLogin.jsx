@@ -98,7 +98,7 @@ const AdminLogin = () => {
                 alt="Taurus Magnus" 
                 className="admin-login-logo-img brand-logo-img"
               />
-              <span className="brand-tagline">INVEST TODAY. GROW TOMORROW.</span>
+              <span className="brand-tagline">UNLISTED & PRE-IPO EQUITY</span>
             </Link>
           </div>
 

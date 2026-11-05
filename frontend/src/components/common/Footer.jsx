@@ -9,7 +9,7 @@ const Footer = () => {
         <div className="footer-brand">
           <div className="footer-logo-wrap brand-lockup">
             <img src={logo} alt="Taurus Magnus" className="footer-logo brand-logo-img" />
-            <span className="brand-tagline footer-tagline">INVEST TODAY. GROW TOMORROW.</span>
+            <span className="brand-tagline footer-tagline">UNLISTED & PRE-IPO EQUITY</span>
           </div>
           <div>
             <p className="footer-brand-name">TAURUS MAGNUS</p>

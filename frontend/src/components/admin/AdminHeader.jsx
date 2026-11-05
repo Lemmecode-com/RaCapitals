@@ -75,7 +75,7 @@ const AdminHeader = ({ onToggleSidebar, isSidebarOpen }) => {
           </button>
           <Link to="/admin" className="admin-header-bar-brand brand-lockup">
             <img src={logo} alt="Taurus Magnus" className="brand-logo-img" />
-            <span className="brand-tagline">INVEST TODAY. GROW TOMORROW.</span>
+            <span className="brand-tagline">UNLISTED & PRE-IPO EQUITY</span>
           </Link>
         </div>
         <div className="admin-header-bar-right">

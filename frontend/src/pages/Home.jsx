@@ -6,10 +6,18 @@ import EnquireButton from '../components/common/EnquireButton'
 import Footer from '../components/common/Footer'
 import Navbar from '../components/common/Navbar'
 
-import { formatINR, formatShortDate } from '../utils/format'
+import { apiBaseWithoutApi, formatINR, formatShortDate } from '../utils/format'
 
 const PREVIEW_LIMIT = 12
 const MARQUEE_DURATION = 22
+
+const buildLogoSrc = (logoUrl) => {
+  if (!logoUrl) return null
+  if (logoUrl.startsWith('http')) return logoUrl
+  return `${apiBaseWithoutApi()}${logoUrl}`
+}
+
+const TRENDING_BADGES = ['🔥 Trending', '⚡ High Demand', '📈 Most Active', '⭐ Top Pick']
 
 const eventTypeClass = (type) => {
   switch (type) {
@@ -239,6 +247,19 @@ const Home = () => {
       .filter((c) => !q || (c.name || '').toLowerCase().includes(q))
       .slice(0, PREVIEW_LIMIT)
   }, [companies, sector, search])
+
+  const trendingCompanies = useMemo(() => {
+    if (!companies || companies.length === 0) return []
+    const sorted = [...companies].sort((a, b) => {
+      const capA = a.marketCap || 0
+      const capB = b.marketCap || 0
+      if (capB !== capA) return capB - capA
+      const priceA = a.latestPrice || 0
+      const priceB = b.latestPrice || 0
+      return priceB - priceA
+    })
+    return sorted.slice(0, 4)
+  }, [companies])
 
   const [ffHover, setFfHover] = useState(null)
   const ffArenaRef = useRef(null)
@@ -478,10 +499,105 @@ const Home = () => {
 
         <TrustSection />
 
+        <section className="home-trending-section" aria-labelledby="trending-heading">
+          <div className="home-section-header">
+            <div>
+              <p className="home-eyebrow">MARKET DEMAND</p>
+              <h2 id="trending-heading" className="home-section-title">Trending Shares</h2>
+              <p className="home-section-sub">
+                Top pre-IPO and unlisted shares currently seeing high interest and enquiry activity.
+              </p>
+            </div>
+            <Link to="/catalog" className="home-marquee-cta">Explore all shares →</Link>
+          </div>
+          <div className="home-trending-grid">
+            {loading ? (
+              Array.from({ length: 4 }).map((_, i) => (
+                <div key={`trending-skel-${i}`} className="home-trending-card skeleton" />
+              ))
+            ) : trendingCompanies.length === 0 ? (
+              <div className="chart-empty">No trending shares available right now.</div>
+            ) : (
+              trendingCompanies.map((c, idx) => {
+                const logoSrc = buildLogoSrc(c.logoUrl)
+                const initial = c.name ? c.name.charAt(0).toUpperCase() : '?'
+                const badgeText = TRENDING_BADGES[idx % TRENDING_BADGES.length]
+
+                return (
+                  <Link
+                    to={`/company/${c._id}`}
+                    key={c._id || idx}
+                    className="home-trending-card"
+                    aria-label={`View ${c.name} details`}
+                  >
+                    <div className="home-trending-card-badge-row">
+                      <span className="home-trending-badge">{badgeText}</span>
+                      {c.drhpFiled && <span className="drhp-badge">DRHP</span>}
+                    </div>
+
+                    <div className="home-trending-card-identity">
+                      <div className="home-trending-card-logo">
+                        {logoSrc ? (
+                          <img src={logoSrc} alt={`${c.name} logo`} />
+                        ) : (
+                          <span className="logo-placeholder small">{initial}</span>
+                        )}
+                      </div>
+                      <div className="home-trending-card-title-wrap">
+                        <h3 className="home-trending-card-name" title={c.name}>{c.name}</h3>
+                        {c.sector && <span className="home-trending-card-sector">{c.sector}</span>}
+                      </div>
+                    </div>
+
+                    <div className="home-trending-card-mid">
+                      <div className="home-trending-price-block">
+                        <span className="home-trending-price-label">Indicative Price</span>
+                        <span className="home-trending-price mono">
+                          {c.latestPrice != null ? formatINR(c.latestPrice) : '—'}
+                        </span>
+                      </div>
+                      {c.lotSize ? (
+                        <div className="home-trending-lot-block">
+                          <span className="home-trending-lot-label">Lot Size</span>
+                          <span className="home-trending-lot mono">{c.lotSize} shares</span>
+                        </div>
+                      ) : null}
+                    </div>
+
+                    {(c.low52 != null && c.high52 != null) && (
+                      <div className="home-trending-card-range">
+                        <span className="home-trending-range-label">52W Range:</span>
+                        <span className="home-trending-range-value mono">
+                          {formatINR(c.low52)} – {formatINR(c.high52)}
+                        </span>
+                      </div>
+                    )}
+
+                    <div className="home-trending-card-footer">
+                      <span className="home-trending-view-btn">
+                        View Details
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                          <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    </div>
+                  </Link>
+                )
+              })
+            )}
+          </div>
+        </section>
+
         <section className="home-drhp-section" aria-labelledby="drhp-heading">
           <div className="home-section-header">
-            <h2 id="drhp-heading" className="home-section-title">DRHP Filed</h2>
-            <Link to="/drhp-filed" className="home-marquee-cta">View all →</Link>
+            <div>
+              <p className="home-eyebrow">IPO WATCH</p>
+              <h2 id="drhp-heading" className="home-section-title">DRHP Filed Shares</h2>
+              <p className="home-section-sub">
+                Unlisted companies that have filed a Draft Red Herring Prospectus with SEBI — an early milestone toward an IPO.
+              </p>
+            </div>
+            <Link to="/drhp-filed" className="home-marquee-cta">View all DRHP filed shares →</Link>
           </div>
           <div className="home-drhp-grid">
             {drhpCompanies.length === 0 ? (

@@ -31,7 +31,7 @@ const Navbar = () => {
       <div className="navbar-inner">
         <Link to="/" className="wordmark brand-lockup" onClick={closeMenu}>
           <img src={logo} alt="Taurus Magnus" className="brand-logo-img" />
-          <span className="brand-tagline">INVEST TODAY. GROW TOMORROW.</span>
+          <span className="brand-tagline">UNLISTED & PRE-IPO EQUITY</span>
         </Link>
 
         <button
