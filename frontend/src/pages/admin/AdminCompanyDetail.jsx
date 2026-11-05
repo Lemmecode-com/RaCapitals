@@ -4,6 +4,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import api from '../../services/api'
 import { apiBaseWithoutApi, formatINR } from '../../utils/format'
 import InfoTooltip from '../../components/common/InfoTooltip'
+import AdminShareholdingManager from '../../components/admin/AdminShareholdingManager'
 
 const AdminCompanyDetail = () => {
   const { id } = useParams()
@@ -13,6 +14,7 @@ const AdminCompanyDetail = () => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [flash, setFlash] = useState('')
+  const [isDescExpanded, setIsDescExpanded] = useState(false)
 
   const [priceModalOpen, setPriceModalOpen] = useState(false)
   const [priceValue, setPriceValue] = useState('')
@@ -237,45 +239,30 @@ const AdminCompanyDetail = () => {
 
   return (
     <div className="dashboard-wrap">
-      <div className="admin-page-header">
-        <div>
-          <nav className="breadcrumbs" aria-label="Breadcrumb" style={{ marginBottom: '0.5rem', fontSize: '0.85rem' }}>
-            <Link to="/admin/listings" className="muted" style={{ textDecoration: 'none' }}>Listings</Link>
-            <span className="muted" style={{ margin: '0 0.5rem' }}>/</span>
-            <span style={{ color: 'var(--brass)', fontWeight: 600 }}>{company.name}</span>
-          </nav>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <h1 style={{ margin: 0 }}>Company Management</h1>
-            <span className="muted mono" style={{ fontSize: '0.85rem' }}>ID: {company._id}</span>
-          </div>
-        </div>
-
-        <div className="admin-actions" style={{ display: 'flex', gap: '0.6rem', alignItems: 'center', flexWrap: 'wrap' }}>
-          <button type="button" className="secondary-btn" onClick={() => setPriceModalOpen(true)}>
-            Update Price
-          </button>
-          <button
-            type="button"
-            className={company.isActive ? 'danger-btn' : 'secondary-btn'}
-            onClick={toggleActive}
-          >
-            {company.isActive ? 'Deactivate' : 'Activate'}
-          </button>
-          <Link to={`/company/${company._id}`} target="_blank" rel="noopener noreferrer" className="secondary-btn">
-            View Live Listing ↗
+      {/* Clean Top Navigation Bar without duplicate headers */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.85rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <nav className="breadcrumbs" aria-label="Breadcrumb" style={{ fontSize: '0.84rem' }}>
+          <Link to="/admin/listings" className="muted" style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
+            ← Back to Listings
           </Link>
-        </div>
+          <span className="muted" style={{ margin: '0 0.5rem' }}>/</span>
+          <span style={{ color: 'var(--page-text)', fontWeight: 600 }}>{company.name}</span>
+        </nav>
+        <span className="mono" style={{ fontSize: '0.74rem', color: 'var(--muted)', background: 'var(--surface-2)', padding: '0.15rem 0.5rem', borderRadius: '4px', border: '1px solid var(--border)' }}>
+          ID: {company._id}
+        </span>
       </div>
 
       {flash && <div className="flash">{flash}</div>}
       {error && <div className="flash" style={{ borderColor: 'var(--rust)', color: 'var(--error-fg)' }}>{error}</div>}
 
-      <div className="dashboard-hero-card">
+      {/* Unified Hero Card with all actions in one place */}
+      <div className="dashboard-hero-card" style={{ marginBottom: '1.25rem' }}>
         <div className="dashboard-hero-main">
           <div className="dashboard-hero-content">
-            <div className="dashboard-hero-logo">
+            <div className="dashboard-hero-logo" style={{ width: '58px', height: '58px', background: '#ffffff', borderRadius: '10px', padding: '4px', border: '1px solid var(--border)', flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               {logoSrc ? (
-                <img src={logoSrc} alt={`${company.name} logo`} />
+                <img src={logoSrc} alt={`${company.name} logo`} style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
               ) : (
                 <span className="logo-placeholder">{initial}</span>
               )}
@@ -294,8 +281,8 @@ const AdminCompanyDetail = () => {
               </label>
             </div>
             <div className="dashboard-hero-text">
-              <h1 style={{ margin: '0 0 0.35rem 0' }}>{company.name}</h1>
-              <div className="dashboard-tags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center' }}>
+              <h1 style={{ margin: '0 0 0.35rem 0', fontFamily: 'var(--font-sans, system-ui, sans-serif)', fontSize: '1.25rem', fontWeight: 600, color: 'var(--page-text)' }}>{company.name}</h1>
+              <div className="dashboard-tags" style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem', alignItems: 'center' }}>
                 {company.sector && <span className="tag-sector">{company.sector}</span>}
                 {company.drhpFiled && <span className="tag-sector" style={{ background: '#FEF3C7', color: '#92400E', border: '1px solid #FCD34D' }}>DRHP Filed</span>}
                 <span className={`tag-status ${company.isActive ? 'live' : 'off'}`}>
@@ -314,11 +301,11 @@ const AdminCompanyDetail = () => {
 
       {/* Section 1: Valuation & Trading Highlights (4 Clean Cards) */}
       <div style={{ marginBottom: '1.25rem' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--brass)', marginBottom: '0.5rem' }}>
+        <div style={{ fontSize: '0.74rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted, #64748B)', marginBottom: '0.5rem' }}>
           Valuation & Market Multiples
         </div>
         <div className="dashboard-metrics-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem', marginBottom: 0 }}>
-          <div className="metric-card metric-primary">
+          <div className="metric-card">
             <div className="metric-header">
               <span>Latest Indicative Price</span>
               <InfoTooltip text="An estimated price based on our own research — not sourced from a live stock exchange." />
@@ -329,7 +316,7 @@ const AdminCompanyDetail = () => {
                   Set Price
                 </button>
               ) : (
-                <span className="mono">{formatINR(latestPrice)}</span>
+                <span className="mono" style={{ fontSize: '1.05rem', fontWeight: 600 }}>{formatINR(latestPrice)}</span>
               )}
             </div>
           </div>
@@ -339,7 +326,7 @@ const AdminCompanyDetail = () => {
               <span>52W High / Low</span>
               <InfoTooltip text="Highest and lowest indicative transaction price over past 12 months." />
             </div>
-            <div className="metric-value mono" style={{ fontSize: '1.1rem' }}>
+            <div className="metric-value mono" style={{ fontSize: '0.96rem', fontWeight: 600 }}>
               {formatINR(company.high52)} / {formatINR(company.low52)}
             </div>
           </div>
@@ -349,7 +336,7 @@ const AdminCompanyDetail = () => {
               <span>Market Cap (Est.)</span>
               <InfoTooltip text="Estimated total valuation in ₹ Crores." />
             </div>
-            <div className="metric-value mono">
+            <div className="metric-value mono" style={{ fontSize: '1.02rem', fontWeight: 600 }}>
               {company.marketCap ? `₹ ${Number(company.marketCap).toLocaleString('en-IN')} Cr` : '—'}
             </div>
           </div>
@@ -359,7 +346,7 @@ const AdminCompanyDetail = () => {
               <span>P/E Ratio</span>
               <InfoTooltip text="Price to Earnings valuation multiple." />
             </div>
-            <div className="metric-value mono">
+            <div className="metric-value mono" style={{ fontSize: '1.02rem', fontWeight: 600 }}>
               {company.peRatio ? `${company.peRatio}x` : '—'}
             </div>
           </div>
@@ -368,7 +355,7 @@ const AdminCompanyDetail = () => {
 
       {/* Section 2: Share Fundamentals & Trading Rules (4 Clean Cards) */}
       <div style={{ marginBottom: '1.25rem' }}>
-        <div style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--brass)', marginBottom: '0.5rem' }}>
+        <div style={{ fontSize: '0.74rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.04em', color: 'var(--muted, #64748B)', marginBottom: '0.5rem' }}>
           Share Fundamentals & Capital Structure
         </div>
         <div className="dashboard-metrics-grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem', marginBottom: 0 }}>
@@ -377,7 +364,7 @@ const AdminCompanyDetail = () => {
               <span>Book Value (BVPS)</span>
               <InfoTooltip text="Book value per share in ₹." />
             </div>
-            <div className="metric-value mono">
+            <div className="metric-value mono" style={{ fontSize: '1.02rem', fontWeight: 600 }}>
               {company.bookValue ? `₹ ${company.bookValue}` : '—'}
             </div>
           </div>
@@ -387,7 +374,7 @@ const AdminCompanyDetail = () => {
               <span>P/B Ratio & ROE</span>
               <InfoTooltip text="Price to Book Value and Return on Equity." />
             </div>
-            <div className="metric-value mono" style={{ fontSize: '1.1rem' }}>
+            <div className="metric-value mono" style={{ fontSize: '0.96rem', fontWeight: 600 }}>
               {company.pbRatio ? `${company.pbRatio}x` : '—'} / {company.roe ? `${company.roe}%` : '—'}
             </div>
           </div>
@@ -397,7 +384,7 @@ const AdminCompanyDetail = () => {
               <span>Lot Size & Face Value</span>
               <InfoTooltip text="Minimum trade quantity & nominal face value." />
             </div>
-            <div className="metric-value mono" style={{ fontSize: '1.1rem' }}>
+            <div className="metric-value mono" style={{ fontSize: '0.96rem', fontWeight: 600 }}>
               {company.lotSize ? `${company.lotSize} shs` : '—'} / {formatINR(company.faceValue)}
             </div>
           </div>
@@ -407,7 +394,7 @@ const AdminCompanyDetail = () => {
               <span>Total Shares Outstanding</span>
               <InfoTooltip text="Total issued and registered demat shares." />
             </div>
-            <div className="metric-value mono">
+            <div className="metric-value mono" style={{ fontSize: '1.02rem', fontWeight: 600 }}>
               {company.outstandingShares ? `${(Number(company.outstandingShares) >= 10000000 ? (Number(company.outstandingShares)/10000000).toFixed(2) + ' Cr' : Number(company.outstandingShares).toLocaleString('en-IN'))}` : '—'}
             </div>
           </div>
@@ -416,43 +403,79 @@ const AdminCompanyDetail = () => {
 
       {/* Section 3: Dedicated Corporate Legal & Filing Details Panel */}
       <div className="dashboard-content-card" style={{ marginBottom: '1.25rem' }}>
-        <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
-          <h3 style={{ margin: 0, fontSize: '0.95rem' }}>Corporate Identifiers & Regulatory Filing Info</h3>
-          <span className="muted" style={{ fontSize: '0.8rem' }}>Ministry of Corporate Affairs (MCA) & Depository Records</span>
+        <div
+          className="card-header"
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+            gap: '0.5rem',
+            padding: '0.75rem 1.25rem'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#64748B', display: 'inline-block' }} />
+            <h3 style={{ margin: 0, fontFamily: 'var(--font-sans, system-ui, sans-serif)', fontSize: '0.88rem', fontWeight: 600, color: 'var(--page-text)' }}>
+              Corporate Identifiers & Regulatory Filing Info
+            </h3>
+          </div>
+          <span
+            style={{
+              fontSize: '0.74rem',
+              color: 'var(--muted, #64748B)',
+              background: 'var(--surface-2, #F8FAFC)',
+              padding: '0.2rem 0.55rem',
+              borderRadius: '4px',
+              border: '1px solid var(--border)'
+            }}
+          >
+            Ministry of Corporate Affairs (MCA) & Depository Records
+          </span>
         </div>
         <div className="card-body" style={{ padding: '1rem 1.25rem' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '1.25rem' }}>
-            <div>
-              <span className="muted" style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>Corporate Identification Number (CIN)</span>
-              <span className="mono" style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--brass)', letterSpacing: '0.03em', whiteSpace: 'nowrap' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '0.85rem' }}>
+            <div style={{ background: 'var(--surface-2, #F8FAFC)', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+              <span className="muted" style={{ display: 'block', fontSize: '0.68rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
+                Corporate Identification Number (CIN)
+              </span>
+              <span className="mono" style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--page-text)', letterSpacing: '0.02em', wordBreak: 'break-all' }}>
                 {company.cin || '—'}
               </span>
             </div>
 
-            <div>
-              <span className="muted" style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>ISIN (Demat Code)</span>
-              <span className="mono" style={{ fontSize: '0.95rem', fontWeight: 700, color: 'var(--page-text)', letterSpacing: '0.03em' }}>
+            <div style={{ background: 'var(--surface-2, #F8FAFC)', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+              <span className="muted" style={{ display: 'block', fontSize: '0.68rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
+                ISIN (Demat Code)
+              </span>
+              <span className="mono" style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--page-text)', letterSpacing: '0.02em' }}>
                 {company.isin || '—'}
               </span>
             </div>
 
-            <div>
-              <span className="muted" style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>Founded / Incorporation Year</span>
-              <span style={{ fontSize: '0.95rem', fontWeight: 600 }}>
+            <div style={{ background: 'var(--surface-2, #F8FAFC)', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+              <span className="muted" style={{ display: 'block', fontSize: '0.68rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
+                Incorporation Year
+              </span>
+              <span style={{ fontSize: '0.86rem', fontWeight: 600, color: 'var(--page-text)' }}>
                 {company.foundedYear || '—'}
               </span>
             </div>
 
-            <div>
-              <span className="muted" style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>Industry Sub-Classification</span>
-              <span style={{ fontSize: '0.95rem', fontWeight: 600 }}>
+            <div style={{ background: 'var(--surface-2, #F8FAFC)', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+              <span className="muted" style={{ display: 'block', fontSize: '0.68rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
+                Industry Sub-Classification
+              </span>
+              <span style={{ fontSize: '0.86rem', fontWeight: 500, color: 'var(--page-text)' }}>
                 {company.industry || company.sector || '—'}
               </span>
             </div>
 
-            <div style={{ gridColumn: '1 / -1', borderTop: '1px solid var(--border)', paddingTop: '0.75rem' }}>
-              <span className="muted" style={{ display: 'block', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>Registered Office (HQ Address)</span>
-              <span style={{ fontSize: '0.88rem', color: 'var(--page-text)' }}>
+            <div style={{ gridColumn: '1 / -1', background: 'var(--surface-2, #F8FAFC)', padding: '0.65rem 0.85rem', borderRadius: '6px', border: '1px solid var(--border)' }}>
+              <span className="muted" style={{ display: 'block', fontSize: '0.68rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.04em', marginBottom: '0.25rem' }}>
+                Registered Office (HQ Address)
+              </span>
+              <span style={{ fontSize: '0.84rem', fontWeight: 400, color: 'var(--page-text)', lineHeight: 1.5 }}>
                 {company.registeredOffice || '—'}
               </span>
             </div>
@@ -462,19 +485,60 @@ const AdminCompanyDetail = () => {
 
       <div className="dashboard-content-grid">
         <div className="dashboard-content-card">
-          <div className="card-header">
-            <h3>Description & Overview</h3>
+          <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <h3 style={{ margin: 0, fontFamily: 'var(--font-sans, system-ui, sans-serif)', fontSize: '0.88rem', fontWeight: 600, color: 'var(--page-text)' }}>
+              Description & Overview
+            </h3>
           </div>
-          <div className="card-body" style={{ maxHeight: '450px', overflowY: 'auto' }}>
-            <p style={{ margin: 0, lineHeight: 1.65, fontSize: '0.88rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--page-text)' }}>
-              {company.description || <span className="muted">No description provided. Click "Edit Details" to add one.</span>}
-            </p>
+          <div className="card-body" style={{ padding: '1rem 1.25rem' }}>
+            {company.description ? (
+              <div>
+                <p style={{ margin: 0, lineHeight: 1.65, fontSize: '0.88rem', whiteSpace: 'pre-wrap', wordBreak: 'break-word', color: 'var(--page-text)' }}>
+                  {isDescExpanded || company.description.length <= 260
+                    ? company.description
+                    : `${company.description.slice(0, 260)}…`}
+                </p>
+                {company.description.length > 260 && (
+                  <button
+                    type="button"
+                    onClick={() => setIsDescExpanded(!isDescExpanded)}
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      color: 'var(--brass, #2563EB)',
+                      fontWeight: 600,
+                      fontSize: '0.84rem',
+                      cursor: 'pointer',
+                      padding: 0,
+                      marginTop: '0.5rem',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.25rem'
+                    }}
+                  >
+                    {isDescExpanded ? 'Read Less ↑' : 'Read More ↓'}
+                  </button>
+                )}
+              </div>
+            ) : (
+              <span className="muted" style={{ fontSize: '0.88rem' }}>No description provided. Click "Edit Details" to add one.</span>
+            )}
           </div>
         </div>
 
         <div className="dashboard-content-card">
-          <div className="card-header">
-            <h3>Price History <span className="muted" style={{ fontWeight: 'normal', fontSize: '0.9rem' }}>({history.length} records)</span></h3>
+          <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+            <h3 style={{ margin: 0, fontFamily: 'var(--font-sans, system-ui, sans-serif)', fontSize: '0.88rem', fontWeight: 600, color: 'var(--page-text)' }}>
+              Price History <span className="muted" style={{ fontWeight: 'normal', fontSize: '0.8rem' }}>({history.length} records)</span>
+            </h3>
+            <button
+              type="button"
+              className="secondary-btn"
+              style={{ fontSize: '0.78rem', padding: '0.25rem 0.6rem' }}
+              onClick={() => setPriceModalOpen(true)}
+            >
+              + Update Price
+            </button>
           </div>
           <div className="card-body" style={{ padding: 0, maxHeight: '450px', overflowY: 'auto' }}>
             {history.length === 0 ? (
@@ -499,6 +563,11 @@ const AdminCompanyDetail = () => {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Section 4: Shareholding Pattern & Cap Table Manager */}
+      <div style={{ marginTop: '1.75rem' }}>
+        <AdminShareholdingManager companyId={company._id} companyName={company.name} />
       </div>
 
       {priceModalOpen && createPortal(

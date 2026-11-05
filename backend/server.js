@@ -12,6 +12,7 @@ import blogRoutes from './routes/blogRoutes.js'
 import enquiryRoutes from './routes/enquiryRoutes.js'
 import financialRoutes from './routes/financialRoutes.js'
 import faqRoutes from './routes/faqRoutes.js'
+import shareholdingRoutes from './routes/shareholdingRoutes.js'
 
 dotenv.config()
 
@@ -41,6 +42,8 @@ app.use('/api/enquiries', enquiryRoutes)
 app.use('/api/admin/enquiries', enquiryRoutes)
 app.use('/api/faqs', faqRoutes)
 app.use('/api/admin/faqs', faqRoutes)
+app.use('/api/shareholding', shareholdingRoutes)
+app.use('/api/admin/shareholding', shareholdingRoutes)
 
 const PORT = process.env.PORT || 5000
 

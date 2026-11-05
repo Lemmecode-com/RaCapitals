@@ -159,7 +159,7 @@ const CompanyDetail = () => {
 
             {activeTab === 'shareholding' && (
               <div className="detail-tab-pane">
-                <CompanyShareholding companyName={company.name} />
+                <CompanyShareholding companyId={company._id} companyName={company.name} />
               </div>
             )}
 

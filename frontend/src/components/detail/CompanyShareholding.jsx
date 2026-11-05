@@ -1,83 +1,188 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import api from '../../services/api'
 
-const CompanyShareholding = ({ companyName }) => {
-  const [selectedQuarter, setSelectedQuarter] = useState('Q4 FY24')
+const CompanyShareholding = ({ companyId, companyName }) => {
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState('')
+  const [records, setRecords] = useState([])
+  const [selectedPeriod, setSelectedPeriod] = useState('')
 
-  const quarters = ['Q4 FY24', 'Q3 FY24', 'Q2 FY24', 'Q1 FY24']
+  useEffect(() => {
+    let isMounted = true
 
-  const shareholdingData = {
-    'Q4 FY24': [
-      { category: 'Promoter & Promoter Group', percentage: 56.4, color: '#3B82F6', change: '0.0%' },
-      { category: 'Domestic Institutions (DIIs & MFs)', percentage: 14.8, color: '#10B981', change: '+1.2%' },
-      { category: 'Foreign Institutional Investors (FIIs)', percentage: 12.3, color: '#F59E0B', change: '-0.4%' },
-      { category: 'Public & High Networth Individuals (HNIs)', percentage: 13.5, color: '#8B5CF6', change: '-0.8%' },
-      { category: 'Employee Benefit Trust (ESOP)', percentage: 3.0, color: '#EC4899', change: '0.0%' }
-    ],
-    'Q3 FY24': [
-      { category: 'Promoter & Promoter Group', percentage: 56.4, color: '#3B82F6', change: '0.0%' },
-      { category: 'Domestic Institutions (DIIs & MFs)', percentage: 13.6, color: '#10B981', change: '+0.5%' },
-      { category: 'Foreign Institutional Investors (FIIs)', percentage: 12.7, color: '#F59E0B', change: '-0.2%' },
-      { category: 'Public & High Networth Individuals (HNIs)', percentage: 14.3, color: '#8B5CF6', change: '-0.3%' },
-      { category: 'Employee Benefit Trust (ESOP)', percentage: 3.0, color: '#EC4899', change: '0.0%' }
-    ],
-    'Q2 FY24': [
-      { category: 'Promoter & Promoter Group', percentage: 56.4, color: '#3B82F6', change: '0.0%' },
-      { category: 'Domestic Institutions (DIIs & MFs)', percentage: 13.1, color: '#10B981', change: '+0.8%' },
-      { category: 'Foreign Institutional Investors (FIIs)', percentage: 12.9, color: '#F59E0B', change: '-0.5%' },
-      { category: 'Public & High Networth Individuals (HNIs)', percentage: 14.6, color: '#8B5CF6', change: '-0.3%' },
-      { category: 'Employee Benefit Trust (ESOP)', percentage: 3.0, color: '#EC4899', change: '0.0%' }
-    ],
-    'Q1 FY24': [
-      { category: 'Promoter & Promoter Group', percentage: 56.4, color: '#3B82F6', change: '0.0%' },
-      { category: 'Domestic Institutions (DIIs & MFs)', percentage: 12.3, color: '#10B981', change: '+1.0%' },
-      { category: 'Foreign Institutional Investors (FIIs)', percentage: 13.4, color: '#F59E0B', change: '+0.2%' },
-      { category: 'Public & High Networth Individuals (HNIs)', percentage: 14.9, color: '#8B5CF6', change: '-1.2%' },
-      { category: 'Employee Benefit Trust (ESOP)', percentage: 3.0, color: '#EC4899', change: '0.0%' }
-    ]
+    const fetchShareholding = async () => {
+      if (!companyId) {
+        setLoading(false)
+        return
+      }
+
+      setLoading(true)
+      setError('')
+
+      try {
+        const res = await api.get(`/companies/${companyId}/shareholding`)
+        if (!isMounted) return
+
+        const fetched = res.data?.records || []
+        setRecords(fetched)
+
+        if (fetched.length > 0) {
+          setSelectedPeriod(fetched[0].periodLabel)
+        }
+      } catch (err) {
+        if (!isMounted) return
+        setError(err?.response?.data?.message || 'Failed to load shareholding data.')
+        setRecords([])
+      } finally {
+        if (isMounted) setLoading(false)
+      }
+    }
+
+    fetchShareholding()
+
+    return () => {
+      isMounted = false
+    }
+  }, [companyId])
+
+  if (loading) {
+    return (
+      <div className="detail-tab-pane" style={{ padding: '2rem 1rem', textAlign: 'center' }}>
+        <p className="muted">Loading shareholding pattern & cap table…</p>
+      </div>
+    )
   }
 
-  const marqueeInvestors = [
-    { name: 'Temasek Holdings', stake: '4.85%', type: 'Sovereign Wealth Fund', country: 'Singapore' },
-    { name: 'Sequoia / Peak XV Partners', stake: '6.20%', type: 'Venture Capital', country: 'India / USA' },
-    { name: 'SBI Mutual Fund', stake: '3.40%', type: 'Domestic Asset Manager', country: 'India' },
-    { name: 'PremjiInvest', stake: '2.15%', type: 'Private Family Office', country: 'India' },
-    { name: 'Canada Pension Plan (CPPIB)', stake: '3.10%', type: 'Pension Fund', country: 'Canada' }
-  ]
+  if (error) {
+    return (
+      <div className="detail-tab-pane">
+        <div className="flash" style={{ borderColor: 'var(--rust)', color: 'var(--error-fg)' }}>
+          {error}
+        </div>
+      </div>
+    )
+  }
 
-  const currentRows = shareholdingData[selectedQuarter] || shareholdingData['Q4 FY24']
+  if (!records || records.length === 0) {
+    return (
+      <div
+        className="detail-tab-pane"
+        style={{
+          textAlign: 'center',
+          padding: '3rem 1.5rem',
+          background: 'var(--surface-card, #ffffff)',
+          borderRadius: '12px',
+          border: '1px solid var(--border)'
+        }}
+      >
+        <div style={{ color: 'var(--muted)', marginBottom: '0.75rem' }}>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto', display: 'block' }}>
+            <circle cx="12" cy="12" r="10" />
+            <path d="M12 2a10 10 0 0 1 10 10" />
+            <path d="M12 12 19 5" />
+          </svg>
+        </div>
+        <h3 style={{ margin: '0 0 0.4rem 0', fontSize: '1.1rem', fontWeight: 600, color: 'var(--text-primary)' }}>
+          No Shareholding Pattern Available
+        </h3>
+        <p className="muted" style={{ margin: 0, fontSize: '0.88rem', maxWidth: '480px', marginInline: 'auto' }}>
+          Official equity distribution filings have not been recorded yet for {companyName || 'this company'}.
+        </p>
+      </div>
+    )
+  }
+
+  const currentRecord = records.find((r) => r.periodLabel === selectedPeriod) || records[0]
+  const currentBreakdown = currentRecord?.breakdown || []
+  const hasMarqueeInvestors = currentRecord?.marqueeInvestors && currentRecord.marqueeInvestors.length > 0
 
   return (
     <div className="detail-tab-pane">
-      <div className="section-header-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginBottom: '1.25rem' }}>
+      {/* Header with Period Switcher */}
+      <div
+        className="section-header-row"
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          marginBottom: '1.25rem'
+        }}
+      >
         <div>
           <h2 className="section-title" style={{ margin: 0 }}>Shareholding Pattern & Cap Table</h2>
           <p className="muted" style={{ fontSize: '0.86rem', margin: '0.25rem 0 0 0' }}>
-            Quarterly equity distribution across promoters, institutional funds, and marquee private investors.
+            Historical equity distribution across financial institutions, corporates, promoters, and public investors.
           </p>
         </div>
-        <div style={{ display: 'flex', gap: '0.35rem', background: 'var(--surface-2)', padding: '0.25rem', borderRadius: '8px', border: '1px solid var(--border)' }}>
-          {quarters.map((q) => (
+
+        {/* Dynamic Period Buttons (e.g. FY26, FY25, FY24...) */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.35rem',
+            background: 'var(--surface-2)',
+            padding: '0.25rem',
+            borderRadius: '8px',
+            border: '1px solid var(--border)',
+            flexWrap: 'wrap'
+          }}
+        >
+          {records.map((r) => (
             <button
-              key={q}
+              key={r._id || r.periodLabel}
               type="button"
-              className={`toggle-tab-btn ${selectedQuarter === q ? 'active' : ''}`}
-              onClick={() => setSelectedQuarter(q)}
+              className={`toggle-tab-btn ${selectedPeriod === r.periodLabel ? 'active' : ''}`}
+              onClick={() => setSelectedPeriod(r.periodLabel)}
             >
-              {q}
+              {r.periodLabel}
             </button>
           ))}
         </div>
       </div>
 
       {/* Visual Multi-color Progress Stack Bar */}
-      <div style={{ marginBottom: '1.5rem', background: 'var(--surface-card, #ffffff)', padding: '1.25rem', borderRadius: '12px', border: '1px solid var(--border)' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem', fontSize: '0.82rem', fontWeight: 600 }}>
-          <span>Ownership Split ({selectedQuarter})</span>
-          <span className="mono">Promoter Pledged Shares: 0.00% (Clean)</span>
+      <div
+        style={{
+          marginBottom: '1.5rem',
+          background: 'var(--surface-card, #ffffff)',
+          padding: '1.25rem',
+          borderRadius: '12px',
+          border: '1px solid var(--border)'
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.5rem',
+            fontSize: '0.82rem',
+            fontWeight: 600,
+            flexWrap: 'wrap',
+            gap: '0.5rem'
+          }}
+        >
+          <span>Ownership Split ({currentRecord.periodLabel})</span>
+          <span className="mono" style={{ color: currentRecord.promoterPledgedPercentage > 0 ? '#dc2626' : 'var(--text-secondary)' }}>
+            Promoter Pledged Shares: {Number(currentRecord.promoterPledgedPercentage || 0).toFixed(2)}%
+            {Number(currentRecord.promoterPledgedPercentage || 0) === 0 ? ' (Clean)' : ''}
+          </span>
         </div>
 
-        <div style={{ display: 'flex', height: '22px', borderRadius: '999px', overflow: 'hidden', background: '#E2E8F0', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)' }}>
-          {currentRows.map((item, idx) => (
+        {/* 100% Stacked Bar */}
+        <div
+          style={{
+            display: 'flex',
+            height: '22px',
+            borderRadius: '999px',
+            overflow: 'hidden',
+            background: '#E2E8F0',
+            boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)'
+          }}
+        >
+          {currentBreakdown.map((item, idx) => (
             <div
               key={idx}
               title={`${item.category}: ${item.percentage}%`}
@@ -92,11 +197,19 @@ const CompanyShareholding = ({ companyName }) => {
 
         {/* Legend Badges */}
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', marginTop: '1rem' }}>
-          {currentRows.map((item, idx) => (
+          {currentBreakdown.map((item, idx) => (
             <div key={idx} style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', fontSize: '0.8rem' }}>
-              <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: item.color, display: 'inline-block' }} />
+              <span
+                style={{
+                  width: '10px',
+                  height: '10px',
+                  borderRadius: '50%',
+                  backgroundColor: item.color,
+                  display: 'inline-block'
+                }}
+              />
               <span style={{ color: 'var(--text-secondary, #475569)' }}>{item.category}:</span>
-              <strong className="mono">{item.percentage}%</strong>
+              <strong className="mono">{item.percentage.toFixed(2)}%</strong>
             </div>
           ))}
         </div>
@@ -109,12 +222,12 @@ const CompanyShareholding = ({ companyName }) => {
             <tr>
               <th style={{ textAlign: 'left' }}>Shareholder Category</th>
               <th style={{ textAlign: 'right' }}>Stake (%)</th>
-              <th style={{ textAlign: 'right' }}>Quarterly Shift</th>
+              <th style={{ textAlign: 'right' }}>Yearly Shift</th>
               <th style={{ textAlign: 'right' }}>Lock-in Status</th>
             </tr>
           </thead>
           <tbody>
-            {currentRows.map((r, i) => (
+            {currentBreakdown.map((r, i) => (
               <tr key={i}>
                 <td style={{ textAlign: 'left', fontWeight: 500 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -122,50 +235,80 @@ const CompanyShareholding = ({ companyName }) => {
                     {r.category}
                   </div>
                 </td>
-                <td className="mono" style={{ textAlign: 'right', fontWeight: 600 }}>{r.percentage.toFixed(1)}%</td>
-                <td className="mono" style={{ textAlign: 'right', color: r.change.startsWith('+') ? '#10B981' : r.change.startsWith('-') ? '#EF4444' : 'var(--text-secondary)' }}>
-                  {r.change}
+                <td className="mono" style={{ textAlign: 'right', fontWeight: 600 }}>
+                  {r.percentage.toFixed(2)}%
+                </td>
+                <td
+                  className="mono"
+                  style={{
+                    textAlign: 'right',
+                    color:
+                      r.shift && r.shift.startsWith('+')
+                        ? '#10B981'
+                        : r.shift && r.shift.startsWith('-')
+                        ? '#EF4444'
+                        : 'var(--text-secondary)'
+                  }}
+                >
+                  {r.shift || '0.0%'}
                 </td>
                 <td style={{ textAlign: 'right', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
-                  {r.category.includes('Promoter') ? 'Pre-IPO (6m lock-in)' : 'Free Float'}
+                  {r.lockInStatus || 'Free Float'}
                 </td>
               </tr>
             ))}
           </tbody>
+          <tfoot>
+            <tr style={{ background: 'var(--surface-2)', fontWeight: 600 }}>
+              <td style={{ textAlign: 'left' }}>Total</td>
+              <td className="mono" style={{ textAlign: 'right' }}>
+                {Number(currentRecord.totalPercentage || 100).toFixed(2)}%
+              </td>
+              <td style={{ textAlign: 'right', color: 'var(--text-secondary)' }}>—</td>
+              <td style={{ textAlign: 'right', fontSize: '0.82rem', color: 'var(--text-secondary)' }}>
+                100% Fully Diluted
+              </td>
+            </tr>
+          </tfoot>
         </table>
       </div>
 
-      {/* Marquee & Key Institutional Investors */}
-      <div>
-        <h3 style={{ fontSize: '1.05rem', fontWeight: 600, margin: '0 0 0.75rem 0', color: 'var(--text-primary)' }}>
-          Marquee Institutional & Private Equity Investors
-        </h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.85rem' }}>
-          {marqueeInvestors.map((inv, idx) => (
-            <div
-              key={idx}
-              style={{
-                background: 'var(--surface-card, #ffffff)',
-                border: '1px solid var(--border)',
-                borderRadius: '10px',
-                padding: '0.85rem 1rem',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.25rem'
-              }}
-            >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--navy)' }}>{inv.name}</span>
-                <span className="mono" style={{ fontSize: '0.82rem', color: 'var(--brass)', fontWeight: 600 }}>{inv.stake}</span>
+      {/* Marquee & Key Institutional Investors (rendered only when data exists) */}
+      {hasMarqueeInvestors && (
+        <div>
+          <h3 style={{ fontSize: '1.05rem', fontWeight: 600, margin: '0 0 0.75rem 0', color: 'var(--text-primary)' }}>
+            Marquee Institutional & Anchor Investors
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '0.85rem' }}>
+            {currentRecord.marqueeInvestors.map((inv, idx) => (
+              <div
+                key={idx}
+                style={{
+                  background: 'var(--surface-card, #ffffff)',
+                  border: '1px solid var(--border)',
+                  borderRadius: '10px',
+                  padding: '0.85rem 1rem',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '0.25rem'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                  <span style={{ fontWeight: 600, fontSize: '0.9rem', color: 'var(--navy)' }}>{inv.name}</span>
+                  <span className="mono" style={{ fontSize: '0.82rem', color: 'var(--brass)', fontWeight: 600 }}>
+                    {inv.stake}
+                  </span>
+                </div>
+                <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary, #64748B)' }}>
+                  {inv.type ? `${inv.type} • ` : ''}{inv.country || 'India'}
+                </span>
               </div>
-              <span style={{ fontSize: '0.78rem', color: 'var(--text-secondary, #64748B)' }}>{inv.type} • {inv.country}</span>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
 
 export default CompanyShareholding
-

@@ -17,6 +17,10 @@ import {
   upsertCompanyFinancial
 } from '../controllers/financialController.js'
 import { getCompanyFaqs } from '../controllers/faqController.js'
+import {
+  getCompanyShareholding,
+  upsertCompanyShareholding
+} from '../controllers/shareholdingController.js'
 import authMiddleware from '../middleware/authMiddleware.js'
 import upload from '../middleware/uploadMiddleware.js'
 
@@ -32,9 +36,11 @@ router.post('/admin/bulk-import', authMiddleware, bulkImportCompanies)
 router.get('/:id', getCompanyById)
 router.get('/:id/financials', getCompanyFinancials)
 router.get('/:id/faqs', getCompanyFaqs)
+router.get('/:id/shareholding', getCompanyShareholding)
 router.post('/', authMiddleware, createCompany)
 router.put('/:id', authMiddleware, updateCompany)
 router.post('/:id/financials', authMiddleware, upsertCompanyFinancial)
+router.post('/:id/shareholding', authMiddleware, upsertCompanyShareholding)
 router.patch('/:id/drhp', authMiddleware, updateDrhpStatus)
 router.patch('/:id/deactivate', authMiddleware, deactivateCompany)
 router.patch('/:id/activate', authMiddleware, activateCompany)
