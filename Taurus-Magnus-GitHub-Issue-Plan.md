@@ -494,11 +494,11 @@ Improve homepage discovery with a Trending Shares showcase and DRHP section upda
 - Refine Hero typography/alignment only where specified; do not invent interactive mechanics.
 
 ### Acceptance criteria
-- [ ] Trending Shares section displays the approved selection of shares.
-- [ ] DRHP heading/subtitle match the approved reference.
-- [ ] View All routes to `/drhp-filed`.
-- [ ] DRHP grid is responsive.
-- [ ] Approved tagline is displayed correctly.
+- [x] Trending Shares section displays the approved selection of shares.
+- [x] DRHP heading/subtitle match the approved reference.
+- [x] View All routes to `/drhp-filed`.
+- [x] DRHP grid is responsive.
+- [x] Approved tagline is displayed correctly.
 
 **Priority:** P2-medium  
 **Module:** Frontend / Backend  
