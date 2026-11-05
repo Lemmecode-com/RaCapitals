@@ -32,6 +32,13 @@ const AdminSidebar = ({ isOpen = false, onNavigate }) => {
           Listings
         </NavLink>
         <NavLink
+          to="/admin/faqs"
+          className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
+          onClick={handleClick}
+        >
+          Share FAQs
+        </NavLink>
+        <NavLink
           to="/admin/enquiries"
           className={({ isActive }) => `${base} ${isActive ? 'active' : ''}`}
           onClick={handleClick}

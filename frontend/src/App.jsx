@@ -8,6 +8,7 @@ import About from './pages/About'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminOverview from './pages/admin/AdminOverview'
 import AdminListings from './pages/admin/AdminListings'
+import AdminFaqs from './pages/admin/AdminFaqs'
 import AdminCompanyDetail from './pages/admin/AdminCompanyDetail'
 import AdminEvents from './pages/admin/AdminEvents'
 import AdminContacts from './pages/admin/AdminContacts'
@@ -78,6 +79,16 @@ function App() {
             <ProtectedRoute>
               <AdminLayout>
                 <AdminListings />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/faqs"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AdminFaqs />
               </AdminLayout>
             </ProtectedRoute>
           }

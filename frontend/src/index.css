@@ -358,6 +358,11 @@ a:hover {
   opacity: 0.95;
 }
 
+.brand-tagline-accent {
+  color: #006bfb;
+  font-weight: 600;
+}
+
 .footer-logo-wrap {
   display: flex;
   flex-direction: column;

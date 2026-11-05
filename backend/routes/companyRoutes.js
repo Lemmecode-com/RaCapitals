@@ -15,6 +15,7 @@ import {
   getCompanyFinancials,
   upsertCompanyFinancial
 } from '../controllers/financialController.js'
+import { getCompanyFaqs } from '../controllers/faqController.js'
 import authMiddleware from '../middleware/authMiddleware.js'
 import upload from '../middleware/uploadMiddleware.js'
 
@@ -27,6 +28,7 @@ router.get('/', getAllCompanies)
 router.get('/admin/all', authMiddleware, getAllCompaniesAdmin)
 router.get('/:id', getCompanyById)
 router.get('/:id/financials', getCompanyFinancials)
+router.get('/:id/faqs', getCompanyFaqs)
 router.post('/', authMiddleware, createCompany)
 router.put('/:id', authMiddleware, updateCompany)
 router.post('/:id/financials', authMiddleware, upsertCompanyFinancial)

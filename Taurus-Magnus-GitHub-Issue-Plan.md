@@ -330,10 +330,10 @@ Build the administrative data model and management console for FAQs associated w
 - Add automated tests for FAQ CRUD and publication behavior.
 
 ### Acceptance criteria
-- [ ] Admins can create, edit, reorder, publish/unpublish, and delete company FAQs.
-- [ ] Public APIs expose only published FAQs.
-- [ ] Company association and ordering are respected.
-- [ ] Automated tests cover CRUD behavior.
+- [x] Admins can create, edit, reorder, publish/unpublish, and delete company FAQs.
+- [x] Public APIs expose only published FAQs.
+- [x] Company association and ordering are respected.
+- [x] Automated tests cover CRUD behavior.
 
 **Priority:** P1-high  
 **Module:** Full Stack (Admin)  
@@ -363,10 +363,10 @@ Render a dynamic, accessible FAQ accordion on individual company details pages u
 - Hide the section when no published FAQs are available.
 
 ### Acceptance criteria
-- [ ] Questions expand/collapse their associated answers.
-- [ ] Only published, relevant FAQs are displayed.
-- [ ] Keyboard and screen-reader accessibility are supported.
-- [ ] Empty FAQ sections are suppressed.
+- [x] Questions expand/collapse their associated answers.
+- [x] Only published, relevant FAQs are displayed.
+- [x] Keyboard and screen-reader accessibility are supported.
+- [x] Empty FAQ sections are suppressed.
 
 **Priority:** P1-high  
 **Module:** Frontend  
