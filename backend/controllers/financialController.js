@@ -223,10 +223,15 @@ export const upsertCompanyFinancial = async (req, res) => {
     }
 
     // Optional balance sheet / cashflow
-    if (req.body.totalAssets !== undefined) updateDoc.totalAssets = Number(req.body.totalAssets)
-    if (req.body.totalLiabilities !== undefined) updateDoc.totalLiabilities = Number(req.body.totalLiabilities)
-    if (req.body.totalEquity !== undefined) updateDoc.totalEquity = Number(req.body.totalEquity)
-    if (req.body.totalDebt !== undefined) updateDoc.totalDebt = Number(req.body.totalDebt)
+    if (req.body.isPublished !== undefined) updateDoc.isPublished = Boolean(req.body.isPublished)
+    if (req.body.totalAssets !== undefined && req.body.totalAssets !== '') updateDoc.totalAssets = Number(req.body.totalAssets)
+    if (req.body.totalLiabilities !== undefined && req.body.totalLiabilities !== '') updateDoc.totalLiabilities = Number(req.body.totalLiabilities)
+    if (req.body.totalEquity !== undefined && req.body.totalEquity !== '') updateDoc.totalEquity = Number(req.body.totalEquity)
+    if (req.body.totalDebt !== undefined && req.body.totalDebt !== '') updateDoc.totalDebt = Number(req.body.totalDebt)
+    if (req.body.operatingCashFlow !== undefined && req.body.operatingCashFlow !== '') updateDoc.operatingCashFlow = Number(req.body.operatingCashFlow)
+    if (req.body.investingCashFlow !== undefined && req.body.investingCashFlow !== '') updateDoc.investingCashFlow = Number(req.body.investingCashFlow)
+    if (req.body.financingCashFlow !== undefined && req.body.financingCashFlow !== '') updateDoc.financingCashFlow = Number(req.body.financingCashFlow)
+    if (req.body.netCashFlow !== undefined && req.body.netCashFlow !== '') updateDoc.netCashFlow = Number(req.body.netCashFlow)
 
     const filter = {
       company: id,
@@ -342,6 +347,23 @@ export const deleteCompanyFinancial = async (req, res) => {
     res.status(200).json({ message: 'Financial record deleted successfully' })
   } catch (error) {
     res.status(500).json({ message: 'Error deleting financial record', error: error.message })
+  }
+}
+
+// PATCH /api/admin/financials/:id/publish
+export const togglePublishFinancial = async (req, res) => {
+  try {
+    const { id } = req.params
+    const doc = await CompanyFinancials.findById(id)
+    if (!doc) {
+      return res.status(404).json({ message: 'Financial record not found' })
+    }
+    const newStatus = typeof req.body.isPublished === 'boolean' ? req.body.isPublished : !doc.isPublished
+    doc.isPublished = newStatus
+    await doc.save()
+    res.status(200).json({ message: `Statement ${newStatus ? 'published' : 'unpublished'} successfully`, isPublished: newStatus, financial: doc })
+  } catch (error) {
+    res.status(500).json({ message: 'Error toggling published status', error: error.message })
   }
 }
 

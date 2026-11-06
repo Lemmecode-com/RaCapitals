@@ -32,6 +32,10 @@ const CompanyFinancialsSchema = new mongoose.Schema({
     type: Boolean,
     default: true
   },
+  isPublished: {
+    type: Boolean,
+    default: true
+  },
   currency: {
     type: String,
     default: 'INR'

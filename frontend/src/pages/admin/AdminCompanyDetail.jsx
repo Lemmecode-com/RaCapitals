@@ -5,6 +5,7 @@ import api from '../../services/api'
 import { apiBaseWithoutApi, formatINR } from '../../utils/format'
 import InfoTooltip from '../../components/common/InfoTooltip'
 import AdminShareholdingManager from '../../components/admin/AdminShareholdingManager'
+import AdminFinancialsManager from '../../components/admin/AdminFinancialsManager'
 
 const AdminCompanyDetail = () => {
   const { id } = useParams()
@@ -568,6 +569,11 @@ const AdminCompanyDetail = () => {
       {/* Section 4: Shareholding Pattern & Cap Table Manager */}
       <div style={{ marginTop: '1.75rem' }}>
         <AdminShareholdingManager companyId={company._id} companyName={company.name} />
+      </div>
+
+      {/* Section 5: Financial Statements Management (P&L, Balance Sheet, Cash Flow) */}
+      <div style={{ marginTop: '1.75rem' }}>
+        <AdminFinancialsManager companyId={company._id} companyName={company.name} />
       </div>
 
       {priceModalOpen && createPortal(
