@@ -12129,7 +12129,7 @@ h1, h2, h3, h4, h5, h6 {
    Homepage Trending Shares Section
    ============================================================ */
 .home-trending-section {
-  padding: 3.5rem 0 1.5rem 0;
+  padding: 2.5rem 0 1.25rem 0;
   max-width: 1180px;
   margin: 0 auto;
 }
@@ -12145,17 +12145,17 @@ h1, h2, h3, h4, h5, h6 {
 .home-trending-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 1.25rem;
+  gap: 1rem;
 }
 
 .home-trending-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 1.25rem;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
   display: flex;
   flex-direction: column;
-  gap: 0.85rem;
+  gap: 0.55rem;
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
   text-decoration: none !important;
   color: inherit;
@@ -12164,14 +12164,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .home-trending-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(37, 99, 235, 0.12);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.1);
   border-color: #2563eb;
   text-decoration: none !important;
 }
 
 .home-trending-card.skeleton {
-  min-height: 220px;
+  min-height: 180px;
   background: #f3f4f6;
   border-color: #e5e7eb;
   animation: skeletonPulse 1.5s ease-in-out infinite;
@@ -12181,19 +12181,19 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.5rem;
+  gap: 0.4rem;
 }
 
 .home-trending-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.2rem;
   background: #FEF3C7;
   color: #92400E;
   border: 1px solid #FCD34D;
-  font-size: 0.7rem;
+  font-size: 0.62rem;
   font-weight: 600;
-  padding: 0.2rem 0.55rem;
+  padding: 0.15rem 0.45rem;
   border-radius: 999px;
   line-height: 1.2;
 }
@@ -12201,13 +12201,13 @@ h1, h2, h3, h4, h5, h6 {
 .home-trending-card-identity {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.55rem;
 }
 
 .home-trending-card-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   border: 1px solid #e5e7eb;
   background: #f9fafb;
   display: flex;
@@ -12221,7 +12221,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  padding: 3px;
+  padding: 2px;
 }
 
 .home-trending-card-title-wrap {
@@ -12230,7 +12230,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .home-trending-card-name {
-  font-size: 1.05rem;
+  font-size: 0.92rem;
   font-weight: 600;
   color: #111827;
   margin: 0;
@@ -12241,9 +12241,9 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .home-trending-card-sector {
-  font-size: 0.8rem;
+  font-size: 0.74rem;
   color: #6b7280;
-  margin: 0.15rem 0 0 0;
+  margin: 0.1rem 0 0 0;
   display: block;
 }
 
@@ -12251,7 +12251,7 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  padding-top: 0.5rem;
+  padding-top: 0.35rem;
   border-top: 1px solid #f3f4f6;
   margin-top: auto;
 }
@@ -12259,11 +12259,11 @@ h1, h2, h3, h4, h5, h6 {
 .home-trending-price-block {
   display: flex;
   flex-direction: column;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .home-trending-price-label {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -12271,7 +12271,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .home-trending-price {
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 700;
   color: #111827;
   line-height: 1.2;
@@ -12281,11 +12281,11 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 0.15rem;
+  gap: 0.1rem;
 }
 
 .home-trending-lot-label {
-  font-size: 0.72rem;
+  font-size: 0.65rem;
   color: #6b7280;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -12293,7 +12293,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .home-trending-lot {
-  font-size: 0.82rem;
+  font-size: 0.76rem;
   color: #4b5563;
   font-weight: 500;
 }
@@ -12302,10 +12302,10 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   background: #f9fafb;
-  border-radius: 6px;
-  padding: 0.35rem 0.6rem;
+  border-radius: 5px;
+  padding: 0.25rem 0.5rem;
   color: #4b5563;
 }
 
@@ -12323,15 +12323,15 @@ h1, h2, h3, h4, h5, h6 {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding-top: 0.4rem;
+  padding-top: 0.3rem;
   border-top: 1px dashed #f3f4f6;
 }
 
 .home-trending-view-btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  font-size: 0.82rem;
+  gap: 0.3rem;
+  font-size: 0.76rem;
   font-weight: 600;
   color: #2563eb;
   transition: gap 0.2s ease;
