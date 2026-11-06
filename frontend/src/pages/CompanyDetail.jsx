@@ -12,7 +12,7 @@ import CompanyFinancialsTable from '../components/detail/CompanyFinancialsTable'
 import CompanyShareholding from '../components/detail/CompanyShareholding'
 import CompanyFundingRounds from '../components/detail/CompanyFundingRounds'
 import CompanyFaqAccordion from '../components/detail/CompanyFaqAccordion'
-import { apiBaseWithoutApi, formatINR } from '../utils/format'
+import { apiBaseWithoutApi, formatINR, formatShortDate } from '../utils/format'
 
 const buildLogoSrc = (logoUrl) => {
   if (!logoUrl) return null
@@ -114,7 +114,14 @@ const CompanyDetail = () => {
           <div className="company-detail-main">
             {/* 1. Indicative Price History Chart (Permanent Top) */}
             <section className="company-section" style={{ marginBottom: '1.75rem' }}>
-              <h2 className="section-title">Indicative Price History</h2>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
+                <h2 className="section-title" style={{ margin: 0 }}>Indicative Price History</h2>
+                {(company.latestPriceDate || (history.length ? history[history.length - 1].recordedAt : null)) && (
+                  <span className="price-as-of-badge" style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                    Indicative Price as of: <strong style={{ color: 'var(--text-primary)' }}>{formatShortDate(company.latestPriceDate || history[history.length - 1].recordedAt)}</strong>
+                  </span>
+                )}
+              </div>
               <PriceHistoryChart priceHistory={history} />
             </section>
 

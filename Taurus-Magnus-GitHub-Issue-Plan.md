@@ -461,11 +461,11 @@ Add an admin workflow for updating current indicative share prices and improve p
 - Display “Indicative Price as of: DD MMM YYYY” on company cards and details pages using the latest recorded price date.
 
 ### Acceptance criteria
-- [ ] Price update creates a new append-only history record.
-- [ ] Current catalog price reflects the latest update.
-- [ ] Chart ranges filter the dataset correctly.
-- [ ] Timestamp reflects the latest `recordedAt` value.
-- [ ] Existing historical price records remain unchanged.
+- [x] Price update creates a new append-only history record.
+- [x] Current catalog price reflects the latest update.
+- [x] Chart ranges filter the dataset correctly.
+- [x] Timestamp reflects the latest `recordedAt` value.
+- [x] Existing historical price records remain unchanged.
 
 **Priority:** P2-medium  
 **Module:** Full Stack  

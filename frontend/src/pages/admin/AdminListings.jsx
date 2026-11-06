@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { Link } from 'react-router-dom'
 import api from '../../services/api'
-import { apiBaseWithoutApi, formatINR } from '../../utils/format'
+import { apiBaseWithoutApi, formatINR, formatShortDate } from '../../utils/format'
 import ConfirmDialog from '../../components/common/ConfirmDialog'
 import InfoTooltip from '../../components/common/InfoTooltip'
 import Pagination from '../../components/admin/Pagination'
@@ -408,7 +408,23 @@ const AdminListings = () => {
                       {c.latestPrice == null ? (
                         <button type="button" className="set-price-link" onClick={() => openPriceModal(c)}>Set price</button>
                       ) : (
-                        formatINR(c.latestPrice)
+                        <button
+                          type="button"
+                          className="table-action-link"
+                          onClick={() => openPriceModal(c)}
+                          title="Click to update price"
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            cursor: 'pointer',
+                            font: 'inherit',
+                            color: 'var(--brass, #b08d57)',
+                            textDecoration: 'underline',
+                            padding: 0
+                          }}
+                        >
+                          {formatINR(c.latestPrice)}
+                        </button>
                       )}
                     </td>
                     <td style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap' }}>
@@ -621,9 +637,17 @@ const AdminListings = () => {
             <button className="modal-close-btn" type="button" onClick={closePriceModal}>&times;</button>
             <h2>Update Price — {priceModal.name}</h2>
             <form onSubmit={handleSubmitPrice} className="admin-form">
+              <div style={{ marginBottom: '1rem', padding: '0.75rem', background: 'var(--paper-2, #f8fafc)', borderRadius: '8px', border: '1px solid var(--border, #e2e8f0)', fontSize: '0.85rem' }}>
+                <div>Current Indicative Price: <strong>{priceModal.latestPrice != null ? formatINR(priceModal.latestPrice) : 'Not set'}</strong></div>
+                {priceModal.latestPriceDate && (
+                  <div style={{ color: 'var(--text-muted, #64748b)', fontSize: '0.75rem', marginTop: '0.25rem' }}>
+                    Last recorded: {formatShortDate(priceModal.latestPriceDate)}
+                  </div>
+                )}
+              </div>
               <label className="form-label">
                 New Price (₹) *
-                <input type="number" step="0.01" min="0" value={priceValue} onChange={(e) => setPriceValue(e.target.value)} required className="form-input" />
+                <input type="number" step="0.01" min="0" value={priceValue} onChange={(e) => setPriceValue(e.target.value)} required className="form-input" placeholder="e.g. 1250" />
               </label>
               {priceError && <p className="form-error">{priceError}</p>}
               <div className="modal-actions">

@@ -23,6 +23,7 @@ const attachStats = async (company) => {
   return {
     ...company,
     latestPrice: latestPriceDoc ? latestPriceDoc.price : null,
+    latestPriceDate: latestPriceDoc ? latestPriceDoc.recordedAt : null,
     high52,
     low52
   }

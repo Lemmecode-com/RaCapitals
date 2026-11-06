@@ -1065,6 +1065,39 @@ a:hover {
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
 }
 
+.detail-tf-group {
+  display: inline-flex;
+  align-items: center;
+  background: var(--paper-2, #f1f5f9);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--border, #e2e8f0);
+  gap: 2px;
+}
+
+.detail-tf-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted, #64748b);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1.2;
+}
+
+.detail-tf-btn:hover {
+  color: var(--text-primary, #0f172a);
+}
+
+.detail-tf-btn.active {
+  background: var(--paper, #ffffff);
+  color: var(--brass, #b08d57);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
 @keyframes drawLine {
   from { stroke-dashoffset: 1000; }
   to { stroke-dashoffset: 0; }
