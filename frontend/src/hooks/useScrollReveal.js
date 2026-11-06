@@ -5,18 +5,31 @@ const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 export default function useScrollReveal(options = {}) {
-  const { threshold = 0.15, rootMargin = '0px 0px -50px' } = options
+  const { threshold = 0.08, rootMargin = '0px 0px -20px' } = options
   const ref = useRef(null)
 
   useEffect(() => {
+    const node = ref.current
+    if (!node) return
+
     if (prefersReducedMotion()) {
-      const node = ref.current
-      if (node) node.classList.add('reveal-visible')
+      node.classList.add('reveal-visible')
       return
     }
 
-    const node = ref.current
-    if (!node) return
+    // Immediately reveal if already within or above the viewport on mount to eliminate flash/flicker
+    if (typeof window !== 'undefined') {
+      const rect = node.getBoundingClientRect()
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        node.classList.add('reveal-visible')
+        return
+      }
+    }
+
+    if (typeof window === 'undefined' || !('IntersectionObserver' in window)) {
+      node.classList.add('reveal-visible')
+      return
+    }
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -32,7 +45,7 @@ export default function useScrollReveal(options = {}) {
 
     observer.observe(node)
     return () => observer.disconnect()
-  }, [ref, threshold, rootMargin])
+  }, [threshold, rootMargin])
 
   return ref
 }

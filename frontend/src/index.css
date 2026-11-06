@@ -1259,6 +1259,8 @@ a:hover {
   gap: 1rem;
   animation: marqueeScroll 22s linear infinite;
   width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 @keyframes marqueeScroll {
@@ -6816,13 +6818,16 @@ h1, h2, h3, h4, h5, h6 {
    ============================================================ */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.5s ease-out, transform 0.5s ease-out;
+  transform: translate3d(0, 18px, 0);
+  transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+  backface-visibility: hidden;
 }
 
 .reveal-visible {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0);
+  will-change: auto;
 }
 
 .reveal-stagger-0 { transition-delay: 0ms; }
@@ -7995,6 +8000,8 @@ h1, h2, h3, h4, h5, h6 {
   gap: 1rem;
   animation: marqueeScroll 22s linear infinite;
   width: max-content;
+  will-change: transform;
+  transform: translateZ(0);
 }
 
 @keyframes marqueeScroll {
