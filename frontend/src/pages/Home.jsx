@@ -5,6 +5,7 @@ import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import EnquireButton from '../components/common/EnquireButton'
 import Footer from '../components/common/Footer'
 import Navbar from '../components/common/Navbar'
+import HeroPriceChart from '../components/home/HeroPriceChart'
 
 import { apiBaseWithoutApi, formatINR, formatShortDate } from '../utils/format'
 
@@ -297,59 +298,7 @@ const Home = () => {
               </p>
               <Link to="/catalog" className="home-hero-cta">Browse the price list</Link>
             </div>
-            <div className="home-hero-chart-card" aria-label="Indicative price chart">
-              <div className="home-hero-chart-header">
-                <span className="home-hero-chart-sub">Indicative Price History</span>
-                <span className="home-hero-chart-live">
-                  <span className="home-hero-chart-dot" />
-                  Live Feed
-                </span>
-              </div>
-              <div className="home-hero-chart-price-row">
-                <span className="home-hero-chart-current-price">₹5.75</span>
-                <span className="home-hero-chart-gain">▲ +310.71% <span>over Max</span></span>
-              </div>
-              <div className="home-hero-chart-wrapper">
-                <svg className="home-hero-chart-svg" viewBox="0 0 500 220" preserveAspectRatio="none" role="img" aria-label="Upward trending price chart with volume bars">
-                  <defs>
-                    <linearGradient id="hero-blue-gradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#2563eb" stopOpacity="0.25" />
-                      <stop offset="100%" stopColor="#2563eb" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <line className="hero-grid-line" x1="0" y1="50" x2="500" y2="50" />
-                  <line className="hero-grid-line" x1="0" y1="110" x2="500" y2="110" />
-                  <line className="hero-grid-line" x1="0" y1="170" x2="500" y2="170" />
-                  <g className="hero-volume-bars">
-                    <rect x="12" y="180" width="16" height="45" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="52" y="165" width="16" height="60" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="92" y="150" width="16" height="75" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="132" y="170" width="16" height="55" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="172" y="130" width="16" height="95" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="212" y="160" width="16" height="65" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="252" y="140" width="16" height="85" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="292" y="115" width="16" height="110" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="332" y="155" width="16" height="70" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="372" y="100" width="16" height="125" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="412" y="80" width="16" height="145" rx="3" fill="#2563eb" opacity="0.12" />
-                    <rect x="452" y="45" width="16" height="180" rx="3" fill="#2563eb" opacity="0.12" />
-                  </g>
-                  <line className="hero-chart-ref-line" x1="20" y1="225" x2="20" y2="209" />
-                  <path className="hero-chart-area" d="M 20,209 L 43,209 L 66,207 L 90,207 L 113,207 L 136,205 L 159,202 L 182,198 L 205,88 L 228,143 L 251,176 L 274,121 L 297,172 L 320,128 L 343,187 L 367,154 L 390,128 L 413,99 L 436,114 L 459,88 L 459,225 L 20,225 Z" fill="url(#hero-blue-gradient)" />
-                  <path className="hero-chart-line" d="M 20,209 L 43,209 L 66,207 L 90,207 L 113,207 L 136,205 L 159,202 L 182,198 L 205,88 L 228,143 L 251,176 L 274,121 L 297,172 L 320,128 L 343,187 L 367,154 L 390,128 L 413,99 L 436,114 L 459,88" />
-                </svg>
-                <div className="hero-chart-tooltip" role="status" aria-label="Sample price point">₹1.19 · Apr 2022</div>
-              </div>
-              <div className="home-hero-chart-controls">
-                <div className="home-timeframe-group">
-                  <button className="home-tf-btn">1M</button>
-                  <button className="home-tf-btn">6M</button>
-                  <button className="home-tf-btn">1Y</button>
-                  <button className="home-tf-btn">3Y</button>
-                  <button className="home-tf-btn active">MAX</button>
-                </div>
-              </div>
-            </div>
+            <HeroPriceChart />
           </div>
         </section>
 
