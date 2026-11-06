@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import api from '../../services/api'
 import Pagination from '../../components/admin/Pagination'
-import { exportToCsv } from '../../utils/exportUtils'
+import { exportToCsv, exportToExcel } from '../../utils/exportUtils'
 
 const STATUS_CHIPS = [
   { id: 'all', label: 'All' },
@@ -196,32 +196,42 @@ const AdminContacts = () => {
   // Export Engine
   const handleExport = (format = 'csv') => {
     if (!filteredSubmissions || filteredSubmissions.length === 0) {
-      setFlash('No contact submissions available to export.')
+      setFlash('No contact submissions available to export for the active filter.')
       return
     }
 
     const columns = [
+      { label: 'ID', key: '_id' },
       { label: 'Name', key: 'name' },
-      { label: 'Email', key: 'email' },
       { label: 'Phone', key: 'phone' },
+      { label: 'Email', key: 'email' },
       { label: 'Status', accessor: (row) => normalizeStatus(row.status) },
       {
-        label: 'Date',
+        label: 'Submission Timestamp',
         accessor: (row) =>
-          new Date(row.createdAt).toLocaleDateString('en-IN', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
+          row.createdAt
+            ? new Date(row.createdAt).toLocaleString('en-IN', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })
+            : '—'
       },
-      { label: 'Message', key: 'message' },
+      { label: 'Message', key: 'message' }
     ]
 
-    const filename = `Contact_Submissions_${selectedStatus}_${new Date().toISOString().slice(0, 10)}.csv`
-    exportToCsv(filename, columns, filteredSubmissions)
-    setFlash(`Exported ${filteredSubmissions.length} contact records (${format.toUpperCase()})`)
+    const dateStr = new Date().toISOString().slice(0, 10)
+    const baseFilename = `Contact_Submissions_${selectedStatus}_${dateStr}`
+
+    if (format === 'excel') {
+      exportToExcel(`${baseFilename}.xls`, columns, filteredSubmissions, 'Contact Submissions')
+    } else {
+      exportToCsv(`${baseFilename}.csv`, columns, filteredSubmissions)
+    }
+
+    setFlash(`Successfully exported ${filteredSubmissions.length} contact record(s) (${format.toUpperCase()})`)
   }
 
   return (
@@ -231,24 +241,20 @@ const AdminContacts = () => {
         <div>
           <h1>Contact Submissions</h1>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
           <button
             type="button"
             className="secondary-btn"
-            style={{ fontSize: '0.85rem', padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
             onClick={() => handleExport('csv')}
-            title="Download CSV file for current view"
           >
-            <span>📥</span> Export CSV
+            Export CSV
           </button>
           <button
             type="button"
             className="secondary-btn"
-            style={{ fontSize: '0.85rem', padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
             onClick={() => handleExport('excel')}
-            title="Download Excel-compatible file"
           >
-            <span>📊</span> Export Excel
+            Export Excel
           </button>
         </div>
       </div>

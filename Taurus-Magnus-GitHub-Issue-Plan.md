@@ -588,10 +588,10 @@ Implement Excel (`.xlsx`) and CSV exports for share-specific enquiries and gener
 - Enforce the manager-approved export permission model.
 
 ### Acceptance criteria
-- [ ] Both `.xlsx` and `.csv` formats download and open correctly.
-- [ ] Exported columns contain the specified fields.
-- [ ] Active screen filters are applied to exported data.
-- [ ] Export endpoints enforce the approved admin authorization rules.
+- [x] Both `.xlsx` and `.csv` formats download and open correctly.
+- [x] Exported columns contain the specified fields.
+- [x] Active screen filters are applied to exported data.
+- [x] Export endpoints enforce the approved admin authorization rules.
 
 **Priority:** P2-medium  
 **Module:** Admin Panel / Backend  

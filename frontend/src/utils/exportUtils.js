@@ -4,20 +4,29 @@
  * with Indian Rupee (₹) and regional alphanumeric characters without font encoding issues.
  */
 
-export const exportToCsv = (filename, columns, data) => {
-  if (!Array.isArray(data) || data.length === 0) {
-    alert('No data available to export.')
-    return
-  }
-
-  const escapeCell = (val) => {
+export const generateCsvString = (columns, data) => {
+  const escapeCell = (val, col = null) => {
     if (val === null || val === undefined) return '""'
-    const str = String(val).replace(/"/g, '""')
+    const str = String(val).trim().replace(/"/g, '""')
+
+    // Fix for Excel converting phone numbers / long numeric identifiers (10+ digits) into scientific notation (e.g. 9.19989E+11)
+    const isPhoneCol = Boolean(
+      col && (
+        (col.key && String(col.key).toLowerCase().includes('phone')) ||
+        (col.label && String(col.label).toLowerCase().includes('phone'))
+      )
+    )
+    const isLongNumeric = /^\+?\d{10,}$/.test(str.replace(/[\s-]/g, ''))
+
+    if (isPhoneCol || (isLongNumeric && !col?.isNumeric)) {
+      return `="${str}"`
+    }
+
     return `"${str}"`
   }
 
-  const headerRow = columns.map((col) => escapeCell(col.label)).join(',')
-  const dataRows = data.map((item) => {
+  const headerRow = columns.map((col) => `"${String(col.label || '').replace(/"/g, '""')}"`).join(',')
+  const dataRows = (data || []).map((item) => {
     return columns
       .map((col) => {
         let val
@@ -26,17 +35,159 @@ export const exportToCsv = (filename, columns, data) => {
         } else {
           val = item[col.key]
         }
-        return escapeCell(val)
+        return escapeCell(val, col)
       })
       .join(',')
   })
 
-  const csvContent = '\uFEFF' + [headerRow, ...dataRows].join('\r\n')
+  return '\uFEFF' + [headerRow, ...dataRows].join('\r\n')
+}
+
+export const exportToCsv = (filename, columns, data) => {
+  if (!Array.isArray(data) || data.length === 0) {
+    alert('No data available to export.')
+    return
+  }
+
+  const csvContent = generateCsvString(columns, data)
   const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' })
   const url = URL.createObjectURL(blob)
   const link = document.createElement('a')
   link.setAttribute('href', url)
   link.setAttribute('download', filename.endsWith('.csv') ? filename : `${filename}.csv`)
+  document.body.appendChild(link)
+  link.click()
+  document.body.removeChild(link)
+  URL.revokeObjectURL(url)
+}
+
+/**
+ * Generates valid SpreadsheetML XML string compatible with Microsoft Excel, Google Sheets, LibreOffice
+ */
+export const generateExcelXml = (sheetName, columns, data) => {
+  const escapeXml = (val) => {
+    if (val === null || val === undefined) return ''
+    return String(val)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&apos;')
+  }
+
+  const headerCells = columns
+    .map(col => `    <Cell ss:StyleID="Header"><Data ss:Type="String">${escapeXml(col.label)}</Data></Cell>`)
+    .join('\n')
+
+  const dataRows = (data || [])
+    .map(item => {
+      const cells = columns.map(col => {
+        let val
+        if (typeof col.accessor === 'function') {
+          val = col.accessor(item)
+        } else {
+          val = item[col.key]
+        }
+
+        const isNum = typeof val === 'number' && !isNaN(val)
+        const type = isNum ? 'Number' : 'String'
+        const escaped = escapeXml(val)
+        return `    <Cell ss:StyleID="Data"><Data ss:Type="${type}">${escaped}</Data></Cell>`
+      }).join('\n')
+
+      return `   <Row ss:AutoFitHeight="1">\n${cells}\n   </Row>`
+    })
+    .join('\n')
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <Author>Taurus Magnus</Author>
+  <Created>${new Date().toISOString()}</Created>
+ </DocumentProperties>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Center"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+  <Style ss:ID="Header">
+   <Alignment ss:Horizontal="Center" ss:Vertical="Center" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="2" ss:Color="#0F172A"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#CBD5E1"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="11" ss:Color="#FFFFFF" ss:Bold="1"/>
+   <Interior ss:Color="#1E293B" ss:Pattern="Solid"/>
+  </Style>
+  <Style ss:ID="Data">
+   <Alignment ss:Vertical="Center" ss:WrapText="1"/>
+   <Borders>
+    <Border ss:Position="Bottom" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Left" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Right" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+    <Border ss:Position="Top" ss:LineStyle="Continuous" ss:Weight="1" ss:Color="#E2E8F0"/>
+   </Borders>
+   <Font ss:FontName="Calibri" ss:Size="10" ss:Color="#0F172A"/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="${escapeXml(sheetName)}">
+  <Table ss:DefaultRowHeight="20">
+   <Row ss:AutoFitHeight="1" ss:Height="26">
+${headerCells}
+   </Row>
+${dataRows}
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <Selected/>
+   <FreezePanes/>
+   <FrozenNoSplit/>
+   <SplitPane>
+    <TopRowBottomPane>1</TopRowBottomPane>
+   </SplitPane>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+    </Pane>
+    <Pane>
+     <Number>2</Number>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>`
+}
+
+/**
+ * Native Excel (.xls / .xlsx) SpreadsheetML Exporter
+ */
+export const exportToExcel = (filename, columns, data, sheetName = 'Export') => {
+  if (!Array.isArray(data) || data.length === 0) {
+    alert('No data available to export.')
+    return
+  }
+
+  const xml = generateExcelXml(sheetName, columns, data)
+  const blob = new Blob([xml], { type: 'application/vnd.ms-excel;charset=utf-8' })
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement('a')
+  link.setAttribute('href', url)
+  const cleanFilename = filename.endsWith('.xls') || filename.endsWith('.xlsx')
+    ? filename
+    : `${filename}.xls`
+  link.setAttribute('download', cleanFilename)
   document.body.appendChild(link)
   link.click()
   document.body.removeChild(link)
@@ -233,5 +384,3 @@ export const downloadFaqSampleTemplate = () => {
   document.body.removeChild(link)
   URL.revokeObjectURL(url)
 }
-
-

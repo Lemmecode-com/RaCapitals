@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import api from '../../services/api'
 import Pagination from '../../components/admin/Pagination'
-import { exportToCsv } from '../../utils/exportUtils'
+import { exportToCsv, exportToExcel } from '../../utils/exportUtils'
 
 const STATUS_CHIPS = [
   { id: 'all', label: 'All' },
@@ -187,36 +187,64 @@ const AdminEnquiries = () => {
     }
   }
 
-  const handleExport = (format = 'csv') => {
-    if (!enquiries || enquiries.length === 0) {
-      setFlash('No enquiries available to export.')
-      return
+  const handleExport = async (format = 'csv') => {
+    try {
+      setFlash(`Preparing ${format.toUpperCase()} export...`)
+
+      // Fetch all matching enquiries for active screen filters (up to 2000 records)
+      const res = await api.get('/enquiries/admin/share', {
+        params: {
+          page: 1,
+          limit: 2000,
+          status: selectedStatus !== 'all' ? selectedStatus : undefined,
+          search: searchTerm ? searchTerm.trim() : undefined
+        }
+      })
+
+      const dataset = res.data?.enquiries?.length ? res.data.enquiries : enquiries
+      if (!dataset || dataset.length === 0) {
+        setFlash('No enquiries available to export for the active filter.')
+        return
+      }
+
+      const columns = [
+        { label: 'Enquiry ID', key: '_id' },
+        { label: 'Company Name', accessor: (row) => row.companyName || (row.company && row.company.name) || '—' },
+        { label: 'Investor Name', key: 'name' },
+        { label: 'Phone', key: 'phone' },
+        { label: 'Email', key: 'email' },
+        { label: 'Quantity', accessor: (row) => (row.quantity != null ? row.quantity : '—') },
+        { label: 'Status', key: 'status' },
+        {
+          label: 'Submission Timestamp',
+          accessor: (row) =>
+            row.createdAt
+              ? new Date(row.createdAt).toLocaleString('en-IN', {
+                  day: 'numeric',
+                  month: 'short',
+                  year: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })
+              : '—'
+        },
+        { label: 'Message / Remarks', key: 'message' }
+      ]
+
+      const dateStr = new Date().toISOString().slice(0, 10)
+      const baseFilename = `Share_Enquiries_${selectedStatus}_${dateStr}`
+
+      if (format === 'excel') {
+        exportToExcel(`${baseFilename}.xls`, columns, dataset, 'Share Enquiries')
+      } else {
+        exportToCsv(`${baseFilename}.csv`, columns, dataset)
+      }
+
+      setFlash(`Successfully exported ${dataset.length} enquiry record(s) (${format.toUpperCase()})`)
+    } catch (err) {
+      console.error('Export error:', err)
+      setFlash('Export failed. Please try again.')
     }
-
-    const columns = [
-      { label: 'Company', key: 'companyName' },
-      { label: 'Customer Name', key: 'name' },
-      { label: 'Phone', key: 'phone' },
-      { label: 'Email', key: 'email' },
-      { label: 'Quantity', key: 'quantity' },
-      { label: 'Status', key: 'status' },
-      {
-        label: 'Date',
-        accessor: (row) =>
-          new Date(row.createdAt).toLocaleDateString('en-IN', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-          }),
-      },
-      { label: 'Message / Remarks', key: 'message' },
-    ]
-
-    const filename = `Share_Enquiries_${selectedStatus}_${new Date().toISOString().slice(0, 10)}.csv`
-    exportToCsv(filename, columns, enquiries)
-    setFlash(`Exported ${enquiries.length} enquiry record(s) (${format.toUpperCase()})`)
   }
 
   return (
@@ -226,24 +254,20 @@ const AdminEnquiries = () => {
         <div>
           <h1>Share Enquiries</h1>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '0.65rem', alignItems: 'center' }}>
           <button
             type="button"
             className="secondary-btn"
-            style={{ fontSize: '0.85rem', padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
             onClick={() => handleExport('csv')}
-            title="Download CSV file for current view"
           >
-            <span>📥</span> Export CSV
+            Export CSV
           </button>
           <button
             type="button"
             className="secondary-btn"
-            style={{ fontSize: '0.85rem', padding: '0.45rem 0.85rem', display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}
             onClick={() => handleExport('excel')}
-            title="Download Excel-compatible file"
           >
-            <span>📊</span> Export Excel
+            Export Excel
           </button>
         </div>
       </div>
