@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import api from '../services/api'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import EnquireButton from '../components/common/EnquireButton'
@@ -176,7 +176,6 @@ const TrustSection = () => {
 }
 
 const Home = () => {
-  const navigate = useNavigate()
   const [companies, setCompanies] = useState([])
   const [loading, setLoading] = useState(true)
   const [faqOpen, setFaqOpen] = useState(-1)
@@ -317,20 +316,7 @@ const Home = () => {
                   >
                     <div className="home-marquee-card-top">
                       <h3 className="home-marquee-card-name">{c.name}</h3>
-                      {c.sector && (
-                        <span
-                          className="home-marquee-card-sector"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            e.stopPropagation()
-                            navigate(`/catalog?sector=${encodeURIComponent(c.sector)}`)
-                          }}
-                          style={{ cursor: 'pointer' }}
-                          title={`Browse all ${c.sector} shares on catalog`}
-                        >
-                          {c.sector}
-                        </span>
-                      )}
+                      {c.sector && <span className="home-marquee-card-sector">{c.sector}</span>}
                     </div>
                     <div className="home-marquee-card-mid">
                       <span className="home-marquee-card-price-label">Indicative Price</span>
@@ -496,20 +482,7 @@ const Home = () => {
                       </div>
                       <div className="home-trending-card-title-wrap">
                         <h3 className="home-trending-card-name" title={c.name}>{c.name}</h3>
-                        {c.sector && (
-                          <span
-                            className="home-trending-card-sector"
-                            onClick={(e) => {
-                              e.preventDefault()
-                              e.stopPropagation()
-                              navigate(`/catalog?sector=${encodeURIComponent(c.sector)}`)
-                            }}
-                            style={{ cursor: 'pointer' }}
-                            title={`Browse all ${c.sector} shares on catalog`}
-                          >
-                            {c.sector}
-                          </span>
-                        )}
+                        {c.sector && <span className="home-trending-card-sector">{c.sector}</span>}
                       </div>
                     </div>
 
