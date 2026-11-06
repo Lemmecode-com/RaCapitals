@@ -1,0 +1,11 @@
+{
+  "timestamp": "2026-11-06T10:42:43.231Z",
+  "totalCompanies": 0,
+  "metrics": {
+    "missingCount": 0,
+    "shortCount": 0,
+    "needsStandardisationCount": 0,
+    "wellFormedCount": 0
+  },
+  "flaggedRecords": []
+}

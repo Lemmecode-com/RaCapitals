@@ -6,6 +6,7 @@
     "start": "node server.js",
     "dev": "nodemon server.js",
     "build": "node --check server.js",
+    "audit:descriptions": "node auditDescriptions.js",
     "test": "node --experimental-vm-modules node_modules/.bin/jest --forceExit"
   },
   "jest": {
