@@ -103,3 +103,4 @@ describe('Company API Limit & Query Handling (Issue #10)', () => {
     expect(mockMongooseQuery.limit).toHaveBeenCalledWith(5)
   })
 })
+

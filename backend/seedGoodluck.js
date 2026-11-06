@@ -88,3 +88,4 @@ const seedGoodluck = async () => {
 }
 
 seedGoodluck()
+

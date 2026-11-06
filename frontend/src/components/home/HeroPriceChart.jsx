@@ -20,13 +20,17 @@ export default function HeroPriceChart({ initialCompany = null }) {
     const fetchTargetCompany = async () => {
       try {
         setLoading(true)
-        // Fetch all active companies to locate Goodluck Defence or premier featured listing
-        const compRes = await api.get('/companies', { params: { limit: 100 } })
-        const list = Array.isArray(compRes.data) ? compRes.data : []
-
-        // Prioritize Goodluck Defence, then company with most records, or first available
-        const goodluck = list.find((c) => /goodluck/i.test(c.name))
-        const chosen = goodluck || list[0] || initialCompany
+        // Targeted lookup: search specifically for Goodluck Defence, or fetch 1 premier featured share
+        let chosen = initialCompany
+        const compRes = await api.get('/companies', { params: { search: 'Goodluck', limit: 1 } })
+        if (Array.isArray(compRes.data) && compRes.data.length > 0) {
+          chosen = compRes.data[0]
+        } else {
+          const fallbackRes = await api.get('/companies', { params: { limit: 1 } })
+          if (Array.isArray(fallbackRes.data) && fallbackRes.data.length > 0) {
+            chosen = fallbackRes.data[0]
+          }
+        }
 
         if (!cancelled && chosen) {
           setCompany(chosen)
@@ -342,3 +346,4 @@ export default function HeroPriceChart({ initialCompany = null }) {
     </div>
   )
 }
+
