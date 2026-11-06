@@ -210,7 +210,7 @@ const Home = () => {
         const [drhpRes, eventsRes, blogsRes] = await Promise.all([
           api.get('/companies/drhp-filed'),
           api.get('/events'),
-          api.get('/blogs', { params: { limit: 3 } })
+          api.get('/blogs', { params: { limit: 4 } })
         ])
         if (!cancelled) {
           setDrhpCompanies(drhpRes.data || [])
@@ -604,7 +604,7 @@ const Home = () => {
               <Link to="/insights" className="home-marquee-cta">View all insights →</Link>
             </div>
             <div className="home-insights-grid">
-              {blogs.map((blog) => {
+              {blogs.slice(0, 4).map((blog) => {
                 const blogKey = blog._id || blog.id || blog.slug
                 return (
                   <article key={blogKey} className="home-insight-card">
