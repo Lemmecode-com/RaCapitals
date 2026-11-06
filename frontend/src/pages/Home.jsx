@@ -560,14 +560,20 @@ const Home = () => {
 
         <section className="home-events-section" aria-labelledby="events-heading">
           <div className="home-section-header">
-            <h2 id="events-heading" className="home-section-title">Events</h2>
-            <Link to="/events" className="home-marquee-cta">View all →</Link>
+            <div>
+              <p className="home-eyebrow">CORPORATE ACTIONS</p>
+              <h2 id="events-heading" className="home-section-title">Events</h2>
+              <p className="home-section-sub">
+                Latest DRHP filings, leadership changes, and corporate milestones.
+              </p>
+            </div>
+            <Link to="/events" className="home-marquee-cta">View all events →</Link>
           </div>
           {events.length === 0 ? (
             <div className="chart-empty">No events have been published yet.</div>
           ) : (
             <div className="home-events-list">
-              {events.slice(0, 5).map((ev) => (
+              {events.slice(0, 8).map((ev) => (
                 <div className="home-event-card" key={ev._id}>
                   <div className="home-event-card-head">
                     <span className={`event-tag ${eventTypeClass(ev.eventType)}`}>{ev.eventType}</span>
@@ -576,9 +582,11 @@ const Home = () => {
                   <h3 className="home-event-title">{ev.title}</h3>
                   {ev.description && <p className="home-event-desc">{ev.description}</p>}
                   {ev.company && (
-                    <p className="home-event-company">
-                      Company: <Link to={`/company/${ev.company._id}`}>{ev.company.name}</Link>
-                    </p>
+                    <div className="home-event-company">
+                      <Link to={`/company/${ev.company._id}`}>
+                        🏢 {ev.company.name}
+                      </Link>
+                    </div>
                   )}
                 </div>
               ))}

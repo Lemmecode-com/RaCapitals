@@ -7603,51 +7603,54 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ============================================================
-   Events Section Styles
+   Events Section Styles (Homepage)
    ============================================================ */
 .home-events-section {
-  padding: 4.5rem 0;
+  padding: 3rem 0;
   max-width: 1180px;
   margin: 0 auto;
 }
 
-.home-events-list, .events-timeline {
+.home-events-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.15rem;
+  margin-top: 1.25rem;
 }
 
-.home-event-card, .event-card {
+.home-event-card {
   background: #ffffff;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
-  padding: 1.5rem;
+  border-radius: 10px;
+  padding: 1rem 1.15rem;
   display: flex;
   flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+  gap: 0.45rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+  min-height: 165px;
 }
 
-.home-event-card:hover, .event-card:hover {
+.home-event-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.08);
+  box-shadow: 0 8px 20px -4px rgba(37, 99, 235, 0.1);
   border-color: #c7d4fc;
 }
 
-.home-event-card-head, .event-card-head {
+.home-event-card-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1rem;
+  gap: 0.5rem;
+  margin-bottom: 0.2rem;
 }
 
 .event-tag {
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  padding: 0.2rem 0.6rem;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
   border-radius: 999px;
 }
 
@@ -7657,42 +7660,60 @@ h1, h2, h3, h4, h5, h6 {
 .event-tag-other { background: #f3f4f6; color: #374151; }
 
 .event-date {
-  font-size: 0.85rem;
+  font-size: 0.74rem;
   color: #6b7280;
   font-weight: 500;
 }
 
-.home-event-title, .event-title {
-  font-family: 'Playfair Display', Georgia, serif;
-  font-size: 1.2rem;
+.home-event-title {
+  font-family: inherit;
+  font-size: 0.92rem;
   font-weight: 600;
   color: #111827;
-  margin: 0 0 0.25rem 0;
+  margin: 0;
+  line-height: 1.35;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.home-event-desc, .event-desc {
-  font-size: 0.95rem;
-  color: #4b5563;
-  margin: 0 0 0.5rem 0;
-  line-height: 1.6;
+.home-event-desc {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin: 0;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.home-event-company, .event-company {
-  font-size: 0.9rem;
+.home-event-company {
+  font-size: 0.78rem;
   color: #6b7280;
-  margin: auto 0 0 0;
-  padding-top: 1rem;
-  border-top: 1px solid #f3f4f6;
+  margin-top: auto;
+  padding-top: 0.5rem;
+  border-top: 1px dashed #f1f5f9;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
-.home-event-company a, .event-company a {
+.home-event-company a {
   color: #2563eb;
   text-decoration: none;
   font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.home-event-company a:hover, .event-company a:hover {
+.home-event-company a:hover {
   color: #1d4ed8;
+  text-decoration: underline;
 }
 
 /* ============================================================
