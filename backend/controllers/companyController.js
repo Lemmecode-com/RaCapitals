@@ -34,7 +34,7 @@ const attachStatsBatch = async (companies) =>
 
 export const getAllCompanies = async (req, res) => {
   try {
-    const { sector, search } = req.query
+    const { sector, search, limit, page } = req.query
     const query = { isActive: true }
 
     if (sector) {
@@ -45,7 +45,18 @@ export const getAllCompanies = async (req, res) => {
       query.name = { $regex: search, $options: 'i' }
     }
 
-    const companies = await Company.find(query).lean()
+    let mongooseQuery = Company.find(query).sort({ createdAt: -1 })
+
+    const parsedLimit = parseInt(limit, 10)
+    if (!isNaN(parsedLimit) && parsedLimit > 0) {
+      const parsedPage = parseInt(page, 10) || 1
+      if (parsedPage > 1) {
+        mongooseQuery = mongooseQuery.skip((parsedPage - 1) * parsedLimit)
+      }
+      mongooseQuery = mongooseQuery.limit(parsedLimit)
+    }
+
+    const companies = await mongooseQuery.lean()
     const companiesWithStats = await attachStatsBatch(companies)
 
     res.status(200).json(companiesWithStats)
@@ -151,7 +162,7 @@ export const uploadLogo = async (req, res) => {
 
 export const getAllCompaniesAdmin = async (req, res) => {
   try {
-    const { sector, search } = req.query
+    const { sector, search, limit, page } = req.query
     const query = {}
 
     if (sector) {
@@ -162,7 +173,18 @@ export const getAllCompaniesAdmin = async (req, res) => {
       query.name = { $regex: search, $options: 'i' }
     }
 
-    const companies = await Company.find(query).lean()
+    let mongooseQuery = Company.find(query).sort({ createdAt: -1 })
+
+    const parsedLimit = parseInt(limit, 10)
+    if (!isNaN(parsedLimit) && parsedLimit > 0) {
+      const parsedPage = parseInt(page, 10) || 1
+      if (parsedPage > 1) {
+        mongooseQuery = mongooseQuery.skip((parsedPage - 1) * parsedLimit)
+      }
+      mongooseQuery = mongooseQuery.limit(parsedLimit)
+    }
+
+    const companies = await mongooseQuery.lean()
 
     const companiesWithStats = await attachStatsBatch(companies)
 
