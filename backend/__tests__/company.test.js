@@ -102,5 +102,45 @@ describe('Company API Limit & Query Handling (Issue #10)', () => {
     expect(mockMongooseQuery.skip).toHaveBeenCalledWith(5)
     expect(mockMongooseQuery.limit).toHaveBeenCalledWith(5)
   })
+
+  it('filters by case-insensitive partial regex for sector (Issue #9)', async () => {
+    const mockCompanies = [{ _id: 'comp-energy', name: 'Clean Energy Power Ltd', sector: 'Energy & Power', isActive: true }]
+
+    const mockMongooseQuery = {
+      sort: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      lean: jest.fn().mockResolvedValue(mockCompanies)
+    }
+
+    mockFind.mockReturnValue(mockMongooseQuery)
+
+    const res = await request(app).get('/api/companies?sector=Energy')
+
+    expect(res.status).toBe(200)
+    expect(mockFind).toHaveBeenCalledWith(expect.objectContaining({
+      isActive: true,
+      sector: { $regex: 'Energy', $options: 'i' }
+    }))
+    expect(res.body).toHaveLength(1)
+  })
+
+  it('does not filter sector when sector=All or empty (Issue #9)', async () => {
+    const mockCompanies = [{ _id: 'comp-all', name: 'General Ltd', isActive: true }]
+
+    const mockMongooseQuery = {
+      sort: jest.fn().mockReturnThis(),
+      skip: jest.fn().mockReturnThis(),
+      limit: jest.fn().mockReturnThis(),
+      lean: jest.fn().mockResolvedValue(mockCompanies)
+    }
+
+    mockFind.mockReturnValue(mockMongooseQuery)
+
+    const res = await request(app).get('/api/companies?sector=All')
+
+    expect(res.status).toBe(200)
+    expect(mockFind).toHaveBeenCalledWith({ isActive: true })
+  })
 })
 

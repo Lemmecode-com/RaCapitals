@@ -32,17 +32,19 @@ const attachStats = async (company) => {
 const attachStatsBatch = async (companies) =>
   Promise.all(companies.map(attachStats))
 
+const escapeRegex = (string) => String(string || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
 export const getAllCompanies = async (req, res) => {
   try {
     const { sector, search, limit, page } = req.query
     const query = { isActive: true }
 
-    if (sector) {
-      query.sector = sector
+    if (sector && sector.trim() && sector.toLowerCase() !== 'all') {
+      query.sector = { $regex: escapeRegex(sector.trim()), $options: 'i' }
     }
 
-    if (search) {
-      query.name = { $regex: search, $options: 'i' }
+    if (search && search.trim()) {
+      query.name = { $regex: escapeRegex(search.trim()), $options: 'i' }
     }
 
     let mongooseQuery = Company.find(query).sort({ createdAt: -1 })
@@ -165,12 +167,12 @@ export const getAllCompaniesAdmin = async (req, res) => {
     const { sector, search, limit, page } = req.query
     const query = {}
 
-    if (sector) {
-      query.sector = sector
+    if (sector && sector.trim() && sector.toLowerCase() !== 'all') {
+      query.sector = { $regex: escapeRegex(sector.trim()), $options: 'i' }
     }
 
-    if (search) {
-      query.name = { $regex: search, $options: 'i' }
+    if (search && search.trim()) {
+      query.name = { $regex: escapeRegex(search.trim()), $options: 'i' }
     }
 
     let mongooseQuery = Company.find(query).sort({ createdAt: -1 })

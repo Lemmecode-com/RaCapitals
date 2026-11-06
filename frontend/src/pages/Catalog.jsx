@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import EnquireButton from '../components/common/EnquireButton'
@@ -11,10 +11,14 @@ import { formatINR } from '../utils/format'
 const SECTORS = ['All', 'Fintech', 'Energy', 'Logistics', 'Consumer', 'Healthcare']
 
 const Catalog = () => {
+  const [searchParams, setSearchParams] = useSearchParams()
+  const initialSector = searchParams.get('sector') || 'All'
+  const initialSearch = searchParams.get('search') || ''
+
   const [companies, setCompanies] = useState([])
   const [loading, setLoading] = useState(true)
-  const [search, setSearch] = useState('')
-  const [sector, setSector] = useState('All')
+  const [search, setSearch] = useState(initialSearch)
+  const [sector, setSector] = useState(initialSector)
   const navigate = useNavigate()
 
   const fetchCompanies = async (overrides = {}) => {
@@ -35,17 +39,31 @@ const Catalog = () => {
   }
 
   useEffect(() => {
-    fetchCompanies()
-  }, [])
+    fetchCompanies({ sector: initialSector, search: initialSearch })
+  }, [initialSector, initialSearch])
 
   const handleSectorClick = (next) => {
     setSector(next)
+    const newParams = new URLSearchParams(searchParams)
+    if (next && next !== 'All') {
+      newParams.set('sector', next)
+    } else {
+      newParams.delete('sector')
+    }
+    setSearchParams(newParams)
     fetchCompanies({ sector: next })
   }
 
   const handleSearchChange = (e) => {
     const value = e.target.value
     setSearch(value)
+    const newParams = new URLSearchParams(searchParams)
+    if (value && value.trim()) {
+      newParams.set('search', value.trim())
+    } else {
+      newParams.delete('search')
+    }
+    setSearchParams(newParams)
     fetchCompanies({ search: value })
   }
 
