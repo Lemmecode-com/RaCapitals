@@ -220,8 +220,8 @@ const Home = () => {
         const [topSellingRes, drhpRes, eventsRes, blogsRes] = await Promise.all([
           api.get('/companies/top-selling'),
           api.get('/companies/drhp-filed', { params: { limit: 9 } }),
-          api.get('/events'),
-          api.get('/blogs', { params: { limit: 4 } })
+          api.get('/events', { params: { limit: 9 } }),
+          api.get('/blogs', { params: { limit: 9 } })
         ])
         if (!cancelled) {
           setTopSellingCompanies(topSellingRes.data || [])
@@ -554,13 +554,14 @@ const Home = () => {
           </div>
         </section>
 
-        <section className="home-events-section" aria-labelledby="events-heading">
+        {/* Issue #6: Events 3x3 Grid (9 Items) */}
+        <section className="home-showcase-section home-events-section" aria-labelledby="events-heading">
           <div className="home-section-header">
             <div>
               <p className="home-eyebrow">CORPORATE ACTIONS</p>
-              <h2 id="events-heading" className="home-section-title">Events</h2>
+              <h2 id="events-heading" className="home-section-title">Events & Filings</h2>
               <p className="home-section-sub">
-                Latest DRHP filings, leadership changes, and corporate milestones.
+                Latest DRHP submissions, regulatory milestones, leadership changes, and capital expansions.
               </p>
             </div>
             <Link to="/events" className="home-marquee-cta">View all events →</Link>
@@ -568,39 +569,46 @@ const Home = () => {
           {events.length === 0 ? (
             <div className="chart-empty">No events have been published yet.</div>
           ) : (
-            <div className="home-events-list">
-              {events.slice(0, 8).map((ev) => (
-                <div className="home-event-card" key={ev._id}>
+            <div className="home-events-grid-3x3">
+              {events.slice(0, 9).map((ev) => (
+                <article className="home-event-card" key={ev._id}>
                   <div className="home-event-card-head">
                     <span className={`event-tag ${eventTypeClass(ev.eventType)}`}>{ev.eventType}</span>
                     <span className="event-date">{formatShortDate(ev.eventDate)}</span>
                   </div>
                   <h3 className="home-event-title">{ev.title}</h3>
                   {ev.description && <p className="home-event-desc">{ev.description}</p>}
-                  {ev.company && (
-                    <div className="home-event-company">
-                      <Link to={`/company/${ev.company._id}`}>
+                  <div className="home-event-footer">
+                    {ev.company ? (
+                      <Link to={`/company/${ev.company._id}`} className="home-event-company-link" title={ev.company.name}>
                         🏢 {ev.company.name}
                       </Link>
-                    </div>
-                  )}
-                </div>
+                    ) : (
+                      <span className="home-event-company-link">🏢 Corporate Action</span>
+                    )}
+                    <Link to="/events" className="home-event-view-link">Details →</Link>
+                  </div>
+                </article>
               ))}
             </div>
           )}
         </section>
 
+        {/* Issue #6: Market Insights 3x3 Grid (9 Items) */}
         {blogs.length > 0 && (
-          <section className="home-insights-section" aria-labelledby="insights-heading">
+          <section className="home-showcase-section home-insights-section" aria-labelledby="insights-heading">
             <div className="home-section-header">
               <div>
                 <p className="home-eyebrow">RESEARCH & ANALYSIS</p>
                 <h2 id="insights-heading" className="home-section-title">Market Insights</h2>
+                <p className="home-section-sub">
+                  In-depth institutional valuation models, pre-IPO unit economics, and unlisted market trends.
+                </p>
               </div>
               <Link to="/insights" className="home-marquee-cta">View all insights →</Link>
             </div>
-            <div className="home-insights-grid">
-              {blogs.slice(0, 4).map((blog) => {
+            <div className="home-insights-grid-3x3">
+              {blogs.slice(0, 9).map((blog) => {
                 const blogKey = blog._id || blog.id || blog.slug
                 return (
                   <article key={blogKey} className="home-insight-card">

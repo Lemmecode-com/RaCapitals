@@ -12960,3 +12960,172 @@ h1, h2, h3, h4, h5, h6 {
   background: #1e293b;
   border-color: #334155;
 }
+
+/* ============================================================
+   Issue #6: Events & Market Insights 3x3 Grids (9 items each)
+   ============================================================ */
+.home-events-grid-3x3,
+.home-insights-grid-3x3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.5rem;
+}
+
+.home-event-card,
+.home-insight-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1.35rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.85rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+  min-height: 200px;
+}
+
+.home-event-card:hover,
+.home-insight-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.12), 0 4px 8px -2px rgba(37, 99, 235, 0.06);
+  border-color: #93c5fd;
+}
+
+.home-event-card-head,
+.home-insight-badge-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.15rem;
+}
+
+.home-event-title,
+.home-insight-title {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif !important;
+  font-size: 1.02rem !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  margin: 0 !important;
+  line-height: 1.4 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.home-insight-title a {
+  color: #0f172a !important;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.home-insight-title a:hover {
+  color: #2563eb !important;
+}
+
+.home-event-desc,
+.home-insight-excerpt {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 0.84rem !important;
+  color: #64748b !important;
+  margin: 0 !important;
+  line-height: 1.5 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  flex: 1;
+}
+
+.home-event-footer,
+.home-insight-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  font-size: 0.8rem;
+}
+
+.home-event-company-link {
+  color: #475569;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 65%;
+}
+
+.home-event-company-link:hover {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.home-insight-author {
+  color: #64748b;
+  font-weight: 500;
+  font-size: 0.78rem;
+}
+
+.home-event-view-link,
+.home-insight-link {
+  color: #2563eb;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.home-event-card:hover .home-event-view-link,
+.home-insight-card:hover .home-insight-link {
+  gap: 0.5rem;
+  color: #1d4ed8;
+}
+
+@media (max-width: 1024px) {
+  .home-events-grid-3x3,
+  .home-insights-grid-3x3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-events-grid-3x3,
+  .home-insights-grid-3x3 {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+[data-theme="black"] .home-event-card,
+[data-theme="black"] .home-insight-card {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+[data-theme="black"] .home-event-card:hover,
+[data-theme="black"] .home-insight-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="black"] .home-event-title,
+[data-theme="black"] .home-insight-title,
+[data-theme="black"] .home-insight-title a {
+  color: #f8fafc !important;
+}
+
+[data-theme="black"] .home-event-desc,
+[data-theme="black"] .home-insight-excerpt {
+  color: #94a3b8 !important;
+}
+
+[data-theme="black"] .home-event-footer,
+[data-theme="black"] .home-insight-footer {
+  border-top-color: #1f2937;
+}

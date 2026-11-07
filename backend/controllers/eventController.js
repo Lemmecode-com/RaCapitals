@@ -3,20 +3,25 @@ import Company from '../models/Company.js'
 
 export const getAllEvents = async (req, res) => {
   try {
-    const { companyId } = req.query
+    const { companyId, limit } = req.query
 
     const query = {}
     if (companyId) {
       query.company = companyId
     }
 
-    const events = await Event.find(query)
+    let q = Event.find(query)
       .sort({ eventDate: -1 })
       .populate({
         path: 'company',
         select: '_id name'
       })
-      .lean()
+
+    if (limit && !isNaN(Number(limit))) {
+      q = q.limit(Number(limit))
+    }
+
+    const events = await q.lean()
 
     res.status(200).json(events)
   } catch (error) {

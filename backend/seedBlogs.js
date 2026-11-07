@@ -283,6 +283,75 @@ export const seedBlogsData = [
       <p>If you purchase unlisted shares and hold them through the public listing, your acquisition date remains the original date of off-market purchase! However, when you sell those shares post-listing through the stock exchange (subject to the post-IPO lock-in expiry), the transaction attracts regular Securities Transaction Tax (STT) and transitions to standard listed share tax treatment.</p>
     `,
     relatedSlugs: ['how-unlisted-shares-transferred-demat', 'drhp-filed-companies-what-investors-should-track']
+  },
+  {
+    slug: 'polymatech-semiconductor-fabrication-india-opportunity',
+    title: 'Polymatech & India’s Semiconductor Push: Deep-Dive into Opto-Chip Manufacturing',
+    subtitle: 'Assessing cleanroom capacities, high-power COB packaging, defence supply chains, and private valuation multiples in the domestic chip sector.',
+    category: 'Valuation & Analysis',
+    readTime: '7 min read',
+    publishedDate: new Date('2026-10-22'),
+    author: 'RA Research Desk',
+    authorRole: 'Technology & Hardware Analyst',
+    featured: true,
+    status: 'published',
+    coverImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+    tags: ['Semiconductors', 'Polymatech', 'Hardware', 'Pre-IPO', 'India Fab'],
+    excerpt: 'With PLI capital subsidies and expanding aerospace orders, here is our institutional breakdown of Polymatech’s unit economics, export contracts, and long-term earnings potential.',
+    contentHtml: `
+      <div class="insight-lead">
+        India's semiconductor ambitions are moving rapidly from policy rhetoric to operational cleanrooms. In the unlisted market, Polymatech stands as one of the pioneer entities actively producing opto-semiconductor chips at scale.
+      </div>
+      <h2>1. Fabless vs. Integrated Packaging</h2>
+      <p>Unlike pure fabless players that depend entirely on foreign foundries, Polymatech operates proprietary assembly, testing, marking, and packaging (ATMP) cleanrooms in Tamil Nadu, serving medical, aerospace, and high-intensity industrial lighting clients.</p>
+    `,
+    relatedSlugs: ['swiggy-pre-ipo-valuation-analysis', 'taxation-unlisted-shares-india-stcg-ltcg']
+  },
+  {
+    slug: 'power-exchange-deregulation-hpx-market-coupling',
+    title: 'Power Exchanges & Market Coupling: Opportunity Analysis for Hindustan Power Exchange',
+    subtitle: 'How regulatory market coupling, renewable energy certificates, and real-time electricity contracts are shaping exchange economics.',
+    category: 'Pre-IPO News',
+    readTime: '5 min read',
+    publishedDate: new Date('2026-10-19'),
+    author: 'RA Research Desk',
+    authorRole: 'Energy & Infrastructure Desk',
+    featured: false,
+    status: 'published',
+    coverImage: 'https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?auto=format&fit=crop&w=1200&q=80',
+    tags: ['Energy', 'HPX', 'Power Exchange', 'Infrastructure', 'Regulations'],
+    excerpt: 'Market coupling by CERC will redefine liquidity across Indian power exchanges. Understand how HPX is positioning its spot electricity contracts and cross-border power trading.',
+    contentHtml: `
+      <div class="insight-lead">
+        Electricity in India is transitioning from long-term bilateral Power Purchase Agreements (PPAs) to dynamic spot trading on automated exchange platforms.
+      </div>
+      <h2>1. The Growth of Spot Power Contracts</h2>
+      <p>As green energy penetration climbs, distribution companies (discoms) increasingly balance intermittency through real-time power markets (RTM) and green day-ahead markets (G-DAM).</p>
+    `,
+    relatedSlugs: ['drhp-filed-companies-what-investors-should-track']
+  },
+  {
+    slug: 'renewable-energy-unlisted-leaders-goodluck-green-solar',
+    title: 'Solar & Clean Tech in Unlisted Markets: From EPC to Decentralized Power Generation',
+    subtitle: 'Analyzing balance-sheet strength, order book execution ratios, and valuation benchmarks across pre-IPO clean energy leaders.',
+    category: 'Valuation & Analysis',
+    readTime: '6 min read',
+    publishedDate: new Date('2026-10-16'),
+    author: 'RA Research Desk',
+    authorRole: 'Clean Energy & Utilities Lead',
+    featured: false,
+    status: 'published',
+    coverImage: 'https://images.unsplash.com/photo-1509391365360-2e959784a276?auto=format&fit=crop&w=1200&q=80',
+    tags: ['Solar', 'Renewable Energy', 'Goodluck Green', 'EPC', 'Pre-IPO'],
+    excerpt: 'Commercial and industrial (C&I) rooftop solar has emerged as a high-margin niche in renewable energy. Here is our research note on asset-light EPC execution and recurring revenue models.',
+    contentHtml: `
+      <div class="insight-lead">
+        India’s ambitious 500 GW non-fossil capacity target by 2030 has created unprecedented tailwinds for mid-market solar EPC and clean power infrastructure providers.
+      </div>
+      <h2>1. Corporate ESG & C&I Solar Adoption</h2>
+      <p>Commercial enterprises are rapidly adopting captive solar to curb power tariffs and fulfill zero-carbon mandates, unlocking multi-year project pipelines for agile engineering firms.</p>
+    `,
+    relatedSlugs: ['polymatech-semiconductor-fabrication-india-opportunity']
   }
 ]
 
@@ -307,8 +376,9 @@ export const seedBlogs = async () => {
 // Allow direct execution: `node seedBlogs.js`
 const isDirectExecution = process.argv[1]?.endsWith('seedBlogs.js')
 if (isDirectExecution) {
+  const uri = process.env.MONGO_URI || process.env.MONGODB_URI || 'mongodb://localhost:27017/racapitals'
   mongoose
-    .connect(process.env.MONGO_URI)
+    .connect(uri)
     .then(async () => {
       console.log('MongoDB connected for Blog seeding...')
       const count = await seedBlogs()
