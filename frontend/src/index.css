@@ -207,15 +207,13 @@ a:hover {
 .compliance-ribbon {
   background: var(--surface-2, #f1f5f9);
   color: var(--text-soft, #475569);
-  font-size: 0.77rem;
-  letter-spacing: 0.015em;
-  padding: 0.35rem 1rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.01em;
+  padding: 0.3rem 1rem;
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
-  line-height: 1.45;
+  line-height: 1.4;
   text-align: center;
-  position: relative;
-  overflow: hidden;
-  animation: ribbonSlideDown 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: ribbonSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
 @keyframes ribbonSlideDown {
@@ -230,62 +228,21 @@ a:hover {
 }
 
 .compliance-ribbon-inner {
-  max-width: 1320px;
+  max-width: 1400px;
   margin: 0 auto;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 0.35rem 0.5rem;
+  display: block;
   text-align: center;
 }
 
-/* Pulsing live radar indicator dot */
-.compliance-ribbon-pulse {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 8px;
-  height: 8px;
-  margin-right: 0.2rem;
-  vertical-align: middle;
-  flex-shrink: 0;
-}
-
-.pulse-dot {
+.compliance-ribbon .pulse-dot {
+  display: inline-block;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background-color: var(--brass, #2563eb);
-}
-
-.pulse-ring {
-  position: absolute;
-  inset: -2px;
-  border-radius: 50%;
-  background-color: var(--brass, #2563eb);
-  opacity: 0.6;
-  animation: ribbonPulseRing 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
-}
-
-@keyframes ribbonPulseRing {
-  0% {
-    transform: scale(0.9);
-    opacity: 0.8;
-  }
-  70% {
-    transform: scale(2.2);
-    opacity: 0;
-  }
-  100% {
-    transform: scale(2.4);
-    opacity: 0;
-  }
-}
-
-.compliance-ribbon-text {
-  color: inherit;
+  margin-right: 0.45rem;
+  vertical-align: middle;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.2);
 }
 
 .compliance-ribbon-link {
@@ -293,24 +250,15 @@ a:hover {
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
+  margin-left: 0.4rem;
   white-space: nowrap;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  display: inline-block;
+  transition: opacity 0.15s ease, transform 0.15s ease;
 }
 
 .compliance-ribbon-link:hover {
-  opacity: 0.85;
-}
-
-.ribbon-arrow {
-  display: inline-block;
-  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.compliance-ribbon-link:hover .ribbon-arrow {
-  transform: translateX(4px);
+  opacity: 0.8;
+  transform: translateX(2px);
 }
 
 /* Navbar */
