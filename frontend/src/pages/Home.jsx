@@ -20,6 +20,67 @@ const buildLogoSrc = (logoUrl) => {
 
 const TRENDING_BADGES = ['🔥 Trending', '⚡ High Demand', '📈 Most Active', '⭐ Top Pick']
 
+const CENTRALIZED_FAQS = [
+  {
+    q: 'What are unlisted & pre-IPO shares, and is it legal to buy them in India?',
+    a: 'Yes, completely legal. Unlisted shares are equity shares of companies not yet listed on public exchanges like the NSE or BSE. Transactions occur legally as off-market private equity transfers directly between demat accounts under the Companies Act, 2013 and SEBI (Depositories and Participants) Regulations via CDSL or NSDL.'
+  },
+  {
+    q: 'How does the demat-to-demat settlement process work?',
+    a: (
+      <div>
+        <p>The settlement is 100% digital, dematerialised, and verified:</p>
+        <ul>
+          <li><strong>Enquiry & Terms:</strong> Confirm company, live indicative price, and desired lot size with our relationship team.</li>
+          <li><strong>Documentation:</strong> Provide your Client Master Report (CMR) from your registered DP (Zerodha, Groww, Upstox, ICICI, etc.).</li>
+          <li><strong>Off-Market Demat Credit:</strong> Shares are transferred directly from seller to buyer demat account via CDSL/NSDL off-market DIS execution.</li>
+          <li><strong>Audit Trail Settlement:</strong> Funds are settled directly via verifiable bank-to-bank RTGS/NEFT transfer with full invoice and transaction trail.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
+    q: 'What is the minimum ticket size or lot size to invest?',
+    a: 'Unlike private equity and venture capital funds that mandate multi-crore minimums, unlisted shares on our platform are accessible in manageable lot sizes. Minimum investment typically ranges from ₹25,000 to ₹1,00,000 depending on the specific company, share price, and prevailing lot availability.'
+  },
+  {
+    q: 'How are capital gains taxed on unlisted shares in India?',
+    a: (
+      <div>
+        <p>Under the revised provisions of the Finance Act 2024:</p>
+        <ul>
+          <li><strong>Long-Term Capital Gains (LTCG):</strong> Holding period exceeding 24 months qualifies as LTCG, taxed at a flat 12.5% (without indexation benefits).</li>
+          <li><strong>Short-Term Capital Gains (STCG):</strong> Holding period of 24 months or less qualifies as STCG, where profits are added to your total income and taxed at your applicable income tax slab rate.</li>
+        </ul>
+      </div>
+    )
+  },
+  {
+    q: 'What happens to my unlisted shares once the company lists on NSE/BSE?',
+    a: 'Upon a successful Initial Public Offering (IPO), the same ISIN converts to listed equity on the stock exchange. Under SEBI (ICDR) Regulations, pre-IPO shares held by non-promoter investors are subject to a standard statutory lock-in period of 6 months from the listing date, after which you can freely trade them on public exchanges.'
+  },
+  {
+    q: 'Can I sell my unlisted shares back before the company goes public?',
+    a: 'Yes. You are not forced to wait for an IPO. You can liquidate your holdings anytime in the active secondary unlisted market through off-market transfers to other willing institutional, HNI, or retail buyers at prevailing market-discovered prices.'
+  },
+  {
+    q: 'How are prices discovered in private markets without an exchange order book?',
+    a: 'Indicative prices are derived from actual concluded secondary off-market transactions, institutional block trades, employee stock ownership plan (ESOP) buybacks, recent venture funding rounds, and documented supply-demand depth across private equity desks.'
+  },
+  {
+    q: 'Is Taurus Magnus a stock broker or SEBI-registered exchange?',
+    a: 'No. Taurus Magnus is an independent research, analytics, and price discovery platform. We are not a stock exchange, broker, clearing corporation, or investment adviser. We do not hold client funds or execute exchange trades; all transactions are private bilateral arrangements between independent buyers and sellers.'
+  },
+  {
+    q: 'What documents are required from an investor to complete a purchase?',
+    a: 'You only require standard regulatory KYC documents: a copy of your PAN Card, Aadhar Card (for address verification), and a digitally signed Client Master Report (CMR) issued by your SEBI-registered depository participant confirming your active CDSL/NSDL demat account details.'
+  },
+  {
+    q: 'What key risks should I evaluate before investing in unlisted equity?',
+    a: 'Key considerations include illiquidity risk (no instant public trading screen), potential IPO timeline postponements or cancellations by issuers, regulatory changes, and company performance volatility. Pre-IPO investments are best suited for investors with a medium-to-long term investment horizon of 2 to 5 years.'
+  }
+]
+
 const eventTypeClass = (type) => {
   switch (type) {
     case 'DRHP': return 'event-tag-drhp'
@@ -631,18 +692,17 @@ const Home = () => {
           </section>
         )}
 
+        {/* Issue #7: Centralized Important FAQs Section */}
         <section className="home-faq-section" aria-labelledby="faq-heading">
           <div className="home-faq-header">
-            <p className="home-eyebrow">Need to know</p>
+            <p className="home-eyebrow">KNOWLEDGE BASE</p>
             <h2 id="faq-heading" className="home-section-title">Frequently Asked Questions</h2>
+            <p className="home-section-sub">
+              Everything you need to know about unlisted equity, demat-to-demat settlement, legal standing, taxation, and risks.
+            </p>
           </div>
           <div className="home-faq-grid">
-            {[
-              { q: 'What are unlisted shares?', a: 'Unlisted shares are equity shares of a company that are not listed on a recognised stock exchange (such as NSE or BSE). They are typically held by promoters, early investors, employees, or private equity funds. Transactions occur privately, often through intermediaries, and prices are negotiated rather than discovered on a public order book.' },
-              { q: "Why buy before a company's IPO?", a: 'Investing before an IPO can provide access to companies at earlier growth stages, often at lower valuations than the eventual public offering price. However, it carries higher illiquidity risk, longer holding periods, and less regulatory oversight. Investors should assess their risk tolerance and investment horizon carefully.' },
-              { q: 'How does a purchase actually work?', a: 'Browse the price list, shortlist companies, and tap Enquire on any listing. Our team responds personally on WhatsApp or email within one business day with current availability, lot size, and next steps. Once terms are agreed, shares are transferred via demat-to-demat transfer with full documentation.' },
-              { q: 'Is this SEBI-regulated?', a: 'Taurus Magnus is an information platform for unlisted and pre-IPO shares — not a stock exchange, broker, or investment adviser. We do not execute trades, hold client funds, or offer regulated investment services. All transactions are private, bilateral arrangements between buyers and sellers. Investors should seek independent financial and legal advice before transacting.' },
-            ].map((item, i) => (
+            {CENTRALIZED_FAQS.map((item, i) => (
               <article
                 key={i}
                 className={`home-faq-card${faqOpen === i ? ' home-faq-card--open' : ''}`}
@@ -663,7 +723,7 @@ const Home = () => {
                   </span>
                 </button>
                 <div id={`faq-answer-${i}`} className="home-faq-answer" role="region" aria-hidden={faqOpen !== i}>
-                  <p>{item.a}</p>
+                  {typeof item.a === 'string' ? <p>{item.a}</p> : item.a}
                 </div>
               </article>
             ))}
