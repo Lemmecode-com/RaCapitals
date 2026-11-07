@@ -82,45 +82,61 @@ const TRUST_CARDS = [
   {
     id: 'research',
     title: 'Research-driven',
-    desc: 'Every listing is backed by documented due diligence and direct verification with company management.',
+    desc: 'Every listing is verified with official MCA filings, audited financials, and direct management due diligence.',
     icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
-        <polyline points="9 12 11 14 15 10" />
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+        <polyline points="14 2 14 8 20 8" />
+        <circle cx="11.5" cy="14.5" r="2.5" />
+        <path d="M13.5 16.5L16 19" />
       </svg>
     ),
   },
   {
     id: 'security',
     title: 'Bank-level security',
-    desc: 'Data encrypted in transit and at rest. Demat-to-demat transfers with full audit trails.',
+    desc: 'Demat-to-demat settlement via CDSL/NSDL with end-to-end data encryption and documented audit trails.',
     icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" />
-        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+        <rect x="9" y="11" width="6" height="4" rx="1" />
+        <path d="M10 11V9a2 2 0 0 1 4 0v2" />
       </svg>
     ),
   },
   {
     id: 'ticket',
     title: 'Low ticket size',
-    desc: 'Accessible lot sizes let you build a diversified pre-IPO portfolio without outsized capital.',
+    desc: 'Accessible lot sizes allow retail & HNI investors to build diversified pre-IPO portfolios without large minimums.',
     icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23" />
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="7" width="20" height="14" rx="2" />
+        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+        <circle cx="12" cy="14" r="2" />
+      </svg>
+    ),
+  },
+  {
+    id: 'value',
+    title: 'Transparent pricing',
+    desc: 'Indicative price discovery based on real secondary market trades, with zero hidden markups or brokerage fees.',
+    icon: (
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10" />
+        <path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8" />
+        <path d="M12 6v12" />
       </svg>
     ),
   },
   {
     id: 'personal',
     title: 'Personal follow-up',
-    desc: 'Every enquiry is handled by a person on our team — no ticket queues, no auto-replies.',
+    desc: 'Dedicated private-market relationship managers guide you from enquiry to demat credit — no bots or queues.',
     icon: (
-      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
         <circle cx="9" cy="7" r="4" />
-        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
         <path d="M16 3.13a4 4 0 0 1 0 7.75" />
       </svg>
     ),
@@ -143,17 +159,10 @@ const TrustCard = ({ card, index }) => {
 }
 
 const TrustSection = () => {
-  const [visible, setVisible] = useState(false)
+  const [visible, setVisible] = useState(true)
   const ref = useRef(null)
   useEffect(() => {
-    const el = ref.current
-    if (!el) return
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect() } },
-      { threshold: 0.15 }
-    )
-    obs.observe(el)
-    return () => obs.disconnect()
+    setVisible(true)
   }, [])
   return (
     <section
