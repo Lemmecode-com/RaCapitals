@@ -20,7 +20,8 @@ const CompanySchema = new mongoose.Schema({
   outstandingShares: { type: Number },
   isActive: { type: Boolean, default: true },
   drhpFiled: { type: Boolean, default: false },
-  drhpFiledDate: { type: Date, default: null }
+  drhpFiledDate: { type: Date, default: null },
+  isHeroFeatured: { type: Boolean, default: false }
 }, { timestamps: true })
 
 export default mongoose.model('Company', CompanySchema)

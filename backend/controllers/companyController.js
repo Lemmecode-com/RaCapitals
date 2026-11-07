@@ -327,3 +327,52 @@ export const bulkImportCompanies = async (req, res) => {
     return res.status(500).json({ message: 'Error bulk importing companies', error: error.message })
   }
 }
+
+export const getFeaturedCompany = async (req, res) => {
+  try {
+    // 1. Look for explicitly featured company
+    let company = await Company.findOne({ isHeroFeatured: true, isActive: true }).lean()
+
+    // 2. Fallback to Goodluck Defence if none set
+    if (!company) {
+      company = await Company.findOne({ name: { $regex: 'Goodluck', $options: 'i' }, isActive: true }).lean()
+    }
+
+    // 3. Fallback to premier active company with highest market cap
+    if (!company) {
+      company = await Company.findOne({ isActive: true }).sort({ marketCap: -1 }).lean()
+    }
+
+    if (!company) {
+      return res.status(404).json({ message: 'No featured company found' })
+    }
+
+    const companyWithStats = await attachStats(company)
+    res.json(companyWithStats)
+  } catch (err) {
+    res.status(500).json({ message: 'Error retrieving featured company', error: err.message })
+  }
+}
+
+export const updateFeaturedCompany = async (req, res) => {
+  try {
+    const { id } = req.params
+
+    const target = await Company.findById(id)
+    if (!target) {
+      return res.status(404).json({ message: 'Company not found' })
+    }
+
+    // Unfeature all other companies
+    await Company.updateMany({}, { $set: { isHeroFeatured: false } })
+
+    // Feature target company
+    target.isHeroFeatured = true
+    await target.save()
+
+    const withStats = await attachStats(target.toObject())
+    res.json({ message: `Successfully set ${target.name} as Homepage Hero Stock`, company: withStats })
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating featured hero company', error: err.message })
+  }
+}

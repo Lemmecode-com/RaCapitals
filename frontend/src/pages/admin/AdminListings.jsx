@@ -288,11 +288,30 @@ const AdminListings = () => {
     return () => clearTimeout(t)
   }, [flash])
 
+  const handleSetHeroFeatured = async (company) => {
+    try {
+      await api.patch(`/companies/${company._id}/featured`)
+      setFlash(`Set "${company.name}" as Homepage Hero Stock`)
+      await fetchCompanies()
+    } catch (err) {
+      setFlash(err?.response?.data?.message || 'Failed to update hero stock')
+    }
+  }
+
   const renderActionsForCard = (c) => (
     <div className="actions-cell">
       <Link to={`/admin/companies/${c._id}`} className="row-action-btn">View</Link>
       <button type="button" className="row-action-btn" onClick={() => openEdit(c)}>Edit</button>
       <button type="button" className="row-action-btn" onClick={() => openPriceModal(c)}>Update Price</button>
+      <button
+        type="button"
+        className="row-action-btn"
+        onClick={() => handleSetHeroFeatured(c)}
+        title="Set as Homepage Hero Stock"
+        style={c.isHeroFeatured ? { color: 'var(--brass, #2563eb)', fontWeight: 600 } : {}}
+      >
+        {c.isHeroFeatured ? '⭐ Hero Stock' : 'Set as Hero'}
+      </button>
       <button type="button" className="row-action-btn" onClick={() => toggleActive(c)}>
         {c.isActive ? 'Deactivate' : 'Activate'}
       </button>
@@ -344,6 +363,34 @@ const AdminListings = () => {
       </div>
 
       {flash && <div className="flash">{flash}</div>}
+
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0.75rem 1rem', background: 'var(--surface-2, #f8fafc)', borderRadius: '8px', border: '1px solid var(--border, #e2e8f0)', marginBottom: '1.25rem', flexWrap: 'wrap', gap: '0.75rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+          <span style={{ fontSize: '1.25rem' }}>⭐</span>
+          <div>
+            <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>Homepage Hero Featured Stock:</div>
+            <div style={{ fontSize: '0.8rem', color: 'var(--brass, #2563eb)', fontWeight: 600 }}>
+              {companies.find(c => c.isHeroFeatured)?.name || 'Goodluck Defence and Aerospace Ltd (Default)'}
+            </div>
+          </div>
+        </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <select
+            className="form-input"
+            style={{ width: 'auto', minWidth: '240px', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}
+            value={companies.find(c => c.isHeroFeatured)?._id || ''}
+            onChange={(e) => {
+              const chosen = companies.find(c => c._id === e.target.value)
+              if (chosen) handleSetHeroFeatured(chosen)
+            }}
+          >
+            <option value="" disabled>Change featured stock…</option>
+            {companies.filter(c => c.isActive).map(c => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+      </div>
 
       <section className="admin-controls" style={{ marginBottom: '1.5rem' }}>
         <input
@@ -402,7 +449,27 @@ const AdminListings = () => {
                         )}
                       </div>
                     </td>
-                    <td style={{ padding: '0.6rem 0.75rem', fontWeight: 600, fontSize: '0.9rem', whiteSpace: 'nowrap' }}>{c.name}</td>
+                    <td style={{ padding: '0.6rem 0.75rem', fontWeight: 600, fontSize: '0.9rem', whiteSpace: 'nowrap' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <span>{c.name}</span>
+                        {c.isHeroFeatured && (
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              padding: '0.1rem 0.45rem',
+                              borderRadius: '4px',
+                              background: 'rgba(37, 99, 235, 0.12)',
+                              color: '#2563eb',
+                              fontWeight: 700,
+                              border: '1px solid rgba(37, 99, 235, 0.3)'
+                            }}
+                            title="Currently featured on Homepage Hero"
+                          >
+                            ⭐ Hero
+                          </span>
+                        )}
+                      </div>
+                    </td>
                     <td style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap' }}>{c.sector || '—'}</td>
                     <td className="mono" style={{ padding: '0.6rem 0.75rem', fontWeight: 600, whiteSpace: 'nowrap' }}>
                       {c.latestPrice == null ? (
