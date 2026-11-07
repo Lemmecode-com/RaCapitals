@@ -213,12 +213,79 @@ a:hover {
   border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
   line-height: 1.45;
   text-align: center;
+  position: relative;
+  overflow: hidden;
+  animation: ribbonSlideDown 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes ribbonSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .compliance-ribbon-inner {
   max-width: 1320px;
   margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
   text-align: center;
+}
+
+/* Pulsing live radar indicator dot */
+.compliance-ribbon-pulse {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 8px;
+  height: 8px;
+  margin-right: 0.2rem;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--brass, #2563eb);
+}
+
+.pulse-ring {
+  position: absolute;
+  inset: -2px;
+  border-radius: 50%;
+  background-color: var(--brass, #2563eb);
+  opacity: 0.6;
+  animation: ribbonPulseRing 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes ribbonPulseRing {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  70% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+.compliance-ribbon-text {
+  color: inherit;
 }
 
 .compliance-ribbon-link {
@@ -226,13 +293,24 @@ a:hover {
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
-  margin-left: 0.25rem;
   white-space: nowrap;
-  transition: opacity 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  transition: opacity 0.15s ease, color 0.15s ease;
 }
 
 .compliance-ribbon-link:hover {
-  opacity: 0.8;
+  opacity: 0.85;
+}
+
+.ribbon-arrow {
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.compliance-ribbon-link:hover .ribbon-arrow {
+  transform: translateX(4px);
 }
 
 /* Navbar */
