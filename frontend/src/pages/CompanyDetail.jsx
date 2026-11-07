@@ -11,6 +11,10 @@ import CompanyFundamentalsGrid from '../components/detail/CompanyFundamentalsGri
 import CompanyFinancialsTable from '../components/detail/CompanyFinancialsTable'
 import CompanyShareholding from '../components/detail/CompanyShareholding'
 import CompanyFundingRounds from '../components/detail/CompanyFundingRounds'
+import CompanyManagement from '../components/detail/CompanyManagement'
+import CompanyEvents from '../components/detail/CompanyEvents'
+import CompanyReports from '../components/detail/CompanyReports'
+import CompanyInsights from '../components/detail/CompanyInsights'
 import CompanyFaqAccordion from '../components/detail/CompanyFaqAccordion'
 import { apiBaseWithoutApi, formatINR, formatShortDate } from '../utils/format'
 
@@ -21,10 +25,14 @@ const buildLogoSrc = (logoUrl) => {
 }
 
 const TABS = [
-  { id: 'fundamentals', label: 'Key Fundamentals' },
+  { id: 'fundamentals', label: 'Fundamentals' },
   { id: 'financials', label: 'Financial Statements' },
   { id: 'shareholding', label: 'Shareholding Pattern' },
-  { id: 'funding', label: 'Funding & Valuation' },
+  { id: 'funding', label: 'Fundraising History' },
+  { id: 'management', label: 'Management & Board' },
+  { id: 'events', label: 'Corporate Events' },
+  { id: 'reports', label: 'Annual & Regulatory Reports' },
+  { id: 'insights', label: 'Company Insights' },
   { id: 'faqs', label: 'Due Diligence & FAQs' }
 ]
 
@@ -173,6 +181,30 @@ const CompanyDetail = () => {
             {activeTab === 'funding' && (
               <div className="detail-tab-pane">
                 <CompanyFundingRounds companyName={company.name} />
+              </div>
+            )}
+
+            {activeTab === 'management' && (
+              <div className="detail-tab-pane">
+                <CompanyManagement company={company} />
+              </div>
+            )}
+
+            {activeTab === 'events' && (
+              <div className="detail-tab-pane">
+                <CompanyEvents company={company} />
+              </div>
+            )}
+
+            {activeTab === 'reports' && (
+              <div className="detail-tab-pane">
+                <CompanyReports company={company} />
+              </div>
+            )}
+
+            {activeTab === 'insights' && (
+              <div className="detail-tab-pane">
+                <CompanyInsights company={company} latestPrice={latestPrice} />
               </div>
             )}
 
