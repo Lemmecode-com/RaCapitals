@@ -34,10 +34,6 @@ const Terms = () => {
           </div>
         </header>
 
-        <div className="legal-draft-banner" role="note">
-          <strong>Draft: pending legal review.</strong> This document is a working draft and has not yet been approved by our legal counsel. Highlighted fields are still to be completed.
-        </div>
-
         <div className="legal-intro">
           <p>
             Please read these Terms of Use carefully before using this website. They explain what Taurus Magnus is, what it is not, and the rules that apply when you browse our price list, read our insights or send us an enquiry about an unlisted or pre-IPO share.
