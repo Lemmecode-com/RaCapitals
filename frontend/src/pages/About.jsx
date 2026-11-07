@@ -17,8 +17,8 @@ const ABOUT_SECTIONS = [
     body: 'Browse the price list, shortlist opportunities, and tap Enquire. Our team responds on WhatsApp or email within one business day with current availability, lot size, and next steps. Once confirmed, shares move via demat-to-demat transfer.'
   },
   {
-    title: 'Our track record',
-    body: 'Five years of offline track record in unlisted and pre-IPO equity. We have helped hundreds of investors access companies before they list, with a focus on risk-aware allocation and clear communication.'
+    title: 'Our philosophy',
+    body: 'Built on the principles of transparency and rigorous due diligence, we demystify private equity. We empower investors with verified fundamentals, structured corporate reports, and indicative pricing before companies go public.'
   }
 ]
 
@@ -34,8 +34,8 @@ const About = () => {
           <p className="eyebrow">About us</p>
           <h1>Research-driven access to unlisted and pre-IPO equity</h1>
           <p className="muted">
-            Taurus Magnus has spent the last five years helping investors access unlisted and pre-IPO equity
-            through an offline network built on trust, diligence, and direct relationships.
+            Taurus Magnus was founded to bring clarity, research integrity, and accessible corporate data
+            to India&apos;s unlisted and pre-IPO equity ecosystem.
           </p>
         </header>
 

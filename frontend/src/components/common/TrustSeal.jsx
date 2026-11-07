@@ -36,18 +36,18 @@ const TrustSeal = ({ size = 280, showSubText = true, showRingText = false, class
           <circle cx={cx} cy={cy} r={outerR} fill="none" stroke="var(--brass)" strokeWidth="1" />
           <text className="trust-seal-ring-text" fontSize={ringFontSize}>
             <textPath href={`#${arcPathId}`} startOffset="50%" textAnchor="middle">
-              TAURUS MAGNUS • OFFLINE TRACK RECORD • SINCE 2021
+              TAURUS MAGNUS • RESEARCH DRIVEN • PRE-IPO & UNLISTED
             </textPath>
           </text>
         </g>
       )}
       <circle cx={cx} cy={cy} r={innerR} fill="none" stroke="var(--brass)" strokeWidth="1" />
       <text x="150" y={150 + numberYOffset} textAnchor="middle" className="trust-seal-number">
-        5+
+        100%
       </text>
       {showSubText && (
         <text x="150" y={150 + subYOffset} textAnchor="middle" className="trust-seal-sub">
-          YEARS TRADING
+          VERIFIED DATA
         </text>
       )}
     </svg>

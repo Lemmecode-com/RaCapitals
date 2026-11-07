@@ -164,7 +164,7 @@ const TrustSection = () => {
       <div className="hts-header">
         <p className="home-eyebrow">Why trust us</p>
         <h2 id="trust-heading" className="home-section-title">Research you can rely on</h2>
-        <p className="hts-sub">Five years of offline deal-making, now transparent and online.</p>
+        <p className="hts-sub">Documented research, institutional diligence, and transparent private-market data.</p>
       </div>
       <div className="hts-grid">
         {TRUST_CARDS.map((card, i) => (
@@ -279,10 +279,10 @@ const Home = () => {
                 <span className="word">today.</span>
               </h1>
               <p className="home-hero-body">
-                Taurus Magnus has spent the last five years helping investors access unlisted and pre-IPO equity
-                through an offline network built on trust, diligence, and direct relationships. This platform
-                brings that research and access online — clearly, transparently, and without the noise of a
-                live trading terminal.
+                Taurus Magnus is an independent research and information platform designed to bring transparency
+                to India&apos;s unlisted and pre-IPO equity markets. We empower forward-looking investors with
+                documented fundamentals, verified corporate filings, and indicative price discovery — making
+                private-market opportunities accessible, transparent, and structured.
               </p>
               <Link to="/catalog" className="home-hero-cta">Browse the price list</Link>
             </div>
