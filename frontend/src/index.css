@@ -12708,3 +12708,255 @@ h1, h2, h3, h4, h5, h6 {
   color: #60A5FA !important;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3) !important;
 }
+
+/* ============================================================
+   3x3 SHOWCASE GRIDS (Top Selling Shares & DRHP Filed Shares)
+   ============================================================ */
+.home-showcase-section {
+  padding: 3.5rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.home-showcase-grid-3x3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr) !important;
+  gap: 1.5rem;
+}
+
+.home-showcase-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 1.35rem 1.4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 1rem;
+  text-decoration: none !important;
+  color: inherit;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05), 0 1px 2px rgba(15, 23, 42, 0.03);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+  position: relative;
+}
+
+.home-showcase-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -4px rgba(37, 99, 235, 0.12), 0 4px 8px -2px rgba(37, 99, 235, 0.06);
+  border-color: #93c5fd;
+}
+
+.home-showcase-card-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.85rem;
+}
+
+.home-showcase-card-identity {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  min-width: 0;
+  flex: 1;
+}
+
+.home-showcase-card-logo {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  overflow: hidden;
+  margin-top: 2px;
+}
+
+.home-showcase-card-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+}
+
+.home-showcase-card-logo .logo-placeholder {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-weight: 700;
+  color: #2563eb;
+  font-size: 1.15rem;
+}
+
+.home-showcase-card-title-wrap {
+  min-width: 0;
+  flex: 1;
+}
+
+.home-showcase-card-name {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Inter', sans-serif !important;
+  font-size: 1.02rem !important;
+  font-weight: 600 !important;
+  color: #0f172a !important;
+  margin: 0 0 0.25rem 0 !important;
+  line-height: 1.35 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+  min-height: 2.7em;
+}
+
+.home-showcase-card-sector {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+  font-size: 0.76rem;
+  color: #64748b;
+  display: inline-block;
+  background: #f1f5f9;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.home-showcase-badge-drhp {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #1d4ed8;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.home-showcase-card-mid {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0.85rem 0;
+  border-top: 1px solid #f1f5f9;
+  border-bottom: 1px solid #f1f5f9;
+  margin: 0.25rem 0;
+}
+
+.home-showcase-price-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.home-showcase-price-label {
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+
+.home-showcase-price {
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.2;
+}
+
+.home-showcase-delta {
+  font-family: "IBM Plex Mono", monospace !important;
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.25rem 0.6rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.home-showcase-delta.positive {
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+}
+
+.home-showcase-delta.negative {
+  background: #fef2f2;
+  color: #dc2626;
+  border: 1px solid #fecaca;
+}
+
+.home-showcase-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.15rem;
+}
+
+.home-showcase-lot-info {
+  font-size: 0.78rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.home-showcase-view-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #2563eb;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+
+.home-showcase-card:hover .home-showcase-view-btn {
+  gap: 0.6rem;
+  color: #1d4ed8;
+}
+
+@media (max-width: 1024px) {
+  .home-showcase-grid-3x3 {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 640px) {
+  .home-showcase-grid-3x3 {
+    grid-template-columns: 1fr !important;
+  }
+  .home-showcase-section {
+    padding: 2.25rem 0;
+  }
+}
+
+[data-theme="black"] .home-showcase-card {
+  background: #111827;
+  border-color: #1f2937;
+}
+
+[data-theme="black"] .home-showcase-card:hover {
+  border-color: #3b82f6;
+  box-shadow: 0 12px 24px -4px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="black"] .home-showcase-card-name {
+  color: #f8fafc !important;
+}
+
+[data-theme="black"] .home-showcase-card-sector {
+  background: #1e293b;
+  color: #94a3b8;
+}
+
+[data-theme="black"] .home-showcase-card-mid {
+  border-color: #1f2937;
+}
+
+[data-theme="black"] .home-showcase-price {
+  color: #f8fafc;
+}
+
+[data-theme="black"] .home-showcase-card-logo {
+  background: #1e293b;
+  border-color: #334155;
+}

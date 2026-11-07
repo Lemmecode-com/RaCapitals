@@ -21,7 +21,8 @@ const CompanySchema = new mongoose.Schema({
   isActive: { type: Boolean, default: true },
   drhpFiled: { type: Boolean, default: false },
   drhpFiledDate: { type: Date, default: null },
-  isHeroFeatured: { type: Boolean, default: false }
+  isHeroFeatured: { type: Boolean, default: false },
+  isTopSelling: { type: Boolean, default: false }
 }, { timestamps: true })
 
 export default mongoose.model('Company', CompanySchema)

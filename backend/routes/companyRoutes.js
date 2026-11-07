@@ -12,7 +12,9 @@ import {
   getDrhpFiledCompanies,
   bulkImportCompanies,
   getFeaturedCompany,
-  updateFeaturedCompany
+  updateFeaturedCompany,
+  getTopSellingCompanies,
+  updateTopSellingStatus
 } from '../controllers/companyController.js'
 import {
   getCompanyFinancials,
@@ -31,6 +33,7 @@ const router = express.Router()
 // NOTE: Specific routes MUST be registered before /:id, otherwise Express
 // treats the path segment as a literal :id value.
 router.get('/featured', getFeaturedCompany)
+router.get('/top-selling', getTopSellingCompanies)
 router.get('/drhp-filed', getDrhpFiledCompanies)
 router.get('/', getAllCompanies)
 router.get('/admin/all', authMiddleware, getAllCompaniesAdmin)
@@ -45,6 +48,7 @@ router.put('/:id', authMiddleware, updateCompany)
 router.post('/:id/financials', authMiddleware, upsertCompanyFinancial)
 router.post('/:id/shareholding', authMiddleware, upsertCompanyShareholding)
 router.patch('/:id/featured', authMiddleware, updateFeaturedCompany)
+router.patch('/:id/top-selling', authMiddleware, updateTopSellingStatus)
 router.patch('/:id/drhp', authMiddleware, updateDrhpStatus)
 router.patch('/:id/deactivate', authMiddleware, deactivateCompany)
 router.patch('/:id/activate', authMiddleware, activateCompany)

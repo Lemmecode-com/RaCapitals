@@ -20,10 +20,23 @@ const attachStats = async (company) => {
   const high52 = prices.length ? Math.max(...prices) : null
   const low52 = prices.length ? Math.min(...prices) : null
 
+  // Calculate percentage change between latest price and prior recorded price
+  const previousPriceDoc = await PriceHistory.findOne({ company: company._id })
+    .sort({ recordedAt: -1 })
+    .skip(1)
+    .lean()
+
+  let changePct = null
+  if (latestPriceDoc && previousPriceDoc && previousPriceDoc.price) {
+    const diff = latestPriceDoc.price - previousPriceDoc.price
+    changePct = Number(((diff / previousPriceDoc.price) * 100).toFixed(2))
+  }
+
   return {
     ...company,
     latestPrice: latestPriceDoc ? latestPriceDoc.price : null,
     latestPriceDate: latestPriceDoc ? latestPriceDoc.recordedAt : null,
+    changePct,
     high52,
     low52
   }
@@ -106,7 +119,7 @@ export const updateCompany = async (req, res) => {
       'name', 'sector', 'industry', 'cin', 'registeredOffice', 'foundedYear',
       'description', 'lotSize', 'faceValue', 'isin', 'logoUrl',
       'marketCap', 'peRatio', 'pbRatio', 'roe', 'bookValue', 'outstandingShares',
-      'drhpFiled', 'drhpFiledDate'
+      'drhpFiled', 'drhpFiledDate', 'isTopSelling', 'isHeroFeatured'
     ]
 
     const updates = {}
@@ -220,15 +233,67 @@ export const updateDrhpStatus = async (req, res) => {
 
 export const getDrhpFiledCompanies = async (req, res) => {
   try {
-    const companies = await Company.find({ drhpFiled: true, isActive: true })
-      .sort({ drhpFiledDate: -1 })
-      .lean()
-
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 0
+    let query = Company.find({ drhpFiled: true, isActive: true }).sort({ drhpFiledDate: -1 })
+    if (limit > 0) {
+      query = query.limit(limit)
+    }
+    const companies = await query.lean()
     const companiesWithStats = await attachStatsBatch(companies)
 
     res.status(200).json(companiesWithStats)
   } catch (error) {
     res.status(500).json({ message: 'Error fetching DRHP filed companies', error: error.message })
+  }
+}
+
+export const getTopSellingCompanies = async (req, res) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit, 10) : 9
+
+    // 1. Fetch companies explicitly marked as isTopSelling
+    let companies = await Company.find({ isTopSelling: true, isActive: true })
+      .sort({ updatedAt: -1 })
+      .limit(limit)
+      .lean()
+
+    // 2. If fewer than limit, backfill with active companies
+    if (companies.length < limit) {
+      const existingIds = companies.map(c => c._id)
+      const additional = await Company.find({
+        _id: { $nin: existingIds },
+        isActive: true
+      })
+        .sort({ marketCap: -1, createdAt: -1 })
+        .limit(limit - companies.length)
+        .lean()
+      companies = [...companies, ...additional]
+    }
+
+    const companiesWithStats = await attachStatsBatch(companies)
+    res.status(200).json(companiesWithStats)
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching top selling companies', error: error.message })
+  }
+}
+
+export const updateTopSellingStatus = async (req, res) => {
+  try {
+    const { id } = req.params
+    const { isTopSelling } = req.body
+
+    const company = await Company.findByIdAndUpdate(
+      id,
+      { isTopSelling: Boolean(isTopSelling) },
+      { new: true }
+    )
+    if (!company) {
+      return res.status(404).json({ message: 'Company not found' })
+    }
+
+    res.status(200).json({ message: `Updated top selling status for "${company.name}"`, company })
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating top selling status', error: error.message })
   }
 }
 

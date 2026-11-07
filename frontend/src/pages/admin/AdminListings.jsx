@@ -26,6 +26,7 @@ const EMPTY_FORM = {
   bookValue: '',
   outstandingShares: '',
   drhpFiled: false,
+  isTopSelling: false,
   price: '',
 }
 
@@ -106,6 +107,7 @@ const AdminListings = () => {
       bookValue: company.bookValue ?? '',
       outstandingShares: company.outstandingShares ?? '',
       drhpFiled: Boolean(company.drhpFiled),
+      isTopSelling: Boolean(company.isTopSelling),
       price: company.price ?? '',
     })
     setFormError('')
@@ -170,6 +172,7 @@ const AdminListings = () => {
         bookValue: form.bookValue === '' ? null : Number(form.bookValue),
         outstandingShares: form.outstandingShares === '' ? null : Number(form.outstandingShares),
         drhpFiled: Boolean(form.drhpFiled),
+        isTopSelling: Boolean(form.isTopSelling),
       }
       if (editing) {
         await api.put(`/companies/${editing._id}`, payload)
@@ -298,6 +301,17 @@ const AdminListings = () => {
     }
   }
 
+  const handleToggleTopSelling = async (company) => {
+    try {
+      const nextVal = !company.isTopSelling
+      await api.patch(`/companies/${company._id}/top-selling`, { isTopSelling: nextVal })
+      setFlash(`${nextVal ? 'Added' : 'Removed'} "${company.name}" ${nextVal ? 'to' : 'from'} Top Selling`)
+      await fetchCompanies()
+    } catch (err) {
+      setFlash(err?.response?.data?.message || 'Failed to update Top Selling status')
+    }
+  }
+
   const renderActionsForCard = (c) => (
     <div className="actions-cell">
       <Link to={`/admin/companies/${c._id}`} className="row-action-btn">View</Link>
@@ -311,6 +325,15 @@ const AdminListings = () => {
         style={c.isHeroFeatured ? { color: 'var(--brass, #2563eb)', fontWeight: 600 } : {}}
       >
         {c.isHeroFeatured ? '⭐ Hero Stock' : 'Set as Hero'}
+      </button>
+      <button
+        type="button"
+        className="row-action-btn"
+        onClick={() => handleToggleTopSelling(c)}
+        title={c.isTopSelling ? 'Remove from Homepage Top Selling' : 'Feature in Homepage Top Selling'}
+        style={c.isTopSelling ? { color: '#059669', fontWeight: 600 } : {}}
+      >
+        {c.isTopSelling ? '🔥 Top Selling' : 'Mark Top Selling'}
       </button>
       <button type="button" className="row-action-btn" onClick={() => toggleActive(c)}>
         {c.isActive ? 'Deactivate' : 'Activate'}
@@ -468,6 +491,22 @@ const AdminListings = () => {
                             ⭐ Hero
                           </span>
                         )}
+                        {c.isTopSelling && (
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              padding: '0.1rem 0.45rem',
+                              borderRadius: '4px',
+                              background: '#ecfdf5',
+                              color: '#059669',
+                              fontWeight: 700,
+                              border: '1px solid #a7f3d0'
+                            }}
+                            title="Featured in Homepage Top Selling 3x3 Grid"
+                          >
+                            🔥 Top Selling
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap' }}>{c.sector || '—'}</td>
@@ -556,14 +595,24 @@ const AdminListings = () => {
                   <textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="form-input" rows={3} placeholder="Brief summary of company business and background..." />
                 </label>
 
-                <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', marginTop: '0.4rem' }}>
-                  <input
-                    type="checkbox"
-                    checked={form.drhpFiled}
-                    onChange={(e) => setForm({ ...form, drhpFiled: e.target.checked })}
-                  />
-                  <span>DRHP Filed (Draft Red Herring Prospectus with SEBI)</span>
-                </label>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem', marginTop: '0.4rem' }}>
+                  <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', margin: 0 }}>
+                    <input
+                      type="checkbox"
+                      checked={form.drhpFiled}
+                      onChange={(e) => setForm({ ...form, drhpFiled: e.target.checked })}
+                    />
+                    <span>DRHP Filed (Draft Red Herring Prospectus with SEBI)</span>
+                  </label>
+                  <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', margin: 0 }}>
+                    <input
+                      type="checkbox"
+                      checked={form.isTopSelling}
+                      onChange={(e) => setForm({ ...form, isTopSelling: e.target.checked })}
+                    />
+                    <span>🔥 Feature in Top Selling Shares (Homepage 3x3 Grid)</span>
+                  </label>
+                </div>
               </div>
 
               {/* Section 2: Corporate Identifiers */}
