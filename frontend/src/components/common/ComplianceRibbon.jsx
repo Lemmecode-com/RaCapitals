@@ -2,14 +2,11 @@ import { Link } from 'react-router-dom'
 
 const ComplianceRibbon = () => {
   return (
-    <aside className="compliance-ribbon" aria-label="Regulatory and Pricing Notice">
+    <aside className="compliance-ribbon" aria-label="Regulatory Notice">
       <div className="compliance-ribbon-inner">
-        <span className="compliance-ribbon-badge">Notice</span>
-        <span className="compliance-ribbon-text">
-          Indicative prices only, based on secondary research — unlisted shares are not traded on a SEBI-recognized stock exchange. Transactions are private and bilateral arrangements.
-        </span>
+        Indicative prices only, based on secondary research — unlisted shares are not traded on a SEBI-recognized stock exchange. Transactions are private and bilateral arrangements.{' '}
         <Link to="/disclaimer" className="compliance-ribbon-link">
-          Private Markets & Risk Disclosures →
+          Risk & Legal Disclosures →
         </Link>
       </div>
     </aside>

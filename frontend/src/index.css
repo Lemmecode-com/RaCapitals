@@ -205,58 +205,34 @@ a:hover {
 
 /* Compliance ribbon */
 .compliance-ribbon {
-  background: var(--surface-3);
-  color: var(--page-text);
-  font-size: 0.78rem;
-  letter-spacing: 0.02em;
-  padding: 0.45rem 1rem;
-  border-bottom: 2px solid var(--brass);
+  background: var(--surface-2, #f1f5f9);
+  color: var(--text-soft, #475569);
+  font-size: 0.77rem;
+  letter-spacing: 0.015em;
+  padding: 0.35rem 1rem;
+  border-bottom: 1px solid var(--border, rgba(0, 0, 0, 0.08));
   line-height: 1.45;
+  text-align: center;
 }
 
 .compliance-ribbon-inner {
   max-width: 1320px;
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
   text-align: center;
 }
 
-.compliance-ribbon-badge {
-  display: inline-flex;
-  align-items: center;
-  background: rgba(212, 160, 23, 0.18);
-  color: var(--brass);
-  border: 1px solid rgba(212, 160, 23, 0.4);
-  font-size: 0.65rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  padding: 0.08rem 0.45rem;
-  border-radius: 3px;
-  flex-shrink: 0;
-}
-
-.compliance-ribbon-text {
-  color: var(--page-text);
-  opacity: 0.92;
-}
-
 .compliance-ribbon-link {
-  color: var(--brass);
+  color: var(--brass, #2563eb);
   font-weight: 600;
   text-decoration: underline;
   text-underline-offset: 2px;
-  transition: opacity 0.15s ease, color 0.15s ease;
+  margin-left: 0.25rem;
   white-space: nowrap;
+  transition: opacity 0.15s ease;
 }
 
 .compliance-ribbon-link:hover {
-  opacity: 0.82;
-  color: var(--brass-light, #e5b32e);
+  opacity: 0.8;
 }
 
 /* Navbar */
@@ -5375,9 +5351,9 @@ a:hover {
 
 /* Compliance ribbon */
 .page-wrap .compliance-ribbon {
-  background: var(--surface-3);
-  color: var(--page-text);
-  border-bottom-color: var(--brass);
+  background: var(--surface-2, #f1f5f9);
+  color: var(--text-soft, #475569);
+  border-bottom-color: var(--border, rgba(0, 0, 0, 0.08));
 }
 
 /* Page main text defaults */
