@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import api from '../services/api'
+import CompanyLogo from '../components/common/CompanyLogo'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import EnquireButton from '../components/common/EnquireButton'
 import Footer from '../components/common/Footer'
@@ -134,11 +135,14 @@ const Catalog = () => {
                     <tr key={c._id} className="catalog-row" onClick={() => navigate(`/company/${c._id}`)}>
                       <td>
                         <div className="company-cell">
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                            <span className="company-name">{c.name}</span>
-                            {c.drhpFiled && <span className="drhp-badge">DRHP Filed</span>}
+                          <CompanyLogo logoUrl={c.logoUrl} name={c.name} size={36} />
+                          <div className="company-info-col">
+                            <div className="company-name-row">
+                              <span className="company-name">{c.name}</span>
+                              {c.drhpFiled && <span className="drhp-badge">DRHP Filed</span>}
+                            </div>
+                            {c.sector && <span className="sector-badge">{c.sector}</span>}
                           </div>
-                          {c.sector && <span className="sector-badge">{c.sector}</span>}
                         </div>
                       </td>
                       <td className="mono">{formatINR(c.latestPrice)}</td>
@@ -164,11 +168,16 @@ const Catalog = () => {
                   onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/company/${c._id}`) } }}
                 >
                   <header className="catalog-card-head">
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                      <h3 className="catalog-card-name">{c.name}</h3>
-                      {c.drhpFiled && <span className="drhp-badge">DRHP Filed</span>}
+                    <div className="catalog-card-identity">
+                      <CompanyLogo logoUrl={c.logoUrl} name={c.name} size={38} />
+                      <div className="catalog-card-title-col">
+                        <div className="catalog-card-name-row">
+                          <h3 className="catalog-card-name">{c.name}</h3>
+                          {c.drhpFiled && <span className="drhp-badge">DRHP Filed</span>}
+                        </div>
+                        {c.sector && <span className="sector-badge">{c.sector}</span>}
+                      </div>
                     </div>
-                    {c.sector && <span className="sector-badge">{c.sector}</span>}
                   </header>
                   <dl className="catalog-card-kv">
                     <div className="kv-row">
