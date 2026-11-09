@@ -14,7 +14,9 @@ import {
   getFeaturedCompany,
   updateFeaturedCompany,
   getTopSellingCompanies,
-  updateTopSellingStatus
+  updateTopSellingStatus,
+  getMarqueeCompanies,
+  updateMarqueeStatus
 } from '../controllers/companyController.js'
 import {
   getCompanyFinancials,
@@ -35,6 +37,7 @@ const router = express.Router()
 router.get('/featured', getFeaturedCompany)
 router.get('/top-selling', getTopSellingCompanies)
 router.get('/drhp-filed', getDrhpFiledCompanies)
+router.get('/marquee', getMarqueeCompanies)
 router.get('/', getAllCompanies)
 router.get('/admin/all', authMiddleware, getAllCompaniesAdmin)
 router.post('/admin/bulk-import', authMiddleware, bulkImportCompanies)
@@ -49,6 +52,7 @@ router.post('/:id/financials', authMiddleware, upsertCompanyFinancial)
 router.post('/:id/shareholding', authMiddleware, upsertCompanyShareholding)
 router.patch('/:id/featured', authMiddleware, updateFeaturedCompany)
 router.patch('/:id/top-selling', authMiddleware, updateTopSellingStatus)
+router.patch('/:id/marquee', authMiddleware, updateMarqueeStatus)
 router.patch('/:id/drhp', authMiddleware, updateDrhpStatus)
 router.patch('/:id/deactivate', authMiddleware, deactivateCompany)
 router.patch('/:id/activate', authMiddleware, activateCompany)

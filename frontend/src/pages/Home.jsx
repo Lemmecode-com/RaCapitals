@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import api from '../services/api'
+import CompanyLogo from '../components/common/CompanyLogo'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import EnquireButton from '../components/common/EnquireButton'
 import Footer from '../components/common/Footer'
@@ -9,8 +10,8 @@ import HeroPriceChart from '../components/home/HeroPriceChart'
 
 import { apiBaseWithoutApi, formatINR, formatShortDate } from '../utils/format'
 
-const PREVIEW_LIMIT = 12
-const MARQUEE_DURATION = 22
+const PREVIEW_LIMIT = 22
+const MARQUEE_DURATION = 35
 
 const buildLogoSrc = (logoUrl) => {
   if (!logoUrl) return null
@@ -254,6 +255,7 @@ const Home = () => {
   const [drhpCompanies, setDrhpCompanies] = useState([])
   const [events, setEvents] = useState([])
   const [blogs, setBlogs] = useState([])
+  const [marqueeCompanies, setMarqueeCompanies] = useState([])
 
   useEffect(() => {
     let cancelled = false
@@ -278,11 +280,12 @@ const Home = () => {
     let cancelled = false
     const load = async () => {
       try {
-        const [topSellingRes, drhpRes, eventsRes, blogsRes] = await Promise.all([
+        const [topSellingRes, drhpRes, eventsRes, blogsRes, marqueeRes] = await Promise.all([
           api.get('/companies/top-selling'),
           api.get('/companies/drhp-filed', { params: { limit: 9 } }),
           api.get('/events', { params: { limit: 9 } }),
-          api.get('/blogs', { params: { limit: 9 } })
+          api.get('/blogs', { params: { limit: 9 } }),
+          api.get('/companies/marquee', { params: { limit: 22 } }).catch(() => ({ data: [] }))
         ])
         if (!cancelled) {
           setTopSellingCompanies(topSellingRes.data || [])
@@ -293,6 +296,9 @@ const Home = () => {
           } else {
             setBlogs([])
           }
+          if (Array.isArray(marqueeRes?.data) && marqueeRes.data.length > 0) {
+            setMarqueeCompanies(marqueeRes.data)
+          }
         }
       } catch {
         if (!cancelled) {
@@ -300,6 +306,7 @@ const Home = () => {
           setDrhpCompanies([])
           setEvents([])
           setBlogs([])
+          setMarqueeCompanies([])
         }
       }
     }
@@ -307,9 +314,14 @@ const Home = () => {
     return () => { cancelled = true }
   }, [])
 
+  const displayedMarquee = useMemo(() => {
+    if (marqueeCompanies.length > 0) return marqueeCompanies.slice(0, 22)
+    return companies.slice(0, 22)
+  }, [marqueeCompanies, companies])
+
   const visible = useMemo(() => {
-    return companies.slice(0, PREVIEW_LIMIT)
-  }, [companies])
+    return displayedMarquee
+  }, [displayedMarquee])
 
   const displayedTopSelling = useMemo(() => {
     return (topSellingCompanies || []).slice(0, 9)
@@ -452,8 +464,13 @@ const Home = () => {
                     aria-label={`View ${c.name} details`}
                   >
                     <div className="home-marquee-card-top">
-                      <h3 className="home-marquee-card-name">{c.name}</h3>
-                      {c.sector && <span className="home-marquee-card-sector">{c.sector}</span>}
+                      <div className="home-marquee-card-identity">
+                        <CompanyLogo logoUrl={c.logoUrl} name={c.name} size={30} />
+                        <div className="home-marquee-title-wrap">
+                          <h3 className="home-marquee-card-name" title={c.name}>{c.name}</h3>
+                          {c.sector && <span className="home-marquee-card-sector">{c.sector}</span>}
+                        </div>
+                      </div>
                     </div>
                     <div className="home-marquee-card-mid">
                       <span className="home-marquee-card-price-label">Indicative Price</span>

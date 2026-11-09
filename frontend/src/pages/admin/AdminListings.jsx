@@ -27,6 +27,7 @@ const EMPTY_FORM = {
   outstandingShares: '',
   drhpFiled: false,
   isTopSelling: false,
+  isMarquee: false,
   price: '',
 }
 
@@ -108,6 +109,7 @@ const AdminListings = () => {
       outstandingShares: company.outstandingShares ?? '',
       drhpFiled: Boolean(company.drhpFiled),
       isTopSelling: Boolean(company.isTopSelling),
+      isMarquee: Boolean(company.isMarquee),
       price: company.price ?? '',
     })
     setFormError('')
@@ -173,6 +175,7 @@ const AdminListings = () => {
         outstandingShares: form.outstandingShares === '' ? null : Number(form.outstandingShares),
         drhpFiled: Boolean(form.drhpFiled),
         isTopSelling: Boolean(form.isTopSelling),
+        isMarquee: Boolean(form.isMarquee),
       }
       if (editing) {
         await api.put(`/companies/${editing._id}`, payload)
@@ -312,6 +315,17 @@ const AdminListings = () => {
     }
   }
 
+  const handleToggleMarquee = async (company) => {
+    try {
+      const nextVal = !company.isMarquee
+      await api.patch(`/companies/${company._id}/marquee`, { isMarquee: nextVal })
+      setFlash(`${nextVal ? 'Added' : 'Removed'} "${company.name}" ${nextVal ? 'to' : 'from'} Marquee Ticker`)
+      await fetchCompanies()
+    } catch (err) {
+      setFlash(err?.response?.data?.message || 'Failed to update Marquee status')
+    }
+  }
+
   const renderActionsForCard = (c) => (
     <div className="actions-cell">
       <Link to={`/admin/companies/${c._id}`} className="row-action-btn">View</Link>
@@ -334,6 +348,15 @@ const AdminListings = () => {
         style={c.isTopSelling ? { color: '#059669', fontWeight: 600 } : {}}
       >
         {c.isTopSelling ? '🔥 Top Selling' : 'Mark Top Selling'}
+      </button>
+      <button
+        type="button"
+        className="row-action-btn"
+        onClick={() => handleToggleMarquee(c)}
+        title={c.isMarquee ? 'Remove from Marquee Ticker' : 'Feature in Marquee Ticker (20-22 Shares)'}
+        style={c.isMarquee ? { color: '#7c3aed', fontWeight: 600 } : {}}
+      >
+        {c.isMarquee ? '⚡ Ticker' : 'Add to Ticker'}
       </button>
       <button type="button" className="row-action-btn" onClick={() => toggleActive(c)}>
         {c.isActive ? 'Deactivate' : 'Activate'}
@@ -397,7 +420,25 @@ const AdminListings = () => {
             </div>
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+              padding: '0.35rem 0.75rem',
+              borderRadius: '6px',
+              background: 'rgba(124, 58, 237, 0.1)',
+              border: '1px solid rgba(124, 58, 237, 0.25)',
+              color: '#7c3aed',
+              fontSize: '0.8rem',
+              fontWeight: 600
+            }}
+            title="Curated shares actively featured in Homepage Marquee Ticker"
+          >
+            <span>⚡ Marquee Ticker:</span>
+            <strong>{companies.filter(c => c.isMarquee).length} / 22 Curated</strong>
+          </div>
           <select
             className="form-input"
             style={{ width: 'auto', minWidth: '240px', padding: '0.4rem 0.75rem', fontSize: '0.85rem' }}
@@ -507,6 +548,22 @@ const AdminListings = () => {
                             🔥 Top Selling
                           </span>
                         )}
+                        {c.isMarquee && (
+                          <span
+                            style={{
+                              fontSize: '0.68rem',
+                              padding: '0.1rem 0.45rem',
+                              borderRadius: '4px',
+                              background: 'rgba(124, 58, 237, 0.12)',
+                              color: '#7c3aed',
+                              fontWeight: 700,
+                              border: '1px solid rgba(124, 58, 237, 0.3)'
+                            }}
+                            title="Featured in Homepage Horizontal Marquee Ticker (Curated 20-22 Shares)"
+                          >
+                            ⚡ Ticker
+                          </span>
+                        )}
                       </div>
                     </td>
                     <td style={{ padding: '0.6rem 0.75rem', whiteSpace: 'nowrap' }}>{c.sector || '—'}</td>
@@ -611,6 +668,14 @@ const AdminListings = () => {
                       onChange={(e) => setForm({ ...form, isTopSelling: e.target.checked })}
                     />
                     <span>🔥 Feature in Top Selling Shares (Homepage 3x3 Grid)</span>
+                  </label>
+                  <label className="form-label" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', margin: 0 }}>
+                    <input
+                      type="checkbox"
+                      checked={form.isMarquee}
+                      onChange={(e) => setForm({ ...form, isMarquee: e.target.checked })}
+                    />
+                    <span>⚡ Feature in Horizontal Marquee Ticker (Curated 20–22 Shares)</span>
                   </label>
                 </div>
               </div>
