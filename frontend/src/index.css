@@ -8488,6 +8488,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.35;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -8500,6 +8501,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -9800,6 +9802,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 1.5rem;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -9966,6 +9969,7 @@ h1, h2, h3, h4, h5, h6 {
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 3;
+  line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -10652,6 +10656,7 @@ h1, h2, h3, h4, h5, h6 {
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
@@ -10743,6 +10748,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -10766,6 +10772,7 @@ h1, h2, h3, h4, h5, h6 {
   flex: 1;
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -13561,6 +13568,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.35 !important;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
   min-height: 2.7em;
@@ -13769,6 +13777,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.4 !important;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
 }
@@ -13792,6 +13801,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.5 !important;
   display: -webkit-box !important;
   -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
   -webkit-box-orient: vertical !important;
   overflow: hidden !important;
   flex: 1;
