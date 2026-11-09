@@ -4,6 +4,7 @@ import Navbar from '../components/common/Navbar'
 import ComplianceRibbon from '../components/common/ComplianceRibbon'
 import Footer from '../components/common/Footer'
 import FloatingParticles from '../components/common/FloatingParticles'
+import { getWhatsAppUrl } from '../utils/whatsapp'
 
 const CORE_PILLARS = [
   {
@@ -76,6 +77,12 @@ const About = () => {
     document.title = 'About Us | Taurus Magnus — Research-Driven Private Market Platform'
   }, [])
 
+  const handleEnquireNow = () => {
+    const message = 'Hi Taurus Magnus team, I would like to enquire about current unlisted share availability, lot pricing, and indicative valuations.'
+    const url = getWhatsAppUrl(message)
+    window.open(url, '_blank', 'noopener,noreferrer')
+  }
+
   return (
     <div className="page-wrap about-page-wrap">
       <Navbar />
@@ -121,6 +128,36 @@ const About = () => {
             </div>
           </div>
         </header>
+
+        {/* Issue #12: Enquire Now CTA directly above About Us Section */}
+        <div className="about-enquire-bar">
+          <div className="about-enquire-bar-content">
+            <div className="about-enquire-badge">
+              <span className="about-enquire-pulse" aria-hidden="true" />
+              DIRECT ACCESS TO RESEARCH DESK
+            </div>
+            <p className="about-enquire-text">
+              Interested in current unlisted share availability, lot pricing, or statutory DRHP filings?
+            </p>
+          </div>
+          <div className="about-enquire-actions">
+            <button
+              type="button"
+              className="about-enquire-now-btn"
+              onClick={handleEnquireNow}
+              id="about-enquire-now-cta"
+              aria-label="Enquire Now on WhatsApp"
+            >
+              <svg className="enquire-whatsapp-icon" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
+                <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.04 14.69 2 12.04 2ZM12.04 20.15C10.56 20.15 9.11 19.76 7.85 19.01L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.8 7.37 7.5 3.67 12.05 3.67C14.25 3.67 16.32 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15ZM16.56 14.39C16.31 14.27 15.09 13.67 14.86 13.58C14.64 13.5 14.47 13.46 14.31 13.7C14.14 13.95 13.66 14.51 13.51 14.68C13.37 14.84 13.22 14.87 12.98 14.74C12.73 14.62 11.94 14.36 11 13.52C10.26 12.87 9.77 12.06 9.62 11.82C9.48 11.57 9.61 11.44 9.73 11.32C9.84 11.21 9.98 11.03 10.1 10.89C10.22 10.74 10.27 10.64 10.35 10.47C10.43 10.31 10.39 10.16 10.33 10.04C10.27 9.92 9.77 8.7 9.57 8.2C9.37 7.72 9.17 7.78 9.02 7.77C8.88 7.77 8.71 7.76 8.55 7.76C8.38 7.76 8.11 7.82 7.89 8.07C7.66 8.31 7.03 8.9 7.03 10.11C7.03 11.32 7.91 12.49 8.03 12.65C8.16 12.82 9.77 15.3 12.23 16.36C12.82 16.61 13.27 16.76 13.63 16.88C14.22 17.07 14.76 17.04 15.19 16.98C15.67 16.91 16.67 16.37 16.88 15.79C17.09 15.2 17.09 14.7 17.03 14.6C16.96 14.5 16.81 14.44 16.56 14.39Z" />
+              </svg>
+              <span>Enquire Now</span>
+            </button>
+            <Link to="/contact" className="about-enquire-secondary-btn">
+              Contact Desk →
+            </Link>
+          </div>
+        </div>
 
         {/* Section: The Founders' Story */}
         <section className="about-section about-story-section" id="about-us-section">

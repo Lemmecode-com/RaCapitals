@@ -7621,6 +7621,114 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: 0.04em;
 }
 
+/* Issue #12: Enquire Now CTA Bar directly above About Us Section */
+.about-enquire-bar {
+  margin: 0 auto 2.4rem;
+  max-width: 960px;
+  background: linear-gradient(135deg, rgba(var(--brass-rgb), 0.15) 0%, rgba(var(--brass-rgb), 0.05) 100%);
+  border: 1px solid rgba(var(--brass-rgb), 0.35);
+  border-radius: 12px;
+  padding: 1.1rem 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.2rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+}
+
+.about-enquire-bar-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.about-enquire-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--brass);
+  text-transform: uppercase;
+}
+
+.about-enquire-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  animation: enquirePulse 2s infinite;
+}
+
+@keyframes enquirePulse {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+  }
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 6px rgba(16, 185, 129, 0);
+  }
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
+  }
+}
+
+.about-enquire-text {
+  margin: 0;
+  font-size: 0.88rem;
+  color: var(--page-text);
+  font-weight: 500;
+}
+
+.about-enquire-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.about-enquire-now-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #25D366;
+  color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.65rem 1.35rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 10px rgba(37, 211, 102, 0.25);
+}
+
+.about-enquire-now-btn:hover {
+  background: #20bd5a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(37, 211, 102, 0.35);
+}
+
+.about-enquire-secondary-btn {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: var(--brass);
+  text-decoration: none;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid rgba(var(--brass-rgb), 0.3);
+  border-radius: 8px;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.about-enquire-secondary-btn:hover {
+  background: rgba(var(--brass-rgb), 0.1);
+  border-color: var(--brass);
+}
+
 /* General Section Structure */
 .about-section {
   margin-bottom: 2.8rem;
@@ -8084,6 +8192,19 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 @media (max-width: 768px) {
+  .about-enquire-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem 1.1rem;
+    gap: 0.9rem;
+  }
+
+  .about-enquire-actions {
+    width: 100%;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
   .about-stats-strip {
     grid-template-columns: repeat(2, 1fr);
   }
